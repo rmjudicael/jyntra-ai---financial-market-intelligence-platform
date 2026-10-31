@@ -1,0 +1,46 @@
+{
+  "name": "jyntra-ai",
+  "private": true,
+  "version": "1.0.0",
+  "description": "JYNTRA AI — Financial Market Intelligence Platform (React + Vite + Express)",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "dev:api": "tsx server.ts",
+    "build": "vite build",
+    "start": "tsx server.ts --production",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "test": "tsx tests/aiEngine.fallback.test.ts && tsx tests/workflowStore.test.ts && tsx tests/detectLanguage.test.ts && tsx tests/jyntrack.test.ts && tsx src/i18n/translations.test.ts"
+  },
+  "dependencies": {
+    "@google/genai": "^2.32.0",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "three": "^0.186.1",
+    "tsx": "^4.23.15"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "autoprefixer": "^10.4.21",
+    "esbuild": "^0.28.2",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  }
+}

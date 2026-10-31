@@ -1,0 +1,396 @@
+@import "tailwindcss";
+@keyframes jyntra-ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.jyntra-ticker-track { display: inline-flex; animation: jyntra-ticker-scroll 45s linear infinite; will-change: transform; }
+.jyntra-ticker-track:hover { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .jyntra-ticker-track { animation: none; } }
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  /* Custom scrollbar for dark/futuristic theme */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0B0F17;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1F2937;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #F97316;
+  }
+}
+
+/* Accueil : apparition progressive + révélation au scroll (discrète, reduced-motion respecté) */
+@keyframes jyntra-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+.jyntra-enter { animation: jyntra-enter .7s ease-out both; }
+.jyntra-enter-1 { animation-delay: .08s; } .jyntra-enter-2 { animation-delay: .16s; } .jyntra-enter-3 { animation-delay: .24s; }
+[data-reveal] { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+[data-reveal].is-visible { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { .jyntra-enter { animation: none; } [data-reveal] { opacity: 1; transform: none; transition: none; } }
+
+/* Light mode theme styling */
+html.light body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+html.light .bg-\[\#080B10\] {
+  background-color: #f8fafc !important;
+}
+html.light .bg-\[\#06090E\],
+html.light .bg-\[\#06080D\],
+html.light .bg-\[\#05070B\],
+html.light .bg-\[\#0B0F17\] {
+  background-color: #ffffff !important;
+}
+/* Variantes avec opacité (ex. `bg-[#06080D]/50`) : sans cette règle, le fond
+   sombre translucide restait gris et le texte devenait illisible en clair. */
+html.light [class*="bg-[#06090E]/"],
+html.light [class*="bg-[#06080D]/"],
+html.light [class*="bg-[#080B10]/"],
+html.light [class*="bg-[#05070B]/"],
+html.light [class*="bg-[#0B0F17]/"] {
+  background-color: rgba(255, 255, 255, 0.72) !important;
+}
+html.light .bg-slate-900,
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/80 {
+  background-color: #f1f5f9 !important;
+}
+html.light .bg-slate-800,
+html.light .bg-slate-700 {
+  background-color: #e2e8f0 !important;
+}
+html.light .bg-slate-950,
+html.light .bg-slate-950\/80 {
+  background-color: #e2e8f0 !important;
+}
+html.light .from-slate-900,
+html.light .to-slate-950,
+html.light .via-slate-900\/90 {
+  --tw-gradient-from: #ffffff !important;
+  --tw-gradient-to: #f1f5f9 !important;
+  --tw-gradient-stops: #ffffff, #f8fafc, #f1f5f9 !important;
+}
+html.light .border-slate-800,
+html.light .border-slate-800\/80,
+html.light .border-slate-800\/60,
+html.light .border-slate-700\/80 {
+  border-color: #cbd5e1 !important;
+}
+html.light .text-white {
+  color: #0f172a !important;
+}
+html.light .text-slate-100,
+html.light .text-slate-200,
+html.light .text-slate-300 {
+  color: #334155 !important;
+}
+html.light .text-slate-400 {
+  color: #64748b !important;
+}
+html.light .text-slate-500:not(.keep-white *) {
+  color: #5b6b7f !important;
+}
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #64748b !important;
+  opacity: 1;
+}
+/* Le logo Meta officiel contient un texte blanc : sur fond clair il devient
+   invisible. L'inversion + rotation de teinte garde le glyphe bleu et rend le
+   mot-symbole lisible, sans altérer le fichier officiel. */
+html.light img.meta-logo {
+  filter: invert(1) hue-rotate(180deg);
+}
+/* Le décor filaire du hackathon doit rester discret sur fond clair. */
+html.light .meta-3d {
+  opacity: 0.18 !important;
+}
+
+/* Couvre les variantes d'opacité (bg-slate-950/70, /60, etc.) sans toucher
+   aux overlays sombres volontaires marqués `keep-white`. */
+html.light [class*="bg-slate-900/"]:not(.keep-white):not(.keep-white *) {
+  background-color: rgba(241, 245, 249, 0.92) !important;
+}
+html.light [class*="bg-slate-950/"]:not(.keep-white):not(.keep-white *) {
+  background-color: rgba(226, 232, 240, 0.9) !important;
+}
+html.light [class*="bg-slate-800/"]:not(.keep-white):not(.keep-white *) {
+  background-color: rgba(226, 232, 240, 0.85) !important;
+}
+
+/* Couleurs d'accent lisibles sur fond clair (les overlays `keep-white`
+   conservent leurs teintes lumineuses via la règle dédiée plus bas). */
+html.light .text-cyan-300:not(.keep-white *) { color: #0e7490 !important; }
+html.light .text-cyan-400:not(.keep-white *) { color: #0e7490 !important; }
+html.light .text-cyan-500:not(.keep-white *) { color: #0e7490 !important; }
+html.light .text-sky-500:not(.keep-white *) { color: #0369a1 !important; }
+html.light .text-blue-300:not(.keep-white *) { color: #1d4ed8 !important; }
+html.light .text-orange-300:not(.keep-white *) { color: #c2410c !important; }
+html.light .text-orange-400:not(.keep-white *) { color: #c2410c !important; }
+html.light .text-orange-500:not(.keep-white *) { color: #c2410c !important; }
+html.light .text-amber-500:not(.keep-white *) { color: #b45309 !important; }
+html.light .text-emerald-300:not(.keep-white *) { color: #047857 !important; }
+html.light .text-emerald-400:not(.keep-white *) { color: #047857 !important; }
+html.light .text-amber-200:not(.keep-white *),
+html.light .text-amber-300:not(.keep-white *) { color: #b45309 !important; }
+html.light .text-rose-300:not(.keep-white *) { color: #be123c !important; }
+html.light .text-rose-400:not(.keep-white *) { color: #be123c !important; }
+html.light .text-rose-500:not(.keep-white *) { color: #9f1239 !important; }
+html.light .text-red-400:not(.keep-white *),
+html.light .text-red-500:not(.keep-white *) { color: #b91c1c !important; }
+html.light .text-emerald-500:not(.keep-white *) { color: #047857 !important; }
+html.light .text-violet-300:not(.keep-white *) { color: #6d28d9 !important; }
+
+/* États de survol : sans ces règles, un survol `bg-slate-800` + `text-white`
+   produisait un texte sombre sur un fond sombre en mode clair. */
+html.light .hover\:bg-slate-800:hover,
+html.light .hover\:bg-slate-800\/60:hover,
+html.light .hover\:bg-slate-800\/80:hover,
+html.light .hover\:bg-slate-700:hover {
+  background-color: #e2e8f0 !important;
+}
+html.light .hover\:text-white:hover { color: #0f172a !important; }
+
+/* Opt-out: elements sitting on a genuinely dark overlay/image keep white text.
+   Use the `keep-white` class on the dark container. */
+html.light .keep-white,
+html.light .keep-white * {
+  color: #ffffff !important;
+}
+html.light .keep-white .text-cyan-300,
+html.light .keep-white .text-cyan-400 {
+  color: #67e8f9 !important;
+}
+
+/* The 3D hologram needs a dark stage in both themes: a white background would
+   erase the translucent shader. */
+html.light .lynara-stage {
+  background: radial-gradient(ellipse at 50% 40%, #0b2230 0%, #050a12 62%, #03060b 100%) !important;
+  border-color: rgba(6, 182, 212, 0.4) !important;
+  box-shadow: 0 24px 60px -24px rgba(2, 6, 23, 0.55) !important;
+}
+html.light .lynara-stage .bg-slate-900\/80 {
+  background-color: rgba(15, 23, 42, 0.8) !important;
+}
+html.light .lynara-stage .border-slate-700 {
+  border-color: #334155 !important;
+}
+html.light .lynara-stage .text-slate-400 {
+  color: #94a3b8 !important;
+}
+html.light .lynara-stage .bg-slate-950\/60 {
+  background-color: rgba(2, 6, 23, 0.6) !important;
+}
+html.light .lynara-stage .border-slate-800\/80 {
+  border-color: rgba(30, 41, 59, 0.8) !important;
+}
+
+html.light ::-webkit-scrollbar-track { background: #eef2f7; }
+html.light ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+html.light ::-webkit-scrollbar-thumb:hover { background: #f97316; }
+
+/* Hologram and pulse animations */
+@keyframes holoScan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-holo-scan {
+  animation: holoScan 6s linear infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: floatSoft 5s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/* LYNARA — workflow n8n-like + hologramme 2D anime                    */
+/* ------------------------------------------------------------------ */
+
+.lynara-panel {
+  background-image: radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.07), transparent 60%);
+}
+
+@keyframes lynara-grid-drift {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 48px, 48px 0; }
+}
+.lynara-grid {
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.09) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px;
+  animation: lynara-grid-drift 9s linear infinite;
+}
+
+@keyframes lynara-scanlines-drift {
+  from { background-position-y: 0; }
+  to { background-position-y: 96px; }
+}
+.lynara-scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.07) 0px,
+    rgba(255, 255, 255, 0.07) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  animation: lynara-scanlines-drift 7s linear infinite;
+}
+
+@keyframes lynara-beam-pulse {
+  0%, 100% { opacity: 0.35; transform: translateX(-50%) scaleX(1); }
+  50% { opacity: 0.7; transform: translateX(-50%) scaleX(1.08); }
+}
+.lynara-beam {
+  background: linear-gradient(
+    to bottom,
+    rgba(94, 231, 255, 0.16) 0%,
+    rgba(94, 231, 255, 0.06) 38%,
+    rgba(34, 211, 238, 0.02) 72%,
+    transparent 100%
+  );
+  filter: blur(6px);
+  animation: lynara-beam-pulse 6s ease-in-out infinite;
+}
+
+@keyframes lynara-mote-rise {
+  0% { transform: translateY(0) scale(0.7); opacity: 0; }
+  15% { opacity: 0.85; }
+  70% { opacity: 0.45; }
+  100% { transform: translateY(-320px) scale(1.1); opacity: 0; }
+}
+.lynara-mote {
+  animation-name: lynara-mote-rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes lynara-figure-hover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes lynara-figure-flicker {
+  0%, 100% { opacity: 1; }
+  46% { opacity: 1; }
+  48% { opacity: 0.74; }
+  50% { opacity: 0.97; }
+  73% { opacity: 0.9; }
+  75% { opacity: 1; }
+}
+.lynara-figure {
+  transform-origin: 210px 500px;
+  animation: lynara-figure-hover 6.5s ease-in-out infinite, lynara-figure-flicker 7.5s steps(1, end) infinite;
+}
+
+@keyframes lynara-eyes-blink {
+  0%, 91%, 100% { transform: scaleY(1); }
+  94% { transform: scaleY(0.08); }
+  97% { transform: scaleY(1); }
+}
+.lynara-blink {
+  transform-box: view-box;
+  animation: lynara-eyes-blink 5.6s ease-in-out infinite;
+}
+
+/* Subtle living gaze: a millimetre of pupil drift, never a stare. */
+@keyframes lynara-gaze-drift {
+  0%, 100% { transform: translate(0, 0); }
+  28% { transform: translate(1.3px, 0.2px); }
+  55% { transform: translate(-1.1px, -0.3px); }
+  78% { transform: translate(0.4px, 0.4px); }
+}
+.lynara-gaze {
+  transform-box: view-box;
+  animation: lynara-gaze-drift 9.5s ease-in-out infinite;
+}
+
+@keyframes lynara-mouth-talk {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(0.4px) scaleY(1.04); }
+}
+.lynara-mouth {
+  transform-box: view-box;
+  transform-origin: 210px 268px;
+  animation: lynara-mouth-talk 2.6s ease-in-out infinite;
+}
+
+@keyframes lynara-hair-sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(0.7deg); }
+}
+.lynara-hair-back,
+.lynara-hair-front {
+  transform-box: view-box;
+  transform-origin: 210px 110px;
+  animation: lynara-hair-sway 7s ease-in-out infinite;
+}
+.lynara-hair-front {
+  animation-duration: 5.4s;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes lynara-band-scan {
+  0% { transform: translateY(-40px); opacity: 0; }
+  8% { opacity: 0.9; }
+  85% { opacity: 0.55; }
+  100% { transform: translateY(560px); opacity: 0; }
+}
+.lynara-band {
+  animation: lynara-band-scan 4.8s linear infinite;
+}
+
+@keyframes lynara-flow-dash {
+  to { stroke-dashoffset: -22; }
+}
+.lynara-flow {
+  stroke-dasharray: 5 4;
+  animation: lynara-flow-dash 1.2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lynara-grid,
+  .lynara-scanlines,
+  .lynara-beam,
+  .lynara-mote,
+  .lynara-figure,
+  .lynara-blink,
+  .lynara-gaze,
+  .lynara-mouth,
+  .lynara-hair-back,
+  .lynara-hair-front,
+  .lynara-band,
+  .lynara-flow {
+    animation: none !important;
+  }
+}

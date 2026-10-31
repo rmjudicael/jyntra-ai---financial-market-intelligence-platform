@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "ultrademo": {
+      "source": "new-xp/ultrademo",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ultrademo/SKILL.md",
+      "computedHash": "525c166a6ce25e44ee3c760868752711d2ac027501ee57a03af200075fd99987"
+    }
+  }
+}

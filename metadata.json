@@ -1,0 +1,10 @@
+{
+  "name": "JYNTRA AI - Financial Market Intelligence Platform",
+  "description": "JYNTRA AI - Your AI. Your Edge. Advanced trading intelligence combining multimodal chart analysis, specialized multi-agent consensus, real market data, risk management, backtesting, and interactive 3D holographic companion LYNARA.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
