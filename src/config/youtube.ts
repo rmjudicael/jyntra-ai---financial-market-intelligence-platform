@@ -1,4 +1,4 @@
-export const YOUTUBE_DEMO_URL: string = 'https://www.youtube.com/watch?v=GU5ax5bb0Y4&t=6s';
+export const YOUTUBE_DEMO_URL: string = 'https://youtu.be/Md1BCGKdlDI';
 
 /** Libellé affiché sous le lecteur (chaîne vide = aucune mention tierce). */
 export const YOUTUBE_DEMO_ATTRIBUTION: string = '';
