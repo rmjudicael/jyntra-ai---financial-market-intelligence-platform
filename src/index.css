@@ -1,0 +1,1047 @@
+﻿@import "tailwindcss";
+@keyframes jyntra-ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.jyntra-ticker-track { display: inline-flex; animation: jyntra-ticker-scroll 45s linear infinite; will-change: transform; }
+.jyntra-ticker-track:hover { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .jyntra-ticker-track { animation: none; } }
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  /* Custom scrollbar for dark/futuristic theme */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0B0F17;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1F2937;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #F97316;
+  }
+}
+
+/* Accueil : apparition progressive + rÃ©vÃ©lation au scroll (discrÃ¨te, reduced-motion respectÃ©) */
+@keyframes jyntra-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+.jyntra-enter { animation: jyntra-enter .7s ease-out both; }
+.jyntra-enter-1 { animation-delay: .08s; } .jyntra-enter-2 { animation-delay: .16s; } .jyntra-enter-3 { animation-delay: .24s; }
+[data-reveal] { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+[data-reveal].is-visible { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { .jyntra-enter { animation: none; } [data-reveal] { opacity: 1; transform: none; transition: none; } }
+
+/* Light mode theme styling */
+html.light body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+html.light .bg-\[\#080B10\] {
+  background-color: #f8fafc !important;
+}
+html.light .bg-\[\#06090E\],
+html.light .bg-\[\#06080D\],
+html.light .bg-\[\#05070B\],
+html.light .bg-\[\#0B0F17\] {
+  background-color: #ffffff !important;
+}
+/* Variantes avec opacitÃ© (ex. `bg-[#06080D]/50`) : sans cette rÃ¨gle, le fond
+   sombre translucide restait gris et le texte devenait illisible en clair. */
+html.light [class*="bg-[#06090E]/"],
+html.light [class*="bg-[#06080D]/"],
+html.light [class*="bg-[#080B10]/"],
+html.light [class*="bg-[#05070B]/"],
+html.light [class*="bg-[#0B0F17]/"] {
+  background-color: rgba(255, 255, 255, 0.72) !important;
+}
+html.light .bg-slate-900,
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/80 {
+  background-color: #f1f5f9 !important;
+}
+html.light .bg-slate-800,
+html.light .bg-slate-700 {
+  background-color: #e2e8f0 !important;
+}
+html.light .bg-slate-950,
+html.light .bg-slate-950\/80 {
+  background-color: #e2e8f0 !important;
+}
+html.light .from-slate-900,
+html.light .to-slate-950,
+html.light .via-slate-900\/90 {
+  --tw-gradient-from: #ffffff !important;
+  --tw-gradient-to: #f1f5f9 !important;
+  --tw-gradient-stops: #ffffff, #f8fafc, #f1f5f9 !important;
+}
+html.light .border-slate-800,
+html.light .border-slate-800\/80,
+html.light .border-slate-800\/60,
+html.light .border-slate-700\/80 {
+  border-color: #cbd5e1 !important;
+}
+html.light .text-white {
+  color: #0f172a !important;
+}
+html.light .text-slate-100,
+html.light .text-slate-200,
+html.light .text-slate-300 {
+  color: #334155 !important;
+}
+html.light .text-slate-400 {
+  color: #64748b !important;
+}
+html.light .text-slate-500:not(.keep-white *) {
+  color: #5b6b7f !important;
+}
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #64748b !important;
+  opacity: 1;
+}
+/* The official Meta logo contains white text: on a light background it becomes
+   invisible. Inversion + hue rotation keeps the glyph blue and makes the
+   wordmark readable, without altering the official file. */
+html.light img.meta-logo {
+  filter: invert(1) hue-rotate(180deg);
+}
+/* The hackathon wireframe decoration stays visible on light background. */
+html.light .meta-3d {
+  opacity: 0.95 !important;
+}
+
+/* Covers opacity variants (bg-slate-900/70, /60, etc.) without touching
+   deliberate dark overlays marked `keep-white`. */
+html.light [class*="bg-slate-900/"]:not(.keep-white):not(.keep-white *) {
+  background-color: rgba(240, 244, 248, 0.88) !important;
+}
+html.light [class*="bg-slate-950/"]:not(.keep-white):not(.keep-white *) {
+  background-color: rgba(248, 250, 252, 0.78) !important;
+}
+html.light [class*="bg-slate-800/"]:not(.keep-white):not(.keep-white *) {
+  background-color: rgba(226, 232, 240, 0.72) !important;
+}
+
+/* Accent colors readable on light background (the `keep-white` overlays
+   keep their light hues via the dedicated rule below). */
+html.light .text-cyan-300:not(.keep-white *) { color: #0e7490 !important; }
+html.light .text-cyan-400:not(.keep-white *) { color: #0e7490 !important; }
+html.light .text-cyan-500:not(.keep-white *) { color: #0e7490 !important; }
+html.light .text-sky-500:not(.keep-white *) { color: #0369a1 !important; }
+html.light .text-blue-300:not(.keep-white *) { color: #1d4ed8 !important; }
+html.light .text-orange-300:not(.keep-white *) { color: #c2410c !important; }
+html.light .text-orange-400:not(.keep-white *) { color: #c2410c !important; }
+html.light .text-orange-500:not(.keep-white *) { color: #c2410c !important; }
+html.light .text-amber-500:not(.keep-white *) { color: #b45309 !important; }
+html.light .text-emerald-300:not(.keep-white *) { color: #047857 !important; }
+html.light .text-emerald-400:not(.keep-white *) { color: #047857 !important; }
+html.light .text-amber-200:not(.keep-white *),
+html.light .text-amber-300:not(.keep-white *) { color: #b45309 !important; }
+html.light .text-rose-300:not(.keep-white *) { color: #be123c !important; }
+html.light .text-rose-400:not(.keep-white *) { color: #be123c !important; }
+html.light .text-rose-500:not(.keep-white *) { color: #9f1239 !important; }
+html.light .text-red-400:not(.keep-white *),
+html.light .text-red-500:not(.keep-white *) { color: #b91c1c !important; }
+html.light .text-emerald-500:not(.keep-white *) { color: #047857 !important; }
+html.light .text-violet-300:not(.keep-white *) { color: #6d28d9 !important; }
+
+/* Ã‰tats de survol : sans ces rÃ¨gles, un survol `bg-slate-800` + `text-white`
+   produisait un texte sombre sur un fond sombre en mode clair. */
+html.light .hover\:bg-slate-800:hover,
+html.light .hover\:bg-slate-800\/60:hover,
+html.light .hover\:bg-slate-800\/80:hover,
+html.light .hover\:bg-slate-700:hover {
+  background-color: #e2e8f0 !important;
+}
+html.light .hover\:text-white:hover { color: #0f172a !important; }
+
+/* Opt-out: elements sitting on a genuinely dark overlay/image keep white text.
+   Use the `keep-white` class on the dark container. */
+html.light .keep-white,
+html.light .keep-white * {
+  color: #ffffff !important;
+}
+html.light .keep-white .text-cyan-300,
+html.light .keep-white .text-cyan-400 {
+  color: #67e8f9 !important;
+}
+
+/* The 3D hologram needs a dark stage in both themes: a white background would
+   erase the translucent shader. */
+html.light .lynara-stage {
+  background: radial-gradient(ellipse at 50% 40%, #0b2230 0%, #050a12 62%, #03060b 100%) !important;
+  border-color: rgba(6, 182, 212, 0.4) !important;
+  box-shadow: 0 24px 60px -24px rgba(2, 6, 23, 0.55) !important;
+}
+html.light .lynara-stage .bg-slate-900\/80 {
+  background-color: rgba(15, 23, 42, 0.8) !important;
+}
+html.light .lynara-stage .border-slate-700 {
+  border-color: #334155 !important;
+}
+html.light .lynara-stage .text-slate-400 {
+  color: #94a3b8 !important;
+}
+html.light .lynara-stage .bg-slate-950\/60 {
+  background-color: rgba(2, 6, 23, 0.6) !important;
+}
+html.light .lynara-stage .border-slate-800\/80 {
+  border-color: rgba(30, 41, 59, 0.8) !important;
+}
+
+/* â”€â”€ Light mode: arbitrary dark surfaces â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   Several pages used hard-coded near-black hex values instead of slate
+   tokens. Without these rules they stayed dark islands in light mode.
+   Targets are explicit so dark mode is untouched. */
+html.light .bg-\[\#070A10\],
+html.light .bg-\[\#070a10\],
+html.light .bg-\[\#080d14\],
+html.light .bg-\[\#05070B\],
+html.light .bg-\[\#06090E\],
+html.light .bg-\[\#06080D\],
+html.light .bg-\[\#0B0F17\] {
+  background-color: #f1f5f9 !important;
+}
+html.light [class*="bg-[#070A10]/"],
+html.light [class*="bg-[#080d14]/"] {
+  background-color: rgba(241, 245, 249, 0.75) !important;
+}
+html.light .from-\[\#0c1017\],
+html.light .from-\[\#06090E\],
+html.light .from-\[\#0b1a24\] {
+  --tw-gradient-from: #f1f5f9 !important;
+  --tw-gradient-stops: #f1f5f9, #e2e8f0, #cbd5e1 !important;
+}
+html.light .to-\[\#070a0f\],
+html.light .to-\[\#040609\],
+html.light .to-\[\#04070c\],
+html.light .to-\[\#0B0F17\] {
+  --tw-gradient-to: #e2e8f0 !important;
+}
+html.light .via-\[\#070d15\] {
+  --tw-gradient-stops: #f1f5f9, #cbd5e1, #94a3b8 !important;
+}
+
+/* Workflow canvas: explicit surface for both themes. */
+.jyntra-workflow-canvas {
+  background-image: linear-gradient(to bottom, #0c1017, #070a0f);
+}
+html.light .jyntra-workflow-canvas {
+  background-image: linear-gradient(to bottom, #f1f5f9, #e2e8f0) !important;
+  border-color: #cbd5e1 !important;
+}
+html.light .jyntra-workflow-canvas .bg-slate-950\/90 {
+  background-color: #f8fafc !important;
+}
+html.light .jyntra-workflow-canvas .bg-slate-950\/80 {
+  background-color: #f1f5f9 !important;
+}
+
+/* Subtle muted text needs enough contrast on light surfaces. */
+html.light .text-slate-600:not(.keep-white *) { color: #475569 !important; }
+html.light .text-slate-500 { color: #4b5b6e !important; }
+
+/* Native select/option menus follow the theme. */
+html.light select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+html.light ::-webkit-scrollbar-track { background: #eef2f7; }
+html.light ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+html.light ::-webkit-scrollbar-thumb:hover { background: #f97316; }
+
+/* Hologram and pulse animations */
+@keyframes holoScan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-holo-scan {
+  animation: holoScan 6s linear infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: floatSoft 5s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/* LYNARA â€” workflow n8n-like + hologramme 2D anime                    */
+/* ------------------------------------------------------------------ */
+
+.lynara-panel {
+  background-image: radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.07), transparent 60%);
+}
+
+@keyframes lynara-grid-drift {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 48px, 48px 0; }
+}
+.lynara-grid {
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.09) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px;
+  animation: lynara-grid-drift 9s linear infinite;
+}
+
+@keyframes lynara-scanlines-drift {
+  from { background-position-y: 0; }
+  to { background-position-y: 96px; }
+}
+.lynara-scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.07) 0px,
+    rgba(255, 255, 255, 0.07) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  animation: lynara-scanlines-drift 7s linear infinite;
+}
+
+@keyframes lynara-beam-pulse {
+  0%, 100% { opacity: 0.35; transform: translateX(-50%) scaleX(1); }
+  50% { opacity: 0.7; transform: translateX(-50%) scaleX(1.08); }
+}
+.lynara-beam {
+  background: linear-gradient(
+    to bottom,
+    rgba(94, 231, 255, 0.16) 0%,
+    rgba(94, 231, 255, 0.06) 38%,
+    rgba(34, 211, 238, 0.02) 72%,
+    transparent 100%
+  );
+  filter: blur(6px);
+  animation: lynara-beam-pulse 6s ease-in-out infinite;
+}
+
+@keyframes lynara-mote-rise {
+  0% { transform: translateY(0) scale(0.7); opacity: 0; }
+  15% { opacity: 0.85; }
+  70% { opacity: 0.45; }
+  100% { transform: translateY(-320px) scale(1.1); opacity: 0; }
+}
+.lynara-mote {
+  animation-name: lynara-mote-rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes lynara-flicker {
+  0%, 100% { opacity: 1; }
+  3% { opacity: 0.88; }
+  6% { opacity: 1; }
+  12% { opacity: 0.92; }
+  15% { opacity: 1; }
+  40% { opacity: 0.95; }
+  43% { opacity: 1; }
+  70% { opacity: 0.9; }
+  73% { opacity: 1; }
+}
+.lynara-flicker {
+  animation: lynara-flicker 4.2s ease-in-out infinite;
+}
+.lynara-figure {
+  transform-origin: 210px 500px;
+  /* Breathing only: the illustrated body must stay fully opaque at all times. */
+  animation: lynara-figure-hover 6.5s ease-in-out infinite;
+}
+
+@keyframes lynara-eyes-blink {
+  0%, 91%, 100% { transform: scaleY(1); }
+  94% { transform: scaleY(0.08); }
+  97% { transform: scaleY(1); }
+}
+.lynara-blink {
+  transform-box: view-box;
+  animation: lynara-eyes-blink 5.6s ease-in-out infinite;
+}
+
+/* Subtle living gaze: a millimetre of pupil drift, never a stare. */
+@keyframes lynara-gaze-drift {
+  0%, 100% { transform: translate(0, 0); }
+  28% { transform: translate(1.3px, 0.2px); }
+  55% { transform: translate(-1.1px, -0.3px); }
+  78% { transform: translate(0.4px, 0.4px); }
+}
+.lynara-gaze {
+  transform-box: view-box;
+  animation: lynara-gaze-drift 9.5s ease-in-out infinite;
+}
+
+@keyframes lynara-mouth-talk {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(0.4px) scaleY(1.04); }
+}
+.lynara-mouth {
+  transform-box: view-box;
+  transform-origin: 210px 246px;
+  animation: lynara-mouth-talk 2.6s ease-in-out infinite;
+}
+
+@keyframes lynara-hair-sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(0.7deg); }
+}
+.lynara-hair-back,
+.lynara-hair-front,
+.lynara-hair-side {
+  transform-box: view-box;
+  transform-origin: 210px 110px;
+  animation: lynara-hair-sway 7s ease-in-out infinite;
+}
+.lynara-hair-front {
+  animation-duration: 5.4s;
+  animation-direction: alternate-reverse;
+}
+.lynara-hair-side {
+  transform-origin: 210px 120px;
+  animation-duration: 8.5s;
+}
+
+@keyframes lynara-band-scan {
+  0% { transform: translateY(-40px); opacity: 0; }
+  8% { opacity: 0.9; }
+  85% { opacity: 0.55; }
+  100% { transform: translateY(560px); opacity: 0; }
+}
+.lynara-band {
+  animation: lynara-band-scan 4.8s linear infinite;
+}
+
+@keyframes lynara-flow-dash {
+  to { stroke-dashoffset: -22; }
+}
+.lynara-flow {
+  stroke-dasharray: 5 4;
+  animation: lynara-flow-dash 1.2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lynara-grid,
+  .lynara-scanlines,
+  .lynara-beam,
+  .lynara-mote,
+  .lynara-figure,
+  .lynara-flicker,
+  .lynara-blink,
+  .lynara-gaze,
+  .lynara-mouth,
+  .lynara-hair-back,
+  .lynara-hair-front,
+  .lynara-hair-side,
+  .lynara-band,
+  .lynara-flow {
+    animation: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Multi-agent console: ambient grid, orbital avatars, scanline and skeletons.
+   Every animation is purely decorative: states come from the real API payload.
+   --------------------------------------------------------------------------- */
+.ja-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 78%);
+}
+
+@keyframes ja-ring-spin {
+  to { transform: rotate(360deg); }
+}
+.ja-avatar-ring {
+  animation: ja-ring-spin 18s linear infinite;
+  transform-origin: center;
+}
+.ja-avatar-ring--fast {
+  animation-duration: 3.2s;
+}
+
+@keyframes ja-scan {
+  0% { transform: translateY(-6px); opacity: 0; }
+  20% { opacity: 0.9; }
+  80% { opacity: 0.6; }
+  100% { transform: translateY(46px); opacity: 0; }
+}
+.ja-scanline {
+  animation: ja-scan 1.8s ease-in-out infinite;
+}
+
+@keyframes ja-shimmer-sweep {
+  0% { background-position: -180% 0; }
+  100% { background-position: 180% 0; }
+}
+.ja-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.10) 0%,
+    rgba(148, 163, 184, 0.28) 45%,
+    rgba(148, 163, 184, 0.10) 90%
+  );
+  background-size: 200% 100%;
+  animation: ja-shimmer-sweep 1.6s ease-in-out infinite;
+}
+
+@keyframes ja-result-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ja-result {
+  animation: ja-result-in 0.45s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ja-avatar-ring,
+  .ja-avatar-ring--fast,
+  .ja-scanline,
+  .ja-shimmer,
+  .ja-result {
+    animation: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   PageAtmosphere3D : couche 3D immersive des pages (hors accueil / multi-agent)
+   Couche purement dÃ©corative, sous le contenu (z-10) et au-dessus du fond.
+   --------------------------------------------------------------------------- */
+.jyntra-page3d-canvas {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+/* Voile noir semi-transparent appliqué uniquement aux fonds 3D privés.
+   Il se place au-dessus du canvas et sous le contenu (z-10). */
+.jyntra-private-3d-veil {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* En thème clair, un voile légèrement plus doux conserve la teinte du fond
+   tout en gardant la même sobriété perçue. */
+html.light .jyntra-private-3d-veil {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.jyntra-page3d-vignette {
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(8, 11, 16, 0.07) 0%, rgba(8, 11, 16, 0.04) 48%, rgba(8, 11, 16, 0.34) 100%),
+    linear-gradient(180deg, rgba(8, 11, 16, 0.2) 0%, transparent 16%, transparent 80%, rgba(8, 11, 16, 0.28) 100%);
+}
+
+.jyntra-page3d-base {
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(37, 99, 235, 0.28) 0%, rgba(29, 78, 216, 0.12) 38%, transparent 68%),
+    radial-gradient(ellipse at 100% 88%, rgba(34, 211, 238, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse at 0% 72%, rgba(59, 130, 246, 0.12) 0%, transparent 52%);
+}
+
+html.light .jyntra-page3d-base {
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(37, 99, 235, 0.22) 0%, transparent 62%),
+    radial-gradient(ellipse at 100% 88%, rgba(34, 211, 238, 0.16) 0%, transparent 55%),
+    radial-gradient(ellipse at 0% 72%, rgba(59, 130, 246, 0.16) 0%, transparent 52%);
+}
+
+html.light .jyntra-page3d-canvas {
+  opacity: 1;
+}
+
+/* Grandes cartes "hero" qui laissaient la 3D totalement invisible : dÃ©gradÃ©
+   directionnel sombre cÃ´tÃ© texte, plus ouvert cÃ´tÃ© composition 3D. */
+.jyntra-hero-glass {
+  background:
+    linear-gradient(
+      100deg,
+      rgba(7, 19, 26, 0.9) 0%,
+      rgba(8, 11, 16, 0.78) 50%,
+      rgba(10, 15, 26, 0.46) 100%
+    );
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+html.light .jyntra-hero-glass {
+  background:
+    linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0.93) 0%,
+      rgba(255, 255, 255, 0.84) 50%,
+      rgba(240, 249, 255, 0.72) 100%
+    );
+}
+
+.jyntra-hero-glass--academy {
+  background:
+    linear-gradient(
+      95deg,
+      rgba(8, 11, 16, 0.9) 0%,
+      rgba(13, 20, 32, 0.76) 48%,
+      rgba(8, 11, 16, 0.44) 100%
+    );
+}
+
+html.light .jyntra-hero-glass--academy {
+  background:
+    linear-gradient(
+      95deg,
+      rgba(255, 255, 255, 0.94) 0%,
+      rgba(255, 255, 255, 0.84) 48%,
+      rgba(240, 249, 255, 0.72) 100%
+    );
+}
+
+html.light .jyntra-page3d-vignette {
+  background:
+    radial-gradient(ellipse at 50% 38%, transparent 0%, rgba(248, 250, 252, 0.06) 40%, rgba(248, 250, 252, 0.1) 100%),
+    linear-gradient(180deg, rgba(248, 250, 252, 0.05) 0%, transparent 45%, transparent 55%, rgba(248, 250, 252, 0.05) 100%);
+}
+
+/* Fallback Ã©lÃ©gant si WebGL est indisponible : composition de halos, grille et
+   anneaux animÃ©s, sans dÃ©pendance ni blocage du contenu. */
+.jyntra-3d-fallback {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.jyntra-3d-fallback-grid {
+  position: absolute;
+  inset: -10%;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.10) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(ellipse at 50% 45%, black 10%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 45%, black 10%, transparent 78%);
+  transform: perspective(600px) rotateX(58deg) scale(1.5);
+  transform-origin: center 70%;
+}
+
+.jyntra-3d-fallback-core {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(58vmin, 560px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%;
+  background:
+    radial-gradient(circle at 38% 34%, rgba(224, 242, 254, 0.75), rgba(34, 211, 238, 0.28) 32%, rgba(37, 99, 235, 0.16) 58%, transparent 72%);
+  filter: blur(18px);
+  animation: jyntra-fallback-breathe 7s ease-in-out infinite;
+}
+
+.jyntra-3d-fallback-ring {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(64vmin, 640px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-radius: 50%;
+  box-shadow: 0 0 40px rgba(37, 99, 235, 0.18) inset;
+  animation: jyntra-fallback-spin 26s linear infinite;
+}
+
+.jyntra-3d-fallback-ring--a::before,
+.jyntra-3d-fallback-ring--b::before {
+  content: '';
+  position: absolute;
+  inset: 12%;
+  border: 1px dashed rgba(96, 165, 250, 0.35);
+  border-radius: 50%;
+}
+
+.jyntra-3d-fallback-ring--b {
+  width: min(46vmin, 460px);
+  animation-duration: 18s;
+  animation-direction: reverse;
+  border-color: rgba(59, 130, 246, 0.32);
+}
+
+@keyframes jyntra-fallback-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+}
+
+@keyframes jyntra-fallback-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jyntra-3d-fallback-core,
+  .jyntra-3d-fallback-ring {
+    animation: none !important;
+  }
+}
+
+html.light .jyntra-3d-fallback {
+  opacity: 0.35;
+}
+
+/* ==================================================================
+   JYNTRA AI â€” LIGHT THEME 2.0
+   Mode jour premium : surfaces chaudes, contrastes naturels,
+   accents FinTech discrets. Toutes les rÃ¨gles sont scopÃ©es Ã 
+   `html.light` : le mode nuit reste strictement inchangÃ©.
+   ================================================================== */
+
+html.light {
+  --jy-bg: #f4f7fb;
+  --jy-surface: #ffffff;
+  --jy-surface-2: #f8fafc;
+  --jy-surface-3: #eef2f7;
+  --jy-surface-4: #e5ebf3;
+  --jy-border: #dce4ee;
+  --jy-border-strong: #cad5e2;
+  --jy-text: #0f172a;
+  --jy-text-2: #334155;
+  --jy-muted: #52627a;
+  --jy-muted-2: #5d6c81;
+  --jy-cyan: #0b6b80;
+  --jy-orange: #b8430b;
+  color-scheme: light;
+}
+
+html.light body {
+  background-color: var(--jy-bg) !important;
+  color: var(--jy-text) !important;
+}
+
+/* Fonds applicatifs : blanc cassÃ© plutÃ´t que blanc pur. */
+html.light .bg-slate-50 {
+  background-color: var(--jy-bg) !important;
+}
+
+/* Surfaces : cartes, panneaux, barres. */
+html.light [class*="bg-slate-900/"]:not(.keep-white):not(.keep-white *) {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+}
+html.light [class*="bg-slate-950/"]:not(.keep-white):not(.keep-white *) {
+  background-color: rgba(248, 250, 252, 0.96) !important;
+}
+html.light [class*="bg-slate-800/"]:not(.keep-white):not(.keep-white *) {
+  background-color: rgba(238, 242, 247, 0.92) !important;
+}
+html.light .bg-slate-900 {
+  background-color: var(--jy-surface-2) !important;
+}
+html.light .bg-slate-950 {
+  background-color: var(--jy-surface-3) !important;
+}
+html.light .bg-slate-800 {
+  background-color: var(--jy-surface-3) !important;
+}
+html.light .bg-slate-700 {
+  background-color: var(--jy-surface-4) !important;
+}
+html.light .bg-slate-600 {
+  background-color: #d7e0ea !important;
+}
+
+/* Champs de saisie : toujours blancs pour se dÃ©tacher des cartes. */
+html.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html.light textarea,
+html.light select {
+  background-color: #ffffff !important;
+  border-color: var(--jy-border-strong) !important;
+  color: var(--jy-text) !important;
+}
+html.light input:focus,
+html.light textarea:focus,
+html.light select:focus {
+  border-color: #0e7490 !important;
+  box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.12) !important;
+}
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: var(--jy-muted) !important;
+  opacity: 1 !important;
+}
+
+/* Texte : hiÃ©rarchie douce mais toujours lisible. */
+html.light .text-white:not(.keep-white *) {
+  color: var(--jy-text) !important;
+}
+html.light .text-slate-50,
+html.light .text-slate-100 {
+  color: var(--jy-text) !important;
+}
+html.light .text-slate-200 {
+  color: var(--jy-text-2) !important;
+}
+html.light .text-slate-300 {
+  color: var(--jy-text-2) !important;
+}
+html.light .text-slate-400:not(.keep-white *) {
+  color: var(--jy-muted) !important;
+}
+html.light .text-slate-500:not(.keep-white *) {
+  color: var(--jy-muted-2) !important;
+}
+html.light .text-slate-600:not(.keep-white *) {
+  color: #475569 !important;
+}
+html.light .text-slate-700:not(.keep-white *) {
+  color: #334155 !important;
+}
+html.light .text-slate-800,
+html.light .text-slate-900,
+html.light .text-slate-950 {
+  color: var(--jy-text) !important;
+}
+
+/* Accents : variantes 300/400/500 lisibles sur fond clair. */
+html.light .text-cyan-100:not(.keep-white *),
+html.light .text-cyan-200:not(.keep-white *),
+html.light .text-cyan-300:not(.keep-white *),
+html.light .text-cyan-400:not(.keep-white *),
+html.light .text-cyan-500:not(.keep-white *) {
+  color: var(--jy-cyan) !important;
+}
+html.light .text-sky-400:not(.keep-white *),
+html.light .text-sky-500:not(.keep-white *) {
+  color: #0369a1 !important;
+}
+html.light .text-blue-300:not(.keep-white *),
+html.light .text-blue-400:not(.keep-white *),
+html.light .text-blue-500:not(.keep-white *) {
+  color: #1d4ed8 !important;
+}
+html.light .text-orange-300:not(.keep-white *),
+html.light .text-orange-400:not(.keep-white *),
+html.light .text-orange-500:not(.keep-white *) {
+  color: var(--jy-orange) !important;
+}
+html.light .text-amber-100:not(.keep-white *),
+html.light .text-amber-200:not(.keep-white *),
+html.light .text-amber-300:not(.keep-white *),
+html.light .text-amber-400:not(.keep-white *),
+html.light .text-amber-500:not(.keep-white *) {
+  color: #92400e !important;
+}
+html.light .text-emerald-300:not(.keep-white *),
+html.light .text-emerald-400:not(.keep-white *),
+html.light .text-emerald-500:not(.keep-white *) {
+  color: #047857 !important;
+}
+html.light .text-rose-200:not(.keep-white *),
+html.light .text-rose-300:not(.keep-white *),
+html.light .text-rose-400:not(.keep-white *),
+html.light .text-rose-500:not(.keep-white *) {
+  color: #9f1239 !important;
+}
+html.light .text-red-400:not(.keep-white *),
+html.light .text-red-500:not(.keep-white *) {
+  color: #b91c1c !important;
+}
+html.light .text-violet-300:not(.keep-white *),
+html.light .text-violet-400:not(.keep-white *),
+html.light .text-violet-500:not(.keep-white *) {
+  color: #6d28d9 !important;
+}
+html.light .text-purple-400:not(.keep-white *),
+html.light .text-fuchsia-500:not(.keep-white *) {
+  color: #86198f !important;
+}
+
+/* ---------- Blocs Meta Intelligence : adaptation mode jour ---------- */
+html.light .from-emerald-500\\/10,
+html.light .from-purple-500\\/10,
+html.light .from-cyan-500\\/10,
+html.light .from-orange-500\\/10,
+html.light .from-rose-500\\/10 {
+  --tw-gradient-from: rgba(255, 255, 255, 0.55) !important;
+}
+html.light .to-slate-900\\/60 {
+  --tw-gradient-to: rgba(248, 250, 252, 0.55) !important;
+}
+html.light .border-emerald-500\\/30,
+html.light .border-purple-500\\/30,
+html.light .border-cyan-500\\/30,
+html.light .border-orange-500\\/30,
+html.light .border-rose-500\\/30 {
+  border-color: rgba(200, 210, 220, 0.55) !important;
+}
+html.light .bg-slate-950 {
+  background-color: #ffffff !important;
+}
+html.light .border-slate-800 {
+  border-color: #cbd5e1 !important;
+}
+html.light .text-white {
+  color: #0f172a !important;
+}
+html.light .text-slate-400 {
+  color: #52627a !important;
+}
+html.light .text-slate-200 {
+  color: #334155 !important;
+}
+html.light .text-slate-300 {
+  color: #475569 !important;
+}
+html.light .text-emerald-400 { color: #047857 !important; }
+html.light .text-orange-400 { color: #c2410c !important; }
+html.light .text-cyan-400 { color: #0e7490 !important; }
+html.light .text-purple-400 { color: #6d28d9 !important; }
+html.light .text-rose-400 { color: #be123c !important; }
+html.light .text-amber-400 { color: #b45309 !important; }
+html.light .text-emerald-300 { color: #047857 !important; }
+html.light .text-purple-300 { color: #6d28d9 !important; }
+html.light .text-cyan-300 { color: #0e7490 !important; }
+html.light .text-orange-300 { color: #c2410c !important; }
+html.light .text-rose-300 { color: #be123c !important; }
+
+/* Hover des boutons Meta en mode jour */
+html.light .hover\\:border-orange-500\\/60:hover {
+  border-color: rgba(194, 65, 12, 0.45) !important;
+}
+
+/* Bordures : fines, froides, jamais noires. */
+html.light .border-slate-500:not(.keep-white *),
+html.light .border-slate-600:not(.keep-white *) {
+  border-color: var(--jy-border-strong) !important;
+}
+html.light .border-slate-700:not(.keep-white *),
+html.light [class*="border-slate-700/"]:not(.keep-white) {
+  border-color: var(--jy-border) !important;
+}
+html.light .border-slate-800:not(.keep-white *),
+html.light [class*="border-slate-800/"]:not(.keep-white) {
+  border-color: var(--jy-border) !important;
+}
+html.light .border-slate-900,
+html.light .border-slate-950 {
+  border-color: var(--jy-border) !important;
+}
+html.light [class*="divide-slate-800/"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #e4eaf2 !important;
+}
+
+/* Menus dÃ©roulants, tooltips, modales. */
+html.light [role="menu"],
+html.light [role="dialog"],
+html.light [role="tooltip"] {
+  background-color: #ffffff !important;
+  border-color: var(--jy-border) !important;
+  color: var(--jy-text) !important;
+  box-shadow: 0 18px 50px -24px rgba(15, 23, 42, 0.28) !important;
+}
+html.light select option {
+  background-color: #ffffff !important;
+  color: var(--jy-text) !important;
+}
+
+/* Hover : plus de texte blanc sur fond clair. */
+html.light .hover\:bg-slate-800:hover,
+html.light .hover\:bg-slate-800\/60:hover,
+html.light .hover\:bg-slate-800\/80:hover,
+html.light .hover\:bg-slate-700:hover,
+html.light .hover\:bg-slate-700\/70:hover {
+  background-color: var(--jy-surface-3) !important;
+}
+html.light .hover\:text-white:hover {
+  color: var(--jy-text) !important;
+}
+
+/* Ombres : douces, jamais lourdes. */
+html.light .shadow-2xl {
+  box-shadow: 0 22px 60px -32px rgba(15, 23, 42, 0.22) !important;
+}
+html.light .shadow-xl {
+  box-shadow: 0 18px 45px -28px rgba(15, 23, 42, 0.2) !important;
+}
+html.light .shadow-lg {
+  box-shadow: 0 12px 30px -20px rgba(15, 23, 42, 0.18) !important;
+}
+
+/* Scrollbars et sÃ©lection. */
+html.light ::selection {
+  background: rgba(14, 116, 144, 0.16);
+  color: #0f172a;
+}
+html.light ::-webkit-scrollbar-track {
+  background: #eaf0f6;
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: #c3cfdd;
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #f97316;
+}
+
+/* Boutons et badges pleins : texte blanc sur accent assombri (premium + accessible). */
+html.light body .bg-cyan-500:not(.keep-white *),
+html.light body .bg-orange-500:not(.keep-white *),
+html.light body .bg-emerald-500:not(.keep-white *),
+html.light body .bg-blue-500:not(.keep-white *),
+html.light body .bg-violet-500:not(.keep-white *),
+html.light body .bg-rose-500:not(.keep-white *),
+html.light body .bg-sky-500:not(.keep-white *) {
+  background-color: #0e7490 !important;
+  color: #ffffff !important;
+}
+html.light body .bg-orange-500:not(.keep-white *) { background-color: #c2410c !important; }
+html.light body .bg-emerald-500:not(.keep-white *) { background-color: #047857 !important; }
+html.light body .bg-blue-500:not(.keep-white *) { background-color: #1d4ed8 !important; }
+html.light body .bg-violet-500:not(.keep-white *) { background-color: #6d28d9 !important; }
+html.light body .bg-rose-500:not(.keep-white *) { background-color: #be123c !important; }
+html.light body .bg-sky-500:not(.keep-white *) { background-color: #0369a1 !important; }
+html.light body .from-orange-500:not(.keep-white *),
+html.light body .from-cyan-500:not(.keep-white *),
+html.light body .from-emerald-500:not(.keep-white *),
+html.light body .from-blue-500:not(.keep-white *),
+html.light body .from-violet-500:not(.keep-white *),
+html.light body .from-sky-500:not(.keep-white *) {
+  color: #ffffff !important;
+}
+
+/* Ã‰lÃ©vation douce des cartes translucides. */
+html.light [class*="bg-slate-900/"][class*="rounded"],
+html.light [class*="bg-slate-950/"][class*="rounded"] {
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 30px -22px rgba(15, 23, 42, 0.22) !important;
+}
+
+
+/* Restaure la couleur de texte sur les dÃ©gradÃ©s de surface claire. */
+html.light .from-slate-900,
+html.light .from-slate-950,
+html.light .to-slate-950,
+html.light .to-slate-900,
+html.light .via-slate-900,
+html.light .via-slate-950 {
+  color: var(--jy-text) !important;
+}

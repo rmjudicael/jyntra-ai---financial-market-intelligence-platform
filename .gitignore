@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+bun.lock
+
+# Local-only directories
+.agents/
+.data/
+
+# Build outputs
+build/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+server.log
+
+# Runtime data
+.data/
+
+# Temporary files
+*.tmp
+*.temp
+*.probe
+*.b64
+
+# Debug / probe scripts (one-time use, not part of the application)
+_patch.mjs
+_probe*
+test_parse.js
+_split.mjs
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Deployment
+.render/
+.vercel/
+.output/
+.next/
+
+# Test coverage
+coverage/
+
+# Local only
+*.local
