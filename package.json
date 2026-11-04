@@ -16,7 +16,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
-    "test": "tsx tests/aiEngine.fallback.test.ts && tsx tests/workflowStore.test.ts && tsx tests/workflowBuilder.test.ts && tsx tests/detectLanguage.test.ts && tsx tests/jyntrack.test.ts && tsx src/i18n/translations.test.ts && tsx tests/riskCalculator.test.ts && tsx tests/backtestEngine.test.ts && tsx tests/metaOnly.test.ts"
+    "test": "tsx tests/aiEngine.fallback.test.ts && tsx tests/workflowStore.test.ts && tsx tests/workflowBuilder.test.ts && tsx tests/detectLanguage.test.ts && tsx tests/jyntrack.test.ts && tsx src/i18n/translations.test.ts && tsx tests/riskCalculator.test.ts && tsx tests/backtestEngine.test.ts && tsx tests/metaOnly.test.ts && tsx tests/metaMultimodal.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.32.0",
