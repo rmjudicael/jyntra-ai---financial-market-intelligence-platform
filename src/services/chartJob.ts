@@ -25,6 +25,8 @@ export interface ChartJobState {
   workflowRunId: string;
   imageBase64?: string;
   preferMuseImage?: boolean;
+  metaOnly?: boolean;
+  model?: string;
   result?: any;
   error?: string;
   steps?: Array<{ id: string; title: string; status: string; detail?: string; at?: number }>;
@@ -211,6 +213,8 @@ export interface StartChartJobInput {
   customPrompt?: string;
   imageBase64?: string;
   preferMuseImage?: boolean;
+  metaOnly?: boolean;
+  model?: string;
   userId: string;
 }
 
@@ -227,6 +231,8 @@ export async function startChartJob(input: StartChartJobInput): Promise<ChartJob
   };
   if (input.imageBase64) payload.imageBase64 = input.imageBase64;
   if (input.preferMuseImage) payload.preferMuseImage = true;
+  if (input.metaOnly) payload.metaOnly = true;
+  if (input.model) payload.model = input.model;
 
   const res = await fetch('/api/ai/analyze-chart', {
     method: 'POST',
@@ -251,6 +257,8 @@ export async function startChartJob(input: StartChartJobInput): Promise<ChartJob
     timeframe: input.timeframe,
     workflowRunId: run.id,
     imageBase64: input.imageBase64,
+    metaOnly: input.metaOnly,
+    model: input.model,
     steps: data.steps,
   };
   startedAt = Date.now();

@@ -145,6 +145,10 @@ export const ChartAnalysisPage: React.FC<ChartAnalysisPageProps> = ({
   const [museImageUrl, setMuseImageUrl] = useState<string>('');
   /** Whether to request Muse Image generation for the annotated chart. */
   const [preferMuseImage, setPreferMuseImage] = useState<boolean>(false);
+  /** Force Meta-only execution (no Gemini/free-tier fallback). */
+  const [metaOnly, setMetaOnly] = useState<boolean>(false);
+  /** Selected Meta model for analysis. */
+  const [selectedModel, setSelectedModel] = useState<string>('muse-spark-1.3');
   /** Zoom modal state for the annotated chart. */
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
 
@@ -326,6 +330,8 @@ export const ChartAnalysisPage: React.FC<ChartAnalysisPageProps> = ({
         customPrompt,
         imageBase64: prepared || undefined,
         preferMuseImage,
+        metaOnly,
+        model: selectedModel,
         userId: session.userId,
       });
       setJob(state);
@@ -669,6 +675,44 @@ export const ChartAnalysisPage: React.FC<ChartAnalysisPageProps> = ({
                   {t.chart.museImageHint}
                 </span>
               )}
+            </div>
+
+            {/* Meta-only execution toggle */}
+            <div className="flex items-center gap-3 px-2">
+              <input
+                id="meta-only"
+                type="checkbox"
+                checked={metaOnly}
+                onChange={(e) => setMetaOnly(e.target.checked)}
+                className="w-4 h-4 rounded border-slate-600 bg-slate-950 text-emerald-500 focus:ring-emerald-500"
+              />
+              <label htmlFor="meta-only" className="text-xs text-slate-300 cursor-pointer flex items-center gap-2">
+                <span className="text-emerald-400">▲</span> {t.chart.metaOnlyLabel}
+              </label>
+              {metaOnly && (
+                <span className="text-[10px] text-emerald-400/80 font-mono">
+                  {t.chart.metaOnlyHint}
+                </span>
+              )}
+            </div>
+
+            {/* Meta model selector */}
+            <div className="px-2">
+              <label className="block text-xs font-medium text-slate-400 mb-1">{t.chart.modelLabel}</label>
+              <select
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+                disabled={!metaOnly}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono font-bold text-cyan-400 focus:outline-none focus:border-cyan-500 cursor-pointer opacity-50 disabled:cursor-not-allowed"
+              >
+                <option value="muse-spark-1.3">Muse Spark 1.3 (équilibré)</option>
+                <option value="muse-wonder-1.0">Muse Wonder 1.0 (raisonnement approfondi)</option>
+                <option value="muse-spark-1.2">Muse Spark 1.2 (alternatif)</option>
+                <option value="muse-spark-1.1">Muse Spark 1.1 (light)</option>
+              </select>
+              <span className="text-[10px] text-slate-500 font-mono block mt-1">
+                {t.chart.modelHint}
+              </span>
             </div>
 
             <button
@@ -1151,6 +1195,37 @@ export const ChartAnalysisPage: React.FC<ChartAnalysisPageProps> = ({
               <p className="text-xs text-orange-400/70">
                 {t.chart.museImageNote}
               </p>
+            </div>
+          )}
+
+          {/* Meta AI execution trace — visible when analysis came from Meta models */}
+          {analysisResult?.trace && analysisResult.trace.length > 0 && (
+            <div className="md:col-span-2 xl:col-span-12 p-4 rounded-xl bg-emerald-500/[0.03] border border-emerald-500/20 space-y-2.5">
+              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-emerald-400 font-mono">
+                <Bot className="w-3 h-3" />
+                <span>{t.chart.metaTraceTitle}</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {analysisResult.trace.map((step: any) => (
+                  <div key={step.id} className="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/60">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className={`w-1.5 h-1.5 shrink-0 rounded-full ${step.status === 'done' ? 'bg-emerald-400' : step.status === 'error' ? 'bg-rose-400' : 'bg-slate-600 animate-pulse'}`} />
+                      <span className="text-xs font-mono text-slate-300 uppercase">{step.id}</span>
+                    </div>
+                    <p className="text-[10px] leading-tight text-slate-400">{step.detail}</p>
+                  </div>
+                ))}
+              </div>
+              {/* Latency summary */}
+              <div className="mt-2 p-2 rounded-lg bg-slate-800/40 border border-slate-700 text-[10px] font-mono text-slate-400 flex items-center justify-between">
+                <span className="flex items-center gap-1">
+                  <span className="w-1 h-1 rounded-full bg-emerald-400" />
+                  {t.chart.metaLatency}
+                </span>
+                <span className="text-emerald-400 font-bold">
+                  {analysisResult.trace.some((s: any) => s.id === 'provider') ? 'Meta AI (vérifié)' : '—'}
+                </span>
+              </div>
             </div>
           )}
         </div>

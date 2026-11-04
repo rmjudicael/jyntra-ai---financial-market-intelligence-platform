@@ -223,6 +223,36 @@ This architecture helps maintain flexibility while keeping provider availability
 
 The platform does not represent a fallback response as a Meta-generated response.
 
+### Meta-only verification mode
+
+JYNTRA AI includes a dedicated **Meta-only mode** that forces the platform to use exclusively Meta AI models, without any fallback to alternative providers. This mode is designed for transparency and verification:
+
+- When enabled, the platform routes all AI reasoning exclusively through Meta models (Muse Spark 1.1/1.2/1.3, Muse Wonder 1.0).
+- If Meta models are unavailable, the platform reports an honest failure instead of silently substituting responses from another provider.
+- Model selection allows users to choose which Meta model variant to use for each analysis.
+
+#### API verification endpoint
+
+`GET /api/ai/verify` — Diagnostic endpoint that reports the Meta AI integration status without exposing any credentials. It checks:
+
+- Whether `META_API_KEY` is configured server-side.
+- Provider catalogue reachability via the Meta endpoint.
+- A minimal real Meta chat call (when `metaOnly` routing is used).
+- Overall verification status: `verified`, `configured_unverified`, or `not_configured`.
+
+This enables operators to confirm Meta API integration before deploying, without revealing API keys in logs or responses.
+
+#### Execution trace
+
+Every analysis response includes an execution trace showing:
+
+- The provider used (Meta AI, Google Gemini, or alternative).
+- The specific model called.
+- Latency measurements.
+- Execution steps with status and details.
+
+Judges and reviewers can verify that responses genuinely originate from Meta models when Meta-only mode is active.
+
 ---
 
 ## Platform Features

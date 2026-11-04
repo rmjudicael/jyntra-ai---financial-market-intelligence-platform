@@ -878,21 +878,21 @@ html.light .text-fuchsia-500:not(.keep-white *) {
 }
 
 /* ---------- Blocs Meta Intelligence : adaptation mode jour ---------- */
-html.light .from-emerald-500\\/10,
-html.light .from-purple-500\\/10,
-html.light .from-cyan-500\\/10,
-html.light .from-orange-500\\/10,
-html.light .from-rose-500\\/10 {
+html.light .from-emerald-500\/10,
+html.light .from-purple-500\/10,
+html.light .from-cyan-500\/10,
+html.light .from-orange-500\/10,
+html.light .from-rose-500\/10 {
   --tw-gradient-from: rgba(255, 255, 255, 0.55) !important;
 }
-html.light .to-slate-900\\/60 {
+html.light .to-slate-900\/60 {
   --tw-gradient-to: rgba(248, 250, 252, 0.55) !important;
 }
-html.light .border-emerald-500\\/30,
-html.light .border-purple-500\\/30,
-html.light .border-cyan-500\\/30,
-html.light .border-orange-500\\/30,
-html.light .border-rose-500\\/30 {
+html.light .border-emerald-500\/30,
+html.light .border-purple-500\/30,
+html.light .border-cyan-500\/30,
+html.light .border-orange-500\/30,
+html.light .border-rose-500\/30 {
   border-color: rgba(200, 210, 220, 0.55) !important;
 }
 html.light .bg-slate-950 {
@@ -926,7 +926,7 @@ html.light .text-orange-300 { color: #c2410c !important; }
 html.light .text-rose-300 { color: #be123c !important; }
 
 /* Hover des boutons Meta en mode jour */
-html.light .hover\\:border-orange-500\\/60:hover {
+html.light .hover\:border-orange-500\/60:hover {
   border-color: rgba(194, 65, 12, 0.45) !important;
 }
 

@@ -253,6 +253,13 @@ export interface Translations {
     noElementDetected: string;
     generatingImageLabel: string;
     closeViewer: string;
+    /** Meta-first execution controls */
+    metaOnlyLabel: string;
+    metaOnlyHint: string;
+    modelLabel: string;
+    modelHint: string;
+    metaTraceTitle: string;
+    metaLatency: string;
   };
   lynara: {
 
@@ -749,6 +756,12 @@ export const translations: Record<SupportedLanguage, Translations> = {
       noElementDetected: 'Aucun élément détecté dans cette analyse.',
       generatingImageLabel: 'Génération de l’image annotée…',
       closeViewer: 'Fermer',
+      metaOnlyLabel: 'Mode Meta uniquement',
+      metaOnlyHint: 'Exclusivement les modèles Meta (pas de secours)',
+      modelLabel: 'Modèle Meta',
+      modelHint: 'Actif uniquement en mode Meta uniquement',
+      metaTraceTitle: 'Trace d’exécution Meta AI',
+      metaLatency: 'Latence',
     },
     lynara: {
       title: 'LYNARA',
@@ -1239,6 +1252,12 @@ export const translations: Record<SupportedLanguage, Translations> = {
       noElementDetected: 'No element detected in this analysis.',
       generatingImageLabel: 'Generating the annotated image…',
       closeViewer: 'Close',
+      metaOnlyLabel: 'Meta-only mode',
+      metaOnlyHint: 'Meta models only (no fallback)',
+      modelLabel: 'Meta model',
+      modelHint: 'Active only in Meta-only mode',
+      metaTraceTitle: 'Meta AI execution trace',
+      metaLatency: 'Latency',
     },
     lynara: {
       title: 'LYNARA',
@@ -1730,6 +1749,12 @@ export const translations: Record<SupportedLanguage, Translations> = {
       noElementDetected: 'Tsy misy singa hita ao amin’ity famakafakana ity.',
       generatingImageLabel: 'Eo am-panamboarana ny sary voamarika…',
       closeViewer: 'Hidio',
+      metaOnlyLabel: 'Fanambadiana Meta ihany',
+      metaOnlyHint: 'Model Meta ihany (tsy misy fampidirana)',
+      modelLabel: 'Model Meta',
+      modelHint: 'Ampiditra raha ny Fanambadiana Meta ihany',
+      metaTraceTitle: 'Traza Meta AI',
+      metaLatency: 'Latence',
     },
     lynara: {
       title: 'LYNARA',

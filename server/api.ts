@@ -535,6 +535,8 @@ app.post('/api/ai/battle', heavyLimit, noStore, async (req: Request, res: Respon
     const symbol = cleanText(req.body?.symbol, 24) || 'BTC/USDT';
     const timeframe = cleanText(req.body?.timeframe, 8) || '1H';
     const candles = req.body?.candles;
+    const metaOnly = req.body?.metaOnly === true;
+    const model = cleanText(req.body?.model, 40);
     if (!Array.isArray(candles) || candles.length < 20) {
       return res.status(400).json({ success: false, error: 'Au moins 20 bougies réelles sont requises pour la bataille.' });
     }
@@ -569,7 +571,7 @@ app.post('/api/ai/battle', heavyLimit, noStore, async (req: Request, res: Respon
 Données : ${JSON.stringify(candles.slice(-90))}.
 Produis un JSON strict avec : instrument, timeframe, visualObservations (trend, marketStructure, keySupports, keyResistances, orderBlocks, fairValueGaps, liquidityZones, breakOfStructure, changeOfCharacter), structure (bosLevel, chochLevel, lastSwingHigh, lastSwingLow), zones (kind, label, top, bottom, price, strength), technicalInterpretation, hypotheses, completeness (isComplete, score, missing), recommendation (BUY/SELL/NO_TRADE), confidence, setupQuality, tradePlan (entry, stopLoss, takeProfit1, takeProfit2, takeProfit3, riskRewardRatio, confirmations, invalidationCondition), riskWarning.
 N'invente aucun prix. Utilise uniquement les valeurs des données fournies.`;
-        const jRes = await aiEngine.runChat([{ role: 'user', content: prompt }], { temperature: 0.15, task: 'reasoning', maxTokens: 6000 });
+        const jRes = await aiEngine.runChat([{ role: 'user', content: prompt }], { temperature: 0.15, task: 'reasoning', maxTokens: 6000, metaOnly, preferredModels: model ? [model] : undefined });
         jyntraResult = {
           success: !!jRes.success && !!jRes.text,
           analysis: jRes.success ? JSON.parse((jRes.text ?? '').replace(/```json/g, '').replace(/```/g, '').trim()) : undefined,
@@ -698,6 +700,8 @@ const handleChartAnalysis = async (req: Request, res: Response) => {
     const imageBase64 = req.body?.imageBase64;
     const preferMuseImage = req.body?.preferMuseImage === true;
     const multiTimeframe = req.body?.multiTimeframe === true;
+    const metaOnly = req.body?.metaOnly === true;
+    const model = cleanText(req.body?.model, 40);
     mark('reception', 'success', imageBase64 ? 'Graphique reçu et validé.' : 'Aucune image : analyse sur données de marché réelles.');
 
     if (!aiClient && !metaApiKey) {
@@ -999,8 +1003,8 @@ Rappel : zones, structure et plan doivent rester cohérents. Si le plan est BUY,
     const chained = await aiEngine.runChat(
       [{ role: 'user', content: userContent }],
       imageBase64
-        ? { temperature: 0.15, task: 'vision', maxTokens: 7000 }
-        : { temperature: 0.15, task: 'reasoning', maxTokens: 5000 },
+        ? { temperature: 0.15, task: 'vision', maxTokens: 7000, metaOnly, preferredModels: model ? [model] : undefined }
+        : { temperature: 0.15, task: 'reasoning', maxTokens: 5000, metaOnly, preferredModels: model ? [model] : undefined },
     );
 
     if (!chained.success || !chained.text) {
@@ -1076,7 +1080,7 @@ Produis une analyse complète au format JSON strict avec : instrument, timeframe
 N'invente aucun prix. Utilise uniquement les valeurs des données fournies.`;
           const liveChained = await aiEngine.runChat(
             [{ role: 'user', content: livePrompt }],
-            { temperature: 0.15, task: 'reasoning', maxTokens: 6000 },
+            { temperature: 0.15, task: 'reasoning', maxTokens: 6000, metaOnly, preferredModels: model ? [model] : undefined },
           );
           if (liveChained.success && liveChained.text) {
             try {
@@ -1211,6 +1215,8 @@ app.post('/api/ai/multi-agents', chatLimit, noStore, async (req: Request, res: R
     const timeframe = cleanText(req.body?.timeframe, 8) || '1H';
     const contextData = cleanText(req.body?.contextData, 6000);
     const priorAnalysis = req.body?.priorAnalysis ?? null;
+    const metaOnly = req.body?.metaOnly === true;
+    const model = cleanText(req.body?.model, 40);
 
     // Server-side prerequisite: the debate arbitrates a real chart analysis.
     // Direct API calls cannot bypass it (the UI checks the same rule).
@@ -1290,7 +1296,7 @@ Fournis impérativement un JSON pur :
   }
 }`;
 
-    const chained = await aiEngine.runChat([{ role: 'user', content: prompt + '\nRéponds uniquement en JSON strict, sans markdown.' }], { temperature: 0.3, task: 'agents', maxTokens: 4096 });
+    const chained = await aiEngine.runChat([{ role: 'user', content: prompt + '\nRéponds uniquement en JSON strict, sans markdown.' }], { temperature: 0.3, task: 'agents', maxTokens: 4096, metaOnly, preferredModels: model ? [model] : undefined });
     if (!chained.success || !chained.text) return res.status(503).json({ success: false, code: chained.reason, error: ANALYSIS_FAILED });
     const responseText = chained.text;
     let data: any;
@@ -1329,6 +1335,8 @@ const handleLynaraChat = async (req: Request, res: Response) => {
     const userName = cleanText(req.body?.userName, 60) || 'Trader';
     const audioBase64 = req.body?.audioBase64;
     const audioMime = cleanText(req.body?.audioMime, 60) || 'audio/webm';
+    const metaOnly = req.body?.metaOnly === true;
+    const model = cleanText(req.body?.model, 40);
 
     // Real Muse Voice Transcribe attempt when the client sends recorded audio
     // and the provider actually exposes its transcription route.
@@ -1428,7 +1436,7 @@ IDENTITÉ & ATTRIBUTS :
       : `\nLANGUE DE RÉPONSE : détecte toi-même la langue du dernier message utilisateur et réponds dans cette langue.`;
     chatMessages[0] = { role: 'system', content: systemInstruction + langInstruction };
 
-    const chained = await aiEngine.runChat(chatMessages, { temperature: 0.55, task: 'reasoning', maxTokens: 2200 });
+    const chained = await aiEngine.runChat(chatMessages, { temperature: 0.55, task: 'reasoning', maxTokens: 2200, metaOnly, preferredModels: model ? [model] : undefined });
     if (!chained.success || !chained.text) {
       return res.status(503).json({ success: false, code: chained.reason || 'AI_NOT_CONFIGURED', error: SERVICE_UNAVAILABLE });
     }
