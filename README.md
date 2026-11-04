@@ -1,4 +1,4 @@
-# JYNTRA AI — Your AI. Your Edge.
+# JYNTRA AI - Your AI. Your Edge.
 
 <p align="center">
   <img src="public/assets/logo.png" alt="JYNTRA AI Logo" width="150" />
@@ -28,7 +28,7 @@
 
 ---
 
-## 🎬 Product Demonstration
+## Product Demonstration
 
 <p align="center">
   <a href="https://youtu.be/wIKQPydzHrI">
@@ -52,7 +52,7 @@
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
 - [Overview](<#-overview>)
 - [The Problem](<#-the-problem>)
@@ -76,7 +76,7 @@
 
 ---
 
-## 🌐 Overview
+## Overview
 
 **JYNTRA AI — Your AI. Your Edge.** is an AI-powered financial intelligence platform designed to help users explore financial markets through a structured combination of market data, technical analysis, multimodal artificial intelligence, multi-agent reasoning, and quantitative research.
 
@@ -97,7 +97,7 @@ https://jyntra-ai-financial-market-intelligence.onrender.com/
 
 ---
 
-## 🎯 The Problem
+## The Problem
 
 Financial market analysis is often fragmented.
 
@@ -118,7 +118,7 @@ Artificial intelligence introduces new possibilities, but simply asking a chatbo
 
 A useful system must consider multiple perspectives, distinguish observations from interpretations, evaluate uncertainty, and make its reasoning process easier to examine.
 
-## 💡 The JYNTRA AI Approach
+## The JYNTRA AI Approach
 
 JYNTRA AI brings these capabilities into a unified financial intelligence environment.
 
@@ -144,7 +144,7 @@ This distinction is fundamental to the philosophy of JYNTRA AI.
 
 ---
 
-## 🏆 Meta Global AI Hackathon 2026
+## Meta Global AI Hackathon 2026
 
 JYNTRA AI was developed for the **Meta Global AI Hackathon 2026**.
 
@@ -173,7 +173,7 @@ It demonstrates an exploration of how AI can become part of a complete software 
 
 ---
 
-## 🤖 Meta AI Integration
+## Meta AI Integration
 
 Meta AI technologies are an important part of the JYNTRA AI experience.
 
@@ -225,7 +225,7 @@ The platform does not represent a fallback response as a Meta-generated response
 
 ---
 
-## 🚀 Platform Features
+## Platform Features
 
 JYNTRA AI brings several specialized capabilities together in a single environment.
 
@@ -301,7 +301,7 @@ The objective is to encourage more consistent and documented analytical practice
 
 ---
 
-## 🧠 Multi-Agent Intelligence
+## Multi-Agent Intelligence
 
 One of the central ideas behind JYNTRA AI is the use of specialized analytical perspectives.
 
@@ -341,7 +341,7 @@ These outputs should be understood as analytical classifications, not instructio
 
 ---
 
-## 📊 JYNTRACK — Quantitative Research
+## JYNTRACK - Quantitative Research
 
 JYNTRACK is the quantitative experimentation environment within JYNTRA AI.
 
@@ -385,7 +385,7 @@ The purpose is to encourage evidence-based investigation rather than unsupported
 
 ---
 
-## 🌍 Financial Data Infrastructure
+## Financial Data Infrastructure
 
 JYNTRA AI connects to external sources of financial and market information.
 
@@ -410,7 +410,7 @@ The availability, freshness, and completeness of information depend on the sourc
 
 ---
 
-## 🏗️ Technical Architecture
+## Technical Architecture
 
 JYNTRA AI combines a modern web frontend, a backend API, AI integrations, external data sources, and specialized analytical modules.
 
@@ -468,7 +468,7 @@ Specialized modules organize chart analysis, multi-agent reasoning, risk assessm
 
 ---
 
-## ⚙️ Technology Stack
+## Technology Stack
 
 JYNTRA AI is built using a modern JavaScript and TypeScript ecosystem.
 
@@ -489,41 +489,41 @@ The architecture combines interactive frontend development, backend services, AI
 
 ---
 
-## 🖥️ Product Showcase
+## Product Showcase
 
 The following section presents selected visual elements from the JYNTRA AI interface.
 
 ### Platform Identity
 
 <p align="center">
-  <img src="public/assets/jyntra_logo_1793088270760.jpg" alt="JYNTRA AI visual identity" width="90%" />
+  <img src="I.jpg" alt="JYNTRA AI visual identity" width="90%" />
 </p>
 
 ### Chart Analysis
 
 <p align="center">
-  <img src="public/assets/chart-analysis.jpg" alt="JYNTRA AI chart analysis interface" width="90%" />
+  <img src="public/assets/C.jpg" alt="JYNTRA AI chart analysis interface" width="90%" />
 </p>
 
 ### Multi-Agent Intelligence
 
 <p align="center">
-  <img src="public/assets/chart_ai_multiagent_1793088296716.jpg" alt="JYNTRA AI multi-agent chart analysis" width="90%" />
+  <img src="public/assets/M.jpg" alt="JYNTRA AI multi-agent chart analysis" width="90%" />
 </p>
 
 ### LYNARA AI
 
 <p align="center">
-  <img src="public/assets/jarvis-hologram.jpg" alt="LYNARA AI assistant interface" width="90%" />
+  <img src="public/assets/L1.jpg" alt="LYNARA AI assistant interface" width="90%" />
 </p>
 
 <p align="center">
-  <img src="public/assets/jarvis_holographic_ai_1793088284614.jpg" alt="LYNARA AI holographic visual experience" width="90%" />
+  <img src="public/assets/L2.jpg" alt="LYNARA AI holographic visual experience" width="90%" />
 </p>
 
 ---
 
-## 💻 Getting Started
+## Getting Started
 
 You can run JYNTRA AI locally to explore its development environment.
 
@@ -569,7 +569,7 @@ Open the local URL displayed by Vite in your terminal.
 
 ---
 
-## 🔧 Environment Configuration
+## Environment Configuration
 
 JYNTRA AI may require provider credentials and configuration values to enable its external integrations.
 
@@ -592,7 +592,7 @@ The application experience may vary depending on which integrations are configur
 
 ---
 
-## 🧪 Development
+## Development
 
 The project uses npm-based development workflows.
 
@@ -616,7 +616,7 @@ A successful production build does not independently guarantee the availability 
 
 ---
 
-## 🔐 Security and Responsible AI
+## Security and Responsible AI
 
 JYNTRA AI is designed as an analytical and research-oriented platform.
 
@@ -648,7 +648,7 @@ JYNTRA AI is not presented as an autonomous trading execution system.
 
 ---
 
-## ⚠️ Limitations
+## Limitations
 
 JYNTRA AI is an evolving software project.
 
@@ -669,7 +669,7 @@ The platform should not be considered a financial adviser, investment recommenda
 
 ---
 
-## 🔭 Future Vision
+## Future Vision
 
 JYNTRA AI explores the possibilities of combining advanced AI technologies with financial intelligence.
 
@@ -687,24 +687,20 @@ These are development directions, not claims that every capability is already av
 
 ---
 
-## 👨‍💻 About the Developer
+## About the Developer
 
 <p align="center">
   <strong>RAMIELSON Geoffroy Judicaël</strong>
 </p>
-
 <p align="center">
   Full Stack Developer · Master 1 Computer Science Student
 </p>
-
 <p align="center">
   ONIFRA · Madagascar 🇲🇬
 </p>
 
 I am a Full Stack Developer and Master 1 Computer Science student at ONIFRA, Madagascar.
-
 My interests include software development, artificial intelligence, automation, and emerging technologies.
-
 My ambition is to transform innovative ideas into concrete technological solutions.
 
 **JYNTRA AI** represents this vision: exploring how modern AI technologies can be combined with software engineering to address complex real-world challenges.
@@ -732,7 +728,7 @@ My ambition is to transform innovative ideas into concrete technological solutio
 </p>
 
 <p align="center">
-  <strong>JYNTRA AI — Your AI. Your Edge.</strong>
+  <strong>JYNTRA AI - Your AI. Your Edge.</strong>
 </p>
 
 <p align="center">
