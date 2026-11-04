@@ -1,392 +1,746 @@
-# JYNTRA AI
+# JYNTRA AI — Your AI. Your Edge.
 
-> Your AI. Your Edge. — Financial Market Intelligence Platform.
+<p align="center">
+  <img src="public/assets/logo.png" alt="JYNTRA AI Logo" width="150" />
+</p>
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev/)
-[![Vite 8](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Tailwind CSS 4](https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Express 4](https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white)](https://expressjs.com/)
-[![Meta AI](https://img.shields.io/badge/Meta%20AI-Muse%20%7C%20SAM%20%7C%20Voice-003263?logo=meta&logoColor=white)](https://ai.meta.com/)
+<h3 align="center">An AI-powered financial intelligence platform built to transform market complexity into structured insight.</h3>
 
-**JYNTRA AI** is an AI-powered financial intelligence platform combining real-time market data, quantitative analysis, multimodal AI, and multi-agent orchestration to deliver structured, transparent, and explainable financial insights. Built by RAMIELSON Geoffroy Judicaël from Madagascar for the Meta Global AI Developer Hackathon 2026 — Indie Developer track, Build for Your World orientation.
+<p align="center">
+  <strong>Observe. Understand. Analyze. Validate.</strong>
+</p>
 
-Every analysis distinguishes three layers: what is observed (factual visual data), what is interpreted (algorithmic reading), and what remains a hypothesis (conditional scenarios). JYNTRA AI never presents a hypothesis as a certainty and never guarantees financial results.
+<p align="center">
+  <a href="https://jyntra-ai-financial-market-intelligence.onrender.com/">
+    <img src="https://img.shields.io/badge/Explore%20Live%20Platform-Visit%20JYNTRA%20AI-0866FF?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Platform" />
+  </a>
+  <a href="https://youtu.be/wIKQPydzHrI">
+    <img src="https://img.shields.io/badge/Watch%20Demo-YouTube-FF0033?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Demo" />
+  </a>
+</p>
 
-Explore JYNTRA AI → https://jyntra-ai-financial-market-intelligence.onrender.com/
-
-## Project Demonstration — YouTube
-
-"JYNTRA AI — Product Demonstration" (https://img.youtube.com/vi/wIKQPydzHrI/maxresdefault.jpg) (https://youtu.be/wIKQPydzHrI)
-
-Watch the full product demonstration on YouTube.
-
-Video ID: `wIKQPydzHrI`
-
----
-
-## Table of Contents
-
-1. [Project Overview](#project-overview)
-2. [Meta Global AI Developer Hackathon 2026](#meta-global-ai-developer-hackathon-2026)
-3. [The Problem](#the-problem)
-4. [Our Solution](#our-solution)
-5. [Key Features](#key-features)
-6. [Meta AI Integration](#meta-ai-integration)
-7. [Multi-Agent Architecture](#multi-agent-architecture)
-8. [Financial Data Sources](#financial-data-sources)
-9. [Technical Architecture](#technical-architecture)
-10. [Technology Stack](#technology-stack)
-11. [Quantitative Evaluation & Benchmarks](#quantitative-evaluation--benchmarks)
-12. [Screenshots & Visual Documentation](#screenshots--visual-documentation)
-13. [Installation & Quickstart](#installation--quickstart)
-14. [Environment Configuration](#environment-configuration)
-15. [Docker Deployment](#docker-deployment)
-16. [Testing & CI/CD](#testing--cicd)
-17. [Known Limitations](#known-limitations)
-18. [Security & Responsible Financial AI](#security--responsible-financial-ai)
-19. [Hackathon Contributions](#hackathon-contributions)
-20. [Project Information](#project-information)
+<p align="center">
+  <img src="https://img.shields.io/badge/Meta%20Global%20AI%20Hackathon-2026-0866FF?style=flat-square&logo=meta&logoColor=white" alt="Meta Global AI Hackathon 2026" />
+  <img src="https://img.shields.io/badge/Track-Build%20for%20Your%20World-111111?style=flat-square" alt="Build for Your World" />
+  <img src="https://img.shields.io/badge/Category-Indie%20Developer-111111?style=flat-square" alt="Indie Developer" />
+  <img src="https://img.shields.io/badge/Origin-Madagascar-00843D?style=flat-square" alt="Madagascar" />
+</p>
 
 ---
 
-## Project Overview
+## 🎬 Product Demonstration
 
-JYNTRA AI is a financial market intelligence platform that combines real-time market data, multimodal chart vision, and a collegiate multi-agent AI layer into a single coherent workspace. It helps traders and analysts read markets more clearly, evaluate scenarios, and make more structured decisions — without promises of gains and without fabricated signals.
+<p align="center">
+  <a href="https://youtu.be/wIKQPydzHrI">
+    <img
+      src="https://img.youtube.com/vi/wIKQPydzHrI/maxresdefault.jpg"
+      alt="JYNTRA AI — Full Product Demonstration"
+      width="100%"
+    />
+  </a>
+</p>
 
-The platform separates every analysis into three intellectual layers:
+<p align="center">
+  <strong>▶ Watch the complete JYNTRA AI demonstration on YouTube</strong>
+</p>
 
-| Layer | Description |
-|-------|-------------|
-| **Observation** | Factual visual data extracted from chart images (candlesticks, levels, zones) |
-| **Interpretation** | Algorithmic reading of market structure (BOS, CHoCH, Order Blocks, FVG) |
-| **Hypothesis** | Conditional scenarios that remain unconfirmed until validated by real market outcomes |
-
-This separation is the core of the platform's intellectual honesty. No hypothesis is ever presented as certainty.
-
-## Meta Global AI Developer Hackathon 2026
-
-Project submitted to the **Meta Global AI Developer Hackathon 2026**, **Indie Developer** track, **Build for Your World** orientation.
-
-JYNTRA AI demonstrates how Meta's AI technologies can power a concrete, accessible financial decision-support tool. The platform is Meta-first: all chat, vision, image generation, and audio transcription routes through Meta models (Muse Spark, Muse Wonder, SAM 3.1, Muse Image, Muse Voice Transcribe) with Google Gemini as a fallback tier only when Meta models are unavailable.
-
-This README is evaluated against the Watt Mind Automated Telemetry Scoring Methodology (community-driven, independent from Meta's official judging). The methodology assesses four pillars:
-
-| Pillar | Weight |
-|--------|--------|
-| Impact | /3 |
-| Meta AI Tooling | /2.5 |
-| Technical Depth | /2 |
-| Demo Completeness | /2.5 |
+<p align="center">
+  <a href="https://youtu.be/wIKQPydzHrI">Watch the video</a>
+  &nbsp; • &nbsp;
+  <a href="https://jyntra-ai-financial-market-intelligence.onrender.com/">Explore the live platform</a>
+</p>
 
 ---
 
-## The Problem
+## 📑 Table of Contents
 
-Most financial analysis tools stack indicators without structure. Retail traders face raw market data with no disciplined decision-making framework, leading to:
+- [Overview](<#-overview>)
+- [The Problem](<#-the-problem>)
+- [The JYNTRA AI Approach](<#-the-jyntra-ai-approach>)
+- [Meta Global AI Hackathon 2026](<#-meta-global-ai-hackathon-2026>)
+- [Meta AI Integration](<#-meta-ai-integration>)
+- [Platform Features](<#-platform-features>)
+- [Multi-Agent Intelligence](<#-multi-agent-intelligence>)
+- [JYNTRACK — Quantitative Research](<#-jyntrack--quantitative-research>)
+- [Financial Data Infrastructure](<#-financial-data-infrastructure>)
+- [Technical Architecture](<#-technical-architecture>)
+- [Technology Stack](<#-technology-stack>)
+- [Product Showcase](<#-product-showcase>)
+- [Getting Started](<#-getting-started>)
+- [Environment Configuration](<#-environment-configuration>)
+- [Development](<#-development>)
+- [Security and Responsible AI](<#-security-and-responsible-ai>)
+- [Limitations](<#-limitations>)
+- [Future Vision](<#-future-vision>)
+- [About the Developer](<#-about-the-developer>)
 
-- **Unstructured decision-making**: Indicators are piled up without a coherent framework for weighing conflicting signals.
-- **No separation of concerns**: Observations, interpretations, and hypotheses are conflated, making it impossible to know what is fact vs. opinion vs. speculation.
-- **No risk validation**: Setups are taken without systematic risk/reward validation or stop-loss discipline.
-- **No hypothesis tracking**: Traders record ideas but never systematically compare them against real market outcomes.
-- **No explainable AI**: Black-box signals with no visibility into which model said what, or why.
+---
 
-This problem matters because undisciplined trading leads to capital loss, and the barrier to structured, AI-assisted market analysis is high for individual traders.
+## 🌐 Overview
 
-**Users concerned**: Individual traders, market analysts, students of technical analysis, and anyone who wants AI assistance to frame and document market reading — not to predict the market.
+**JYNTRA AI — Your AI. Your Edge.** is an AI-powered financial intelligence platform designed to help users explore financial markets through a structured combination of market data, technical analysis, multimodal artificial intelligence, multi-agent reasoning, and quantitative research.
 
-## Our Solution
+Financial markets generate enormous amounts of information. Understanding that information requires more than identifying patterns on a chart. It involves observing market behavior, interpreting context, evaluating risk, testing hypotheses, and distinguishing evidence from assumptions.
 
-JYNTRA AI addresses the gap between raw market data and disciplined decision-making by:
+JYNTRA AI brings these activities together in one environment.
 
-- **Requiring multiple specialized AI agents to debate** before producing a verdict, reducing single-model bias.
-- **Separating market observations from AI interpretations and hypotheses**, so users always know what is fact vs. speculation.
-- **Keeping analyses, risk management, journaling, and education in one consistent data space.**
-- **Providing real market data from public sources** (Binance Spot, ECB/Frankfurter, Yahoo Finance) — zero synthetic quotes.
-- **Never guaranteeing financial results** and never presenting a hypothesis as a certainty.
+Rather than presenting artificial intelligence as an unquestionable source of trading signals, JYNTRA AI aims to make the analytical process more structured, transparent, and research-oriented.
 
-## Key Features
+The platform combines a collection of specialized tools and AI-powered capabilities to support financial market exploration.
 
-- **Multimodal chart analysis** — Import MT4, MT5, and TradingView chart screenshots. AI vision detects Market Structure (BOS, CHoCH), Order Blocks, Fair Value Gaps, and liquidity zones via SAM 3.1 visual detection.
-- **Six specialized agents** — Technical Analyst, Market Research Analyst, Risk Manager, Strategy Analyst, Red-Team Analyst, and Lead Analyst debate dialectically before shaping a trade plan.
-- **BUY / SELL / NO TRADE consensus** — Clear collegiate verdict with entry zones, Stop Loss, Take Profit targets, and Risk/Reward ratio.
-- **JYNTRACK — Probabilistic laboratory** — Explore market scenarios with empirical block bootstrap, evaluate strategy performance out of sample, and track hypotheses against real outcomes via the Reality Tracker.
-- **Advanced risk management** — Mathematical position sizing, strict Stop-Loss validation, mandatory R:R >= 1.5, and risk-of-ruin warnings.
-- **Live markets & news** — Real-time spot quotes, order book depth, and financial news aggregated from public RSS feeds.
-- **Trading journal** — Record and track positions with screenshots, psychological notes, and results.
-- **Workflow Studio** — Visual pipeline execution: Data → Vision AI → Multi-Agents → Risk → Report. Each block performs a real operation; nothing is simulated.
-- **LYNARA — Holographic assistant** — Multilingual text and voice interface that explains analyses, reformulates agent reasoning, and guides users through the platform.
+**Its central philosophy is simple:**
 
-## Meta AI Integration
+> Intelligence should support better analysis, not replace critical thinking.
 
-JYNTRA AI is built Meta-first. All integrations below are implemented in `src/server/aiEngine.ts` and `server/api.ts`. Each model is called with its declared identifier sent verbatim to the provider; the provider catalogue decides real availability.
+**Live platform:**  
+https://jyntra-ai-financial-market-intelligence.onrender.com/
 
-| Model | Declared ID | Role | Responsibility |
-|-------|-------------|------|----------------|
-| **Muse Spark** | `muse-spark-1.3`, `muse-spark-1.2`, `muse-spark-1.1` | Reasoning & vision chat | Powers the six-agent multi-agent debate, LYNARA assistant, and chart analysis synthesis |
-| **Muse Wonder** | `muse-wonder-1.0` | Deep reasoning chat | Advanced reasoning for complex chart interpretation and scenario planning |
-| **SAM 3.1** | `sam-3.1` | Visual detection & segmentation | Chart image analysis via Meta Responses API (`/v1/responses`) |
-| **Muse Image** | `muse-image-1.0` | Visual generation | Generation of annotated chart illustrations via `/v1/images/generations` (b64_json) |
-| **Muse Voice Transcribe** | `muse-voice-transcribe-1.0` | Audio transcription | Real-time voice message transcription via `/v1/asr/transcribe` (multipart WAV, 16 kHz mono PCM) |
+---
 
-**Pipeline orchestration:**
+## 🎯 The Problem
 
-1. **Chat/reasoning tier**: Models are tried in priority order — `muse-spark-1.3`, `muse-wonder-1.0`, `muse-spark-1.2`, `muse-spark-1.1`. Contributor checkpoints (`muse-spark-1.3-contributor`, `muse-spark-1.2-contributor`) are alternates, never used by default.
-2. **Circuit breaker**: When every Meta model reports quota/billing exhaustion, a circuit breaker prevents further hammering of the provider.
-3. **Fallback tiers**: When Meta is unavailable, Google Gemini (`gemini-2.5-flash` for chat, `gemini-2.5-flash-image` for images, `gemini-2.5-flash` for transcription) provides the fallback tier. A Groq-compatible free-tier alternative is available as a third tier when configured.
-4. **Honest failure**: If all tiers fail, the system returns an error — never a simulated or fabricated response.
+Financial market analysis is often fragmented.
 
-**Multi-modal pipeline:** Chart images are uploaded → SAM 3.1 probes for segmentation and box detection → Muse Spark/Wonder reason over detected zones → Muse Image generates annotated visual output → LYNARA transcribes voice input via Muse Voice Transcribe.
+Traders and researchers may need to switch between multiple tools to:
 
-**Error handling:** 401/403 stops the chain (key/permission issue — no other model helps). 400/404/5xx try the next compatible Meta model. 503/quota triggers circuit breaker and fallback. Every failure is surfaced to the user with a clear message.
+- Examine price movements.
+- Interpret technical chart structures.
+- Follow macroeconomic developments.
+- Understand market news.
+- Evaluate trading scenarios.
+- Assess risk and reward.
+- Record and review their decisions.
+- Test historical hypotheses.
 
-## Multi-Agent Architecture
+This fragmentation makes it difficult to maintain a coherent analytical process.
 
-Six specialized agents collaborate per analysis, implemented in `src/server/aiEngine.ts` and orchestrated via `server/api.ts`:
+Artificial intelligence introduces new possibilities, but simply asking a chatbot whether to buy or sell does not provide a sufficiently structured approach to financial research.
 
-| # | Agent | Role | Responsibility |
-|---|-------|------|----------------|
-| 1 | **Technical Analyst** | Price Action & Smart Money Concepts | Order Blocks, FVG, BOS, CHoCH, support/resistance, volumes |
-| 2 | **Market Research Analyst** | Macroeconomics & Institutional Flows | Refinancing rates, ETF flows, DXY correlations, economic calendar |
-| 3 | **Risk Analyst** | Capital Preservation & Invalidation | Strict veto on setups with R:R < 1.5 or arbitrary Stop-Loss |
-| 4 | **Strategy Analyst** | Mathematical Expectancy & Edge | Statistical probability of success under current volatility regime |
-| 5 | **Red-Team Analyst** | Devil's Advocate & False Signals | Bull traps, false breakouts, manipulative liquidity sweeps |
-| 6 | **Lead Analyst** | Chief Arbitrator & Final Decision | Weighs contradictory arguments, delivers unified verdict (BUY / SELL / NO TRADE) |
+A useful system must consider multiple perspectives, distinguish observations from interpretations, evaluate uncertainty, and make its reasoning process easier to examine.
 
-**Risk Analyst veto rule:** The Risk Analyst holds veto power. Any setup with a risk/reward ratio below 1.5 or an invalid Stop-Loss is rejected. This rule is enforced deterministically in code — not merely suggested by AI.
+## 💡 The JYNTRA AI Approach
 
-**Interaction flow:** Agents debate dialectically → contradictory arguments are weighed → Lead Analyst delivers unified verdict → Output includes entry, Stop Loss, Take Profit, R:R, plus explicit observation vs. interpretation separation.
+JYNTRA AI brings these capabilities into a unified financial intelligence environment.
 
-## Financial Data Sources
+Its approach combines:
 
-All market data is real, sourced from public APIs. No prices are invented.
+| Analytical dimension | Purpose |
+| --- | --- |
+| Market Observation | Examine market information and price behavior |
+| Technical Interpretation | Identify and organize chart structures |
+| AI Reasoning | Explore possible interpretations and hypotheses |
+| Multi-Agent Analysis | Evaluate markets through specialized analytical perspectives |
+| Risk Assessment | Examine potential exposure and risk/reward relationships |
+| Quantitative Research | Investigate historical behavior and test hypotheses |
+| Research Tracking | Organize analytical work and monitor observations |
 
-| Source | Data | Role | Provenance |
-|--------|------|------|------------|
-| **Binance Spot** | Crypto spot candles, order book depth, ticker search | Real-time spot for cryptocurrencies and PAXG/USDT (gold proxy) | Public REST API |
-| **Frankfurter / ECB** | FX reference rates | Daily official foreign exchange rates | European Central Bank via Frankfurter API |
-| **Yahoo Finance** | Equity index history | S&P 500, Dow Jones, Nasdaq, Euro Stoxx 50, FTSE 100, Nikkei 225 | Public finance API |
-| **Public RSS feeds** | Financial news | CNBC, MarketWatch, Nasdaq, Investing.com, BBC Business, CoinDesk, Federal Reserve, ECB, Bank of England | Public RSS syndication |
+The platform separates three important concepts:
 
-News articles retain their original title, link, source, publication date, and image. No article is AI-generated.
+- **Observation:** What can actually be seen in the available data?
+- **Interpretation:** What could those observations mean?
+- **Hypothesis:** What possible scenario deserves further investigation?
 
-## Technical Architecture
+This distinction is fundamental to the philosophy of JYNTRA AI.
+
+---
+
+## 🏆 Meta Global AI Hackathon 2026
+
+JYNTRA AI was developed for the **Meta Global AI Hackathon 2026**.
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Event-Meta%20Global%20AI%20Hackathon%202026-0866FF?style=for-the-badge&logo=meta&logoColor=white" alt="Meta Hackathon" />
+</p>
+
+| Information | Details |
+| --- | --- |
+| Event | Meta Global AI Hackathon 2026 |
+| Track | Build for Your World |
+| Category | Indie Developer |
+| Project | JYNTRA AI |
+| Developer | RAMIELSON Geoffroy Judicaël |
+| Country | Madagascar 🇲🇬 |
+
+### Why Build for Your World?
+
+Financial market information affects individuals, businesses, and economic decision-making around the world.
+
+JYNTRA AI explores how advanced AI technologies can be applied to a complex real-world domain: financial market intelligence.
+
+The project brings together AI reasoning, multimodal interaction, market information, and quantitative experimentation to create a practical technological experience.
+
+It demonstrates an exploration of how AI can become part of a complete software product rather than remaining an isolated conversational interface.
+
+---
+
+## 🤖 Meta AI Integration
+
+Meta AI technologies are an important part of the JYNTRA AI experience.
+
+The project explores the use of Meta's AI ecosystem across reasoning, visual understanding, image generation, and voice-related interactions.
+
+Rather than treating AI as a single generic feature, JYNTRA AI organizes AI capabilities around different user needs.
+
+### Meta AI technologies
+
+| Meta technology | Role in the project |
+| --- | --- |
+| Muse Spark | AI-assisted reasoning and interpretation |
+| Muse Wonder | Advanced AI-assisted analytical interactions |
+| SAM 3.1 | Visual understanding and segmentation-related capabilities |
+| Muse Image | Image-generation capabilities |
+| Muse Voice Transcribe | Voice transcription and voice-based interaction |
+
+The exact capabilities available depend on the integration and provider availability.
+
+### From AI models to product capabilities
+
+JYNTRA AI explores several ways to incorporate AI into a financial intelligence workflow:
+
+**1. Reasoning and interpretation**
+
+AI-assisted analysis helps users explore market information, examine possible interpretations, and organize analytical conclusions.
+
+**2. Visual intelligence**
+
+Image-related capabilities support visual workflows involving chart analysis and graphical information.
+
+**3. Multimodal interaction**
+
+The platform explores interactions that go beyond conventional text-based interfaces, including image and voice-related experiences.
+
+**4. Integrated AI assistance**
+
+LYNARA brings AI interaction into the wider platform experience.
+
+### Multi-provider architecture
+
+JYNTRA AI supports a configurable AI integration architecture.
+
+Meta models are integrated into the platform, with alternative providers such as Gemini available as fallback options where configured.
+
+This architecture helps maintain flexibility while keeping provider availability and actual model responses distinct from simulated results.
+
+The platform does not represent a fallback response as a Meta-generated response.
+
+---
+
+## 🚀 Platform Features
+
+JYNTRA AI brings several specialized capabilities together in a single environment.
+
+### 1. AI-Powered Chart Analysis
+
+Analyze trading chart images and explore technical market structures.
+
+The platform supports chart-oriented workflows involving:
+
+- MetaTrader 4.
+- MetaTrader 5.
+- TradingView.
+
+Depending on the available analysis and image-processing capabilities, users can explore:
+
+| Concept | Description |
+| --- | --- |
+| Order Blocks | Potential areas of institutional order activity |
+| Fair Value Gaps | Price inefficiencies and imbalance zones |
+| Break of Structure (BOS) | Structural price breaks |
+| Change of Character (CHoCH) | Potential changes in market structure |
+| Liquidity Zones | Areas associated with potential liquidity concentration |
+| Entry Zones | Potential trade-entry areas |
+| Stop Loss | Risk-limiting price levels |
+| Take Profit | Potential profit-target levels |
+| Risk/Reward | Relationship between potential risk and reward |
+
+The goal is to organize technical observations and possible trading scenarios.
+
+AI-generated chart interpretations remain analytical suggestions, not guaranteed market predictions.
+
+### 2. Six-Agent Intelligence
+
+JYNTRA AI incorporates a specialized multi-agent analytical approach.
+
+Each agent has a distinct analytical responsibility.
+
+### 3. LYNARA AI
+
+LYNARA is the intelligent assistant integrated into the JYNTRA AI experience.
+
+It provides an interactive AI interface designed to make financial research and platform interaction more accessible.
+
+Its experience combines conversational interaction with the platform's visual identity and available voice-related capabilities.
+
+### 4. JYNTRACK
+
+JYNTRACK is the quantitative research and probabilistic experimentation environment.
+
+It helps explore historical market behavior, investigate hypotheses, and examine the uncertainty associated with analytical scenarios.
+
+### 5. Workflow Studio
+
+Workflow Studio provides a visual environment for organizing and connecting workflow steps.
+
+It brings workflow-oriented automation concepts into the platform.
+
+### 6. Financial News
+
+The financial news area provides access to relevant market information and news feeds.
+
+It helps users consider broader market context alongside technical observations.
+
+### 7. Academy
+
+The Academy provides an educational environment covering trading concepts, market analysis, planning, and discipline.
+
+### 8. Trading Journal and Risk Management
+
+The platform includes tools for organizing research, recording trading-related information, and examining risk-management considerations.
+
+The objective is to encourage more consistent and documented analytical practices.
+
+---
+
+## 🧠 Multi-Agent Intelligence
+
+One of the central ideas behind JYNTRA AI is the use of specialized analytical perspectives.
+
+Instead of relying exclusively on a single AI response, the platform incorporates six analytical roles.
+
+| Agent | Primary responsibility |
+| --- | --- |
+| Technical Analyst | Examines technical structures and price behavior |
+| Market Research Analyst | Considers broader market context |
+| Risk Analyst | Evaluates potential risk and exposure |
+| Strategy Analyst | Examines possible analytical scenarios |
+| Red-Team Analyst | Challenges assumptions and identifies weaknesses |
+| Lead Analyst | Coordinates the final analytical perspective |
+
+### Why multiple analytical perspectives?
+
+Financial market interpretation is inherently uncertain.
+
+A technical observation may suggest one scenario while macroeconomic information or risk considerations suggest another.
+
+The multi-agent approach is designed to make these differences visible.
+
+The analytical process can therefore consider:
+
+- Technical evidence.
+- Market context.
+- Risk constraints.
+- Strategic coherence.
+- Counterarguments.
+- Final synthesis.
+
+The platform supports structured outcomes such as BUY, SELL, and WAIT where implemented.
+
+These outputs should be understood as analytical classifications, not instructions to execute trades.
+
+**Risk-aware analysis matters more than producing a confident answer.**
+
+---
+
+## 📊 JYNTRACK — Quantitative Research
+
+JYNTRACK is the quantitative experimentation environment within JYNTRA AI.
+
+It explores how historical market information can be used to investigate trading hypotheses.
+
+Instead of treating an interesting market pattern as proof of a profitable strategy, JYNTRACK emphasizes the importance of testing and validation.
+
+Its research-oriented capabilities include applicable techniques such as:
+
+- Bootstrap-based experimentation.
+- Historical event studies.
+- Probabilistic analysis.
+- Backtesting.
+- Train/test separation.
+- Out-of-sample evaluation.
+- Reality Tracker.
+
+### Research philosophy
+
+JYNTRACK is designed around a distinction between:
+
+**Historical observation**
+
+What happened in the available historical data?
+
+**Hypothesis**
+
+What relationship or market behavior are we investigating?
+
+**Experimentation**
+
+How does the hypothesis behave under a defined testing process?
+
+**Validation**
+
+Does the observed behavior remain meaningful outside the data used to formulate the hypothesis?
+
+Historical performance does not guarantee future performance.
+
+The purpose is to encourage evidence-based investigation rather than unsupported certainty.
+
+---
+
+## 🌍 Financial Data Infrastructure
+
+JYNTRA AI connects to external sources of financial and market information.
+
+Its data infrastructure includes sources such as:
+
+| Source | Information |
+| --- | --- |
+| Binance Spot | Cryptocurrency market information |
+| Frankfurter / ECB | Foreign exchange reference rates |
+| Yahoo Finance | Financial market indices |
+| Public RSS feeds | Financial news and market information |
+
+These sources provide different categories of information that can contribute to market observation and research.
+
+### Real data, not fabricated market information
+
+JYNTRA AI is designed around the use of actual external market information.
+
+It does not intentionally present fabricated market values as live financial data.
+
+The availability, freshness, and completeness of information depend on the source and its connectivity.
+
+---
+
+## 🏗️ Technical Architecture
+
+JYNTRA AI combines a modern web frontend, a backend API, AI integrations, external data sources, and specialized analytical modules.
+
+### High-level architecture
 
 ```mermaid
-graph TD
-    Client[Browser: React 19 + Vite + TypeScript] --> API[Express 4 Backend]
-    API --> Meta[Meta AI Models: Muse Spark, Muse Wonder, SAM 3.1, Muse Image, Muse Voice Transcribe]
-    API --> Gemini[Google Gemini Fallback]
-    API --> Binance[Binance Spot Market Data]
-    API --> ECB[Frankfurter/ECB FX Rates]
-    API --> Yahoo[Yahoo Finance Equity Data]
-    API --> RSS[Financial News RSS Feeds]
-    Client --> LocalStorage[(localStorage: journal, settings, workflows, jobs)]
-    Client --> Canvas[AnnotatedChart Canvas: SMC/ICT levels]
-    
-    subgraph Frontend
-        Client
-        Canvas
-        LocalStorage
-    end
-    
-    subgraph Backend
-        API
-    end
-    
-    subgraph AI_Tier
-        Meta
-        Gemini
-    end
-    
-    subgraph Data_Tier
-        Binance
-        ECB
-        Yahoo
-        RSS
-    end
+flowchart TD
+    U["User"] --> UI["JYNTRA AI Interface"]
+
+    UI --> FE["React Frontend"]
+    FE --> API["Express Backend API"]
+
+    API --> AI["AI Integration Layer"]
+
+    AI --> META["Meta AI Models"]
+    AI --> GEMINI["Gemini Fallback"]
+
+    API --> MARKET["Financial Data Sources"]
+    MARKET --> BINANCE["Binance Spot"]
+    MARKET --> ECB["Frankfurter / ECB"]
+    MARKET --> YAHOO["Yahoo Finance"]
+    MARKET --> NEWS["Financial News Feeds"]
+
+    API --> ANALYSIS["Analytical Engine"]
+    ANALYSIS --> AGENTS["Multi-Agent Intelligence"]
+    ANALYSIS --> JYNTRACK["JYNTRACK"]
+
+    FE --> LYNARA["LYNARA AI"]
+    FE --> WORKFLOW["Workflow Studio"]
+    FE --> ACADEMY["Academy"]
+    FE --> JOURNAL["Trading Journal"]
 ```
 
-**Frontend:** React 19 + Vite 8 + TypeScript + Tailwind CSS 4, Three.js 3D scenes  
-**Backend:** Express 4 (Node.js) exposing REST endpoints  
-**AI layer:** Meta-first routing with Gemini fallback when Meta models are unavailable  
-**Persistence:** Browser localStorage for journal, settings, workflows, and chart jobs  
-**Async:** Background chart analysis jobs with resumable status and owner-scoped tokens  
-**Security:** CORS with explicit method/header allowlisting, rate limiting (40 chat, 12 heavy, 10 audio, 40 jyntrack, 6 war-room per minute), security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy)
+*Conceptual overview of the platform. It illustrates the main functional areas rather than every internal implementation detail.*
 
-## Technology Stack
+### Frontend
 
-- React 19, Vite 8, TypeScript, Tailwind CSS 4
-- Express 4 (Node.js)
-- Three.js, Lucide React, Framer Motion
-- Meta AI (Muse Spark, Muse Wonder, SAM 3.1, Muse Image, Muse Voice Transcribe)
-- Google Gemini (fallback tier, server-side only)
-- Public market data: Binance Spot, Frankfurter/ECB, Yahoo Finance, RSS feeds
+The frontend provides the user-facing experience, platform navigation, analytical interfaces, and interactive visual components.
 
-## Quantitative Evaluation & Benchmarks
+### Backend
 
-JYNTRA AI provides deterministic, reproducible evaluation through the JYNTRACK laboratory (`server/jyntrack.ts`):
+The backend handles application API operations and coordinates access to configured AI providers and external services.
 
-- **Event study**: Measures only forward windows that truly exist, avoiding look-ahead bias.
-- **Strategy lab**: Selects parameters on training data and reports genuine out-of-sample test results.
-- **Reality check**: Compares an analytical hypothesis with the closest actually observed market outcome.
-- **Empirical block bootstrap**: Resamples historical blocks to estimate strategy performance distributions.
+### AI integration
 
-**Important:** No pre-computed benchmark results are committed to the repository. The JYNTRACK module computes metrics at runtime from real market data fetched via the API. Sample metrics computed per-scenario include: median terminal return, 90% confidence band [p05, p95], probability of up-move, VaR95, expected maximum drawdown, and invalidation levels. These are calculated live — never fabricated.
+The AI integration layer connects the platform to available AI providers and supports the capabilities exposed through the application.
 
-If reproducible benchmark reports are needed for evaluation, they can be generated by running the JYNTRACK simulation against live data through the `/api/ai/jyntrack/*` endpoints.
+### External data
 
-## Screenshots & Visual Documentation
+Market and financial information is obtained from external data providers.
 
-Authentic screenshots from the platform are located in `public/assets/`:
+### Analytical environment
 
-- `public/assets/chart-analysis.jpg` — Chart analysis interface (1.6 MB)
-- `public/assets/chart_ai_multiagent_1793088296716.jpg` — Multi-agent consensus view (1.6 MB)
-- `public/assets/jarvis-hologram.jpg` — LYNARA holographic interface (854 KB)
-- `public/assets/jarvis_holographic_ai_1793088284614.jpg` — LYNARA holographic interface alt (854 KB)
-- `public/assets/jyntra_logo_1793088270760.jpg` — JYNTRA AI logo (498 KB)
-- `public/assets/logo.png` — Platform logo (498 KB)
-- `public/assets/meta-logo.svg` — Meta logo (3.3 KB)
+Specialized modules organize chart analysis, multi-agent reasoning, risk assessment, and quantitative research.
 
-## Installation & Quickstart
+---
+
+## ⚙️ Technology Stack
+
+JYNTRA AI is built using a modern JavaScript and TypeScript ecosystem.
+
+| Layer | Technologies |
+| --- | --- |
+| Frontend | React 19 |
+| Build Tool | Vite 8 |
+| Language | TypeScript |
+| Styling | Tailwind CSS 4 |
+| Backend | Node.js |
+| API Framework | Express 4 |
+| 3D Graphics | Three.js |
+| AI | Meta AI integrations, Gemini fallback where configured |
+| Financial Data | Binance, Frankfurter / ECB, Yahoo Finance |
+| Development | npm |
+
+The architecture combines interactive frontend development, backend services, AI integration, and data-driven analytical workflows.
+
+---
+
+## 🖥️ Product Showcase
+
+The following section presents selected visual elements from the JYNTRA AI interface.
+
+### Platform Identity
+
+<p align="center">
+  <img src="public/assets/jyntra_logo_1793088270760.jpg" alt="JYNTRA AI visual identity" width="90%" />
+</p>
+
+### Chart Analysis
+
+<p align="center">
+  <img src="public/assets/chart-analysis.jpg" alt="JYNTRA AI chart analysis interface" width="90%" />
+</p>
+
+### Multi-Agent Intelligence
+
+<p align="center">
+  <img src="public/assets/chart_ai_multiagent_1793088296716.jpg" alt="JYNTRA AI multi-agent chart analysis" width="90%" />
+</p>
+
+### LYNARA AI
+
+<p align="center">
+  <img src="public/assets/jarvis-hologram.jpg" alt="LYNARA AI assistant interface" width="90%" />
+</p>
+
+<p align="center">
+  <img src="public/assets/jarvis_holographic_ai_1793088284614.jpg" alt="LYNARA AI holographic visual experience" width="90%" />
+</p>
+
+---
+
+## 💻 Getting Started
+
+You can run JYNTRA AI locally to explore its development environment.
 
 ### Prerequisites
 
-- Node.js >= 20.19.0
-- npm or bun
+Make sure you have:
 
-### Installation
+- Node.js installed.
+- npm installed.
+- Git installed.
+- Access to the required provider credentials for the AI and external services you intend to use.
+
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-org>/jyntra-ai.git
-cd jyntra-ai
+git clone YOUR_REPOSITORY_URL
+cd YOUR_PROJECT_DIRECTORY
+```
+
+Replace the placeholders with the actual repository URL and directory name.
+
+### 2. Install dependencies
+
+```bash
 npm install
 ```
 
-### Environment Configuration
+### 3. Configure environment variables
 
-Create a `.env` file at the root from `.env.example`. No keys are stored in the frontend or exposed publicly.
+Create a local environment configuration based on the project's existing environment example, if available.
 
-```bash
-cp .env.example .env
-# then edit .env with your values
-```
+Do not commit private credentials or API keys.
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `META_API_KEY` | Meta AI provider API key (server-side only) | Yes |
-| `META_API_ENDPOINT` | Meta API base URL (default: https://api.meta.ai/v1) | No |
-| `META_MODELS` | Comma-separated declared Meta model IDs | No |
-| `GEMINI_API_KEY` | Google Gemini API key (fallback tier) | No |
-| `GROQ_API_KEY` | Groq free-tier API key (third tier) | No |
-| `PORT` | Server port (default: 3000) | No |
+Refer to the actual environment configuration and backend implementation to identify the required variables.
 
-### Running Frontend & Backend
+### 4. Start the development server
 
 ```bash
-# Development (frontend + API mounted in Vite)
 npm run dev
-
-# Development (API-only server)
-npm run dev:api
-
-# Production (build + start)
-npm run build
-npm start
-
-# Preview production build locally
-npm run preview
 ```
 
-The platform is available in your browser (default Vite port 5173, or the port shown on server startup).
-
-## Docker Deployment
-
-No Dockerfile or Docker Compose configuration exists in this repository. The project is designed to run directly with Node.js >= 20.19.0 via `npm run dev` or `npm start`. Containerization can be added in a future iteration if required for deployment.
-
-## Testing & CI/CD
-
-```bash
-# Typecheck
-npm run typecheck
-
-# Production build
-npm run build
-
-# Test suite
-npm test
-```
-
-**Test suites (5 files, all passing):**
-
-| Test File | Coverage |
-|-----------|----------|
-| `tests/aiEngine.fallback.test.ts` | AI engine fallback chain: Meta → Gemini → free tier, quota handling, 401-stop, timeout, prerequisite block, AI-independent risk, image honesty, no banned service |
-| `tests/workflowStore.test.ts` | Workflow store persistence and analysis restoration |
-| `tests/workflowBuilder.test.ts` | Workflow builder orchestration: block ordering, reordering, resume, output passing, context bounding, blueprint change detection |
-| `tests/detectLanguage.test.ts` | Language detection: 41/41 cases across French, English, Malagasy |
-| `tests/jyntrack.test.ts` | JYNTRACK laboratory: reality check, event study, strategy lab |
-| `src/i18n/translations.test.ts` | Translation completeness across French, English, and Malagasy |
-
-No GitHub Actions workflows exist in this repository. Tests run locally via `npm test`.
-
-**Continuous validation:** TypeScript compiles with 0 errors. Production build succeeds (Vite 8). All tests pass.
-
-## Known Limitations
-
-- **No Docker support**: The project runs directly with Node.js; no containerization exists.
-- **No GitHub Actions CI/CD**: Tests must be run locally.
-- **No pre-computed benchmarks**: JYNTRACK metrics are computed at runtime from live data; no static benchmark reports are committed.
-- **Meta model availability**: The Meta provider catalogue decides real availability at call time. If Meta models are unavailable and no Gemini/Groq key is configured, the system returns an honest error rather than simulating results.
-- **localStorage persistence**: Journal, settings, workflows, and chart jobs are stored in browser localStorage. Data is not synchronized across devices.
-- **Not financial advice**: AI outputs are assistive, not personalized financial recommendations. JYNTRACK scenarios are conditional distributions, not forecasts. No transaction is triggered automatically.
-
-## Security & Responsible Financial AI
-
-- **API keys server-side only**: `.env` is gitignored and never committed. Frontend never sees API keys.
-- **Security headers**: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy applied in production.
-- **CORS**: Explicit method (GET, POST, OPTIONS) and header (Content-Type, x-job-token) allowlisting.
-- **Input validation**: All endpoints validate inputs; no SQL/NoSQL injection surface (storage is local browser localStorage).
-- **Rate limiting**: 40 chat, 12 heavy, 10 audio, 40 jyntrack, 6 war-room requests per minute per IP.
-- **Honest AI unavailability**: No fabricated results. If all AI tiers fail, the system returns an error.
-- **AI outputs are assistive, not financial advice**: Analyses, signals, and scenarios are not personalized financial recommendations.
-- **JYNTRACK scenarios are conditional distributions, not forecasts**: No transaction is triggered automatically.
-
-## Hackathon Contributions
-
-Features and improvements developed during the hackathon:
-
-- **Meta-first AI model routing engine** supporting Muse Spark (muse-spark-1.3, muse-spark-1.2, muse-spark-1.1, muse-spark-1.3-contributor, muse-spark-1.2-contributor) for reasoning and vision tasks, Muse Wonder (muse-wonder-1.0) for deep chart interpretation and scenario planning, SAM 3.1 (sam-3.1) for visual segmentation and box detection in chart images via the Meta Responses API, Muse Image (muse-image-1.0) for visual generation of graphical elements, and Muse Voice Transcribe (muse-voice-transcribe-1.0) for real-time audio transcription in LYNARA voice interactions, with each model called using its declared identifier sent verbatim to the provider
-- **Intelligent model tier orchestration** with Gemini as the fallback tier when Meta models are unavailable due to quota, billing, or endpoint issues, plus a Groq-compatible free-tier alternative as a third tier, all preserving the same response contract across providers
-- **Multimodal financial chart analysis pipeline** that imports MT4, MT5, and TradingView chart screenshots, applies SAM 3.1 visual detection probing for segmentation and box detection, and synthesizes Market Structure readings (BOS, CHoCH), Order Blocks, Fair Value Gaps, liquidity zones, support/resistance levels, and entry/stop-loss/take-profit targets through the AnnotatedChart canvas rendering engine
-- **Six-agent collegiate debate architecture** implementing Technical Analyst, Market Research Analyst, Risk Manager, Strategy Analyst, Red-Team Analyst, and Lead Analyst agents that dialectically debate before producing a unified BUY / SELL / NO TRADE verdict, with the Risk Manager holding veto power over setups with risk/reward ratio below 1.5 or invalid stop-loss conditions
-- **LYNARA holographic AI assistant** with multilingual support (French, English, Malagasy), voice interaction capabilities powered by Muse Voice Transcribe for audio transcription, Web Speech API integration for synthesis and recognition, and context-aware explanations that reformulate multi-agent reasoning into accessible trading guidance
-- **JYNTRACK probabilistic laboratory** implementing empirical block bootstrap resampling, event study analysis with forward-only windows, strategy lab with train/test split and genuine out-of-sample evaluation, and a Reality Tracker that compares analytical hypotheses against actual observed market outcomes to validate or invalidate trading scenarios
-- **Workflow Studio visual pipeline editor** with node-based architecture supporting real block execution across Data → Vision AI → Multi-Agents → Risk → Report stages, resumable workflow execution from the first incomplete block, owner-scoped job tokens, background async processing with polling status, and persistent workflow state via localStorage
-- **Interactive trading academy** with 8 pedagogical modules covering financial market fundamentals, Japanese candlesticks and price action, market structure (BOS/CHoCH), Smart Money Concepts, mathematical risk management and position sizing, MT4/MT5 setup for JYNTRA AI, institutional liquidity and stop hunts, and trading plan/journal/discipline, each with quiz questions and translations in French, English, and Malagasy
-- **Light mode and dark theme support** with Meta-inspired visual system (deep Meta blue #003263, JYNTRA black #080B10 dark mode, #F8FAFC light mode, JYNTRA orange #F97316 accent), responsive layouts across desktop, tablet, and Android devices, and per-page Three.js 3D scene compositions
-- **Backend Express 4 REST API** with CORS configuration, rate limiting on AI and heavy endpoints, security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy), input validation on all endpoints, proper HTTP error status codes, honest AI unavailability handling without fabricated results, and server-side-only API key storage with .env excluded from version control
-- **Comprehensive test suite** covering AI engine fallback chain (Meta → Gemini → free tier), workflow store persistence and analysis restoration, workflow builder orchestration (block ordering, reordering, resume, output passing, context bounding, blueprint change detection), language detection (41/41 cases), JYNTRACK laboratory functions (reality check, event study, strategy lab), and translation completeness across French, English, and Malagasy
-- **Financial data integration** with real-time spot quotes from Binance Spot (cryptocurrencies and PAXG/USDT gold proxy), FX reference rates from Frankfurter/ECB, equity index history from Yahoo Finance (S&P 500, Dow Jones, Nasdaq, Euro Stoxx 50, FTSE 100, Nikkei 225), and financial news aggregated from public RSS feeds (CNBC, MarketWatch, Nasdaq, Investing.com, BBC Business, CoinDesk, Federal Reserve, ECB, Bank of England)
-- **Trading journal** with position recording, screenshot attachment, psychological notes, trade plan integration from analysis results, status tracking (OPEN/CLOSED/CANCELLED), and risk management validation with mandatory risk/reward ratio checks
-- **Risk management panel** with mathematical position sizing formulas, strict stop-loss validation, risk-of-ruin warnings, and deterministic calculators that operate independently of AI outputs
-- **News page** with category filtering (markets, economy, companies, forex, crypto, central banks), article metadata preservation (original title, link, source, publication date, image), and manual refresh capability without AI-generated content
-- **Multi-agent page** with agent status visualization, three.js-powered agent avatars, and real-time collaboration display for the six-agent debate system
-- **Settings page** with data export/backup functionality, full data reset with custom confirmation dialog, theme toggle, and language selection persisting across sessions
-
-Features pre-existing before the hackathon remain fully preserved and operational.
-
-## Project Information
-
-- **Name**: JYNTRA AI
-- **Slogan**: Your AI. Your Edge.
-- **Creator**: RAMIELSON Geoffroy Judicaël
-- **Country**: Madagascar 🇲🇬
-- **Event**: Meta Global AI Developer Hackathon 2026
-- **Track**: Indie Developer — Build for Your World
-- **License**: No license specified. All rights reserved by the author.
-- **Repository**: This project
-- **Live demo**: https://jyntra-ai-financial-market-intelligence.onrender.com/
-- **Product demonstration**: https://youtu.be/wIKQPydzHrI
+Open the local URL displayed by Vite in your terminal.
 
 ---
+
+## 🔧 Environment Configuration
+
+JYNTRA AI may require provider credentials and configuration values to enable its external integrations.
+
+Depending on the enabled functionality, configuration may include:
+
+- Meta AI provider credentials.
+- Gemini credentials, where configured.
+- External data provider settings.
+- Backend application configuration.
+
+**Important:**
+
+- Never expose API keys in frontend code.
+- Never commit `.env` files containing secrets.
+- Keep credentials in server-side environment variables.
+- Use the actual variable names defined by the project's backend and environment example.
+- Do not assume that every provider is mandatory for every application feature.
+
+The application experience may vary depending on which integrations are configured and available.
+
+---
+
+## 🧪 Development
+
+The project uses npm-based development workflows.
+
+Typical commands include:
+
+```bash
+npm run dev
+```
+
+To build the application:
+
+```bash
+npm run build
+```
+
+Where supported by the repository, type checking and automated tests can be executed using their corresponding npm scripts.
+
+Consult `package.json` for the exact scripts available in the current version of the project.
+
+A successful production build does not independently guarantee the availability of external AI providers or financial data services.
+
+---
+
+## 🔐 Security and Responsible AI
+
+JYNTRA AI is designed as an analytical and research-oriented platform.
+
+Several principles guide its use:
+
+**Credential protection**
+
+Private API credentials should remain on the backend and must not be published in the repository.
+
+**Provider transparency**
+
+AI-generated results should be associated with the actual provider used. A fallback provider must not be misrepresented as Meta.
+
+**Data integrity**
+
+External financial information should not be replaced with invented values presented as real market data.
+
+**Analytical transparency**
+
+Observations, interpretations, and hypotheses should remain distinguishable.
+
+**Human judgment**
+
+AI-generated analyses are decision-support information. Users remain responsible for their own financial decisions.
+
+**No automatic trading**
+
+JYNTRA AI is not presented as an autonomous trading execution system.
+
+---
+
+## ⚠️ Limitations
+
+JYNTRA AI is an evolving software project.
+
+Its capabilities depend on:
+
+- External provider availability.
+- API credentials and access permissions.
+- Network connectivity.
+- Financial data source limitations.
+- AI model availability.
+- The quality and completeness of the supplied information.
+
+AI-generated interpretations may be incorrect or incomplete.
+
+Historical analyses do not guarantee future outcomes.
+
+The platform should not be considered a financial adviser, investment recommendation service, or guarantee of trading profitability.
+
+---
+
+## 🔭 Future Vision
+
+JYNTRA AI explores the possibilities of combining advanced AI technologies with financial intelligence.
+
+Its longer-term direction includes continued exploration of:
+
+- More sophisticated multimodal AI experiences.
+- Improved analytical collaboration between specialized agents.
+- More extensive quantitative experimentation.
+- Better research traceability.
+- Expanded workflow automation.
+- More accessible financial education.
+- Stronger analytical validation tools.
+
+These are development directions, not claims that every capability is already available.
+
+---
+
+## 👨‍💻 About the Developer
+
+<p align="center">
+  <strong>RAMIELSON Geoffroy Judicaël</strong>
+</p>
+
+<p align="center">
+  Full Stack Developer · Master 1 Computer Science Student
+</p>
+
+<p align="center">
+  ONIFRA · Madagascar 🇲🇬
+</p>
+
+I am a Full Stack Developer and Master 1 Computer Science student at ONIFRA, Madagascar.
+
+My interests include software development, artificial intelligence, automation, and emerging technologies.
+
+My ambition is to transform innovative ideas into concrete technological solutions.
+
+**JYNTRA AI** represents this vision: exploring how modern AI technologies can be combined with software engineering to address complex real-world challenges.
+
+### Project Information
+
+| | |
+|---|---|
+| Project | JYNTRA AI |
+| Tagline | Your AI. Your Edge. |
+| Developer | RAMIELSON Geoffroy Judicaël |
+| Country | Madagascar 🇲🇬 |
+| Event | Meta Global AI Hackathon 2026 |
+| Track | Build for Your World |
+| Category | Indie Developer |
+
+<p align="center">
+  <a href="https://jyntra-ai-financial-market-intelligence.onrender.com/">
+    <strong>Explore JYNTRA AI</strong>
+  </a>
+  &nbsp; • &nbsp;
+  <a href="https://youtu.be/wIKQPydzHrI">
+    <strong>Watch the Demonstration</strong>
+  </a>
+</p>
+
+<p align="center">
+  <strong>JYNTRA AI — Your AI. Your Edge.</strong>
+</p>
+
+<p align="center">
+  <em>Observe the market. Challenge assumptions. Think beyond signals.</em>
+</p>
+
+---
+
+<p align="center">
+  Built with innovation, engineering, and AI in Madagascar 🇲🇬
+</p>
