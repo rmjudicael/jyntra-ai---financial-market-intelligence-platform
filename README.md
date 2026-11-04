@@ -542,7 +542,7 @@ The following section presents selected visual elements from the JYNTRA AI inter
 ### Platform Identity
 
 <p align="center">
-  <img src="Id.jpg" alt="JYNTRA AI visual identity" width="90%" />
+  <img src="public/Id.jpg" alt="JYNTRA AI visual identity" width="90%" />
 </p>
 
 ### Chart Analysis
