@@ -1,0 +1,27 @@
+# JYNTRA AI — Docker Compose
+services:
+  jyntra-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jyntra-ai
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - jyntra-network
+
+networks:
+  jyntra-network:
+    driver: bridge

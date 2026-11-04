@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { createHash } from 'crypto';
 import { GoogleGenAI } from '@google/genai';
-import { createAiEngine, type AiContentPart, type AiMessage, type AiResult, type AiTask } from '../src/server/aiEngine.ts';
+import { createAiEngine, type AiContentPart, type AiMessage, type AiResult, type AiTask, isChatModelId } from '../src/server/aiEngine.ts';
 import { isValidPriorAnalysis, MISSING_ANALYSIS_MSG } from '../src/utils/prerequisites.ts';
 import {
   JyntrackDataError,
@@ -104,6 +104,7 @@ interface PublicTraceStep {
 
 /** Builds a truthful execution trace from what actually ran. */
 function buildTrace(input: {
+  executionId: string;
   isAudio: boolean;
   transcription?: { ok: boolean; provider?: string };
   task: AiTask;
@@ -112,9 +113,12 @@ function buildTrace(input: {
   hasImage: boolean;
   segmented?: boolean;
 }): PublicTraceStep[] {
+  const providerLabel = input.result.tier === 'META' ? 'Meta AI' : input.result.tier === 'GEMINI' ? 'Google Gemini' : 'Free tier';
+  const modelName = input.result.model ?? '—';
   const steps: PublicTraceStep[] = [
-    { id: 'input', status: 'done', detail: input.isAudio ? 'Message vocal reçu' : 'Message texte reçu' },
+    { id: 'input', status: 'done', detail: `Execution ${input.executionId} — ${input.isAudio ? 'Message vocal reçu' : 'Message texte reçu'}` },
     { id: 'language', status: 'done', detail: 'Langue détectée côté client et confirmée par le modèle' },
+    { id: 'provider', status: input.result.success ? 'done' : 'error', detail: `Fournisseur: ${providerLabel} · Modèle: ${modelName} · Niveau: ${input.result.tier ?? '—'}` },
   ];
   if (input.isAudio) {
     steps.push({
@@ -136,12 +140,12 @@ function buildTrace(input: {
   steps.push({
     id: 'routing',
     status: input.result.success ? 'done' : 'error',
-    detail: input.result.success ? 'Moteur JYNTRA sélectionné et exécuté' : 'Aucun moteur disponible',
+    detail: input.result.success ? `Moteur JYNTRA sélectionné et exécuté via ${providerLabel}` : 'Aucun moteur disponible',
   });
   steps.push({
     id: 'reasoning',
     status: input.result.success ? 'done' : 'error',
-    detail: input.result.success ? 'Raisonnement et génération exécutés' : 'Aucun résultat généré',
+    detail: input.result.success ? `Raisonnement et génération exécutés par ${modelName}` : 'Aucun résultat généré',
   });
   steps.push({
     id: 'search',
@@ -386,6 +390,82 @@ app.get('/api/ai/models', async (_req: Request, res: Response) => {
 });
 
 // ---------------------------------------------------------------------------
+// 2C. API: Meta AI Integration Verification (diagnostic, no secrets exposed)
+// ---------------------------------------------------------------------------
+app.get('/api/ai/verify', noStore, async (_req: Request, res: Response) => {
+  const report: {
+    configured: boolean;
+    keyPresent: boolean;
+    endpoint: string;
+    modelsDeclared: string[];
+    providerCatalogConfirmed: boolean | null;
+    metaCallResult: { attempted: boolean; success: boolean; model?: string; tier?: string; latencyMs?: number; error?: string };
+    fallbackConfigured: { gemini: boolean; freeAlternative: boolean };
+    overall: 'verified' | 'configured_unverified' | 'not_configured';
+  } = {
+    configured: !!(aiClient || metaApiKey),
+    keyPresent: !!metaApiKey,
+    endpoint: metaEndpoint,
+    modelsDeclared: DECLARED_META_MODELS,
+    providerCatalogConfirmed: null,
+    metaCallResult: { attempted: false, success: false },
+    fallbackConfigured: { gemini: !!aiClient, freeAlternative: !!freeAiKey },
+    overall: 'not_configured',
+  };
+
+  if (!metaApiKey) {
+    return res.json({ ...report, overall: 'not_configured', message: 'META_API_KEY not configured. Integration cannot be verified without server-side credentials.' });
+  }
+
+  // Attempt provider catalogue discovery (proves endpoint reachability + auth).
+  try {
+    const catalog = await aiEngine.discoverMetaCatalog();
+    report.providerCatalogConfirmed = !!catalog;
+  } catch {
+    report.providerCatalogConfirmed = false;
+  }
+
+  // Attempt a minimal real Meta chat call with the first declared model.
+  const firstModel = DECLARED_META_MODELS.find((m) => isChatModelId(m));
+  if (firstModel) {
+    const started = Date.now();
+    try {
+      const result = await aiEngine.runChat([{ role: 'user', content: 'Say OK in one word.' }], {
+        temperature: 0,
+        task: 'chat',
+        preferredModels: [firstModel],
+        metaOnly: true,
+      });
+      report.metaCallResult = {
+        attempted: true,
+        success: !!result.success,
+        model: result.model,
+        tier: result.tier,
+        latencyMs: Date.now() - started,
+        error: result.success ? undefined : result.reason,
+      };
+    } catch (err: any) {
+      report.metaCallResult = {
+        attempted: true,
+        success: false,
+        model: firstModel,
+        tier: undefined,
+        latencyMs: Date.now() - started,
+        error: err?.message || 'UNKNOWN_ERROR',
+      };
+    }
+  }
+
+  if (report.metaCallResult.success) {
+    report.overall = 'verified';
+  } else if (report.configured) {
+    report.overall = 'configured_unverified';
+  }
+
+  res.json(report);
+});
+
+// ---------------------------------------------------------------------------
 // 2B. API: Direct AI execution (validated, rate-limited)
 // ---------------------------------------------------------------------------
 app.post('/api/ai/engine-call', chatLimit, noStore, async (req: Request, res: Response) => {
@@ -419,7 +499,7 @@ app.post('/api/ai/engine-call', chatLimit, noStore, async (req: Request, res: Re
       text: result.text,
       latencyMs: result.latencyMs,
       engineLabel: 'JYNTRA',
-      trace: buildTrace({ isAudio: false, task: 'reasoning', result, usedSearch: false, hasImage: false }),
+      trace: buildTrace({ executionId: `jy-${Date.now().toString(36)}`, isAudio: false, task: 'reasoning', result, usedSearch: false, hasImage: false }),
     });
   } catch {
     res.status(500).json({ success: false, error: SERVICE_UNAVAILABLE });
@@ -965,6 +1045,7 @@ Rappel : zones, structure et plan doivent rester cohérents. Si le plan est BUY,
       engineLabel: 'JYNTRA',
       analysis,
       trace: buildTrace({
+        executionId: `jy-${Date.now().toString(36)}`,
         isAudio: false,
         task: 'vision',
         result: chained,
@@ -1228,7 +1309,7 @@ Fournis impérativement un JSON pur :
       engineLabel: 'JYNTRA',
       redTeamInvoked: !!metaRedTeamResult,
       consensus: data,
-      trace: buildTrace({ isAudio: false, task: 'agents', result: chained, usedSearch: false, hasImage: false }),
+      trace: buildTrace({ executionId: `jy-${Date.now().toString(36)}`, isAudio: false, task: 'agents', result: chained, usedSearch: false, hasImage: false }),
     });
   } catch {
     res.status(500).json({ success: false, error: ANALYSIS_FAILED });
@@ -1359,6 +1440,7 @@ IDENTITÉ & ATTRIBUTS :
       latencyMs: chained.latencyMs,
       transcription: transcription ? { attempted: true, success: transcription.ok } : { attempted: false },
       trace: buildTrace({
+        executionId: `jy-${Date.now().toString(36)}`,
         isAudio: !!transcription,
         transcription: transcription ? { ok: transcription.ok, provider: transcription.provider } : undefined,
         task: 'reasoning',

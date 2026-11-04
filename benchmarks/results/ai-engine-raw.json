@@ -1,0 +1,59 @@
+{
+  "benchmarkId": "ai-engine-v1",
+  "executedAt": "2026-11-04T15:53:55.552Z",
+  "module": "ai-engine-routing",
+  "cases": [
+    {
+      "name": "Meta first model success",
+      "latencyMs": 1.15,
+      "success": false,
+      "calls": 2,
+      "modelTried": [
+        "muse-spark-1.3",
+        "muse-wonder-1.0"
+      ]
+    },
+    {
+      "name": "Meta quota fallback to alternate model",
+      "latencyMs": 0.86,
+      "success": true,
+      "tier": "META",
+      "model": "m2",
+      "calls": 2,
+      "modelTried": [
+        "m1",
+        "m2"
+      ]
+    },
+    {
+      "name": "Meta exhausted -> Gemini fallback",
+      "latencyMs": 0.19,
+      "success": true,
+      "tier": "GEMINI",
+      "model": "gemini",
+      "calls": 1
+    },
+    {
+      "name": "All providers down -> honest failure",
+      "latencyMs": 0.04,
+      "success": false,
+      "error": "NO_TIER_AVAILABLE"
+    },
+    {
+      "name": "401 stops chain (no model burning)",
+      "latencyMs": 0.13,
+      "success": true,
+      "tier": "GEMINI",
+      "calls": 1,
+      "modelTried": [
+        "m1"
+      ]
+    },
+    {
+      "name": "Non-chat model ID exclusion",
+      "latencyMs": 0,
+      "success": false,
+      "detail": "Excluded IDs: sam-3.1, muse-voice-transcribe-1.0, muse-image-1.0"
+    }
+  ]
+}

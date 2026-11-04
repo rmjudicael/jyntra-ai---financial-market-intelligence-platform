@@ -1,0 +1,111 @@
+{
+  "benchmarkId": "financial-v1",
+  "executedAt": "2026-11-04T15:53:54.085Z",
+  "module": "financial-calculations",
+  "cases": [
+    {
+      "category": "risk-calculator",
+      "name": "Valid LONG trade R:R=2.0",
+      "latencyMs": 0.18,
+      "isValid": true,
+      "riskRewardRatio": 2,
+      "riskAmount": 100,
+      "positionSize": 20,
+      "warnings": []
+    },
+    {
+      "category": "risk-calculator",
+      "name": "Valid SHORT trade R:R=2.0",
+      "latencyMs": 0.01,
+      "isValid": true,
+      "riskRewardRatio": 2,
+      "riskAmount": 100,
+      "positionSize": 20,
+      "warnings": []
+    },
+    {
+      "category": "risk-calculator",
+      "name": "Invalid: zero capital",
+      "latencyMs": 0,
+      "isValid": false,
+      "riskRewardRatio": 0,
+      "riskAmount": 0,
+      "positionSize": 0,
+      "warnings": [
+        "CAPITAL_POSITIVE"
+      ]
+    },
+    {
+      "category": "risk-calculator",
+      "name": "Invalid: SL above entry (LONG)",
+      "latencyMs": 0.05,
+      "isValid": false,
+      "riskRewardRatio": 2,
+      "riskAmount": 100,
+      "positionSize": 20,
+      "warnings": [
+        "LONG_SL"
+      ]
+    },
+    {
+      "category": "risk-calculator",
+      "name": "High risk > 3%",
+      "latencyMs": 0.02,
+      "isValid": true,
+      "riskRewardRatio": 2,
+      "riskAmount": 500,
+      "positionSize": 100,
+      "warnings": [
+        "HIGH_RISK"
+      ]
+    },
+    {
+      "category": "risk-calculator",
+      "name": "Low R:R < 1.5",
+      "latencyMs": 0.02,
+      "isValid": true,
+      "riskRewardRatio": 0.4,
+      "riskAmount": 100,
+      "positionSize": 20,
+      "warnings": [
+        "LOW_RR"
+      ]
+    },
+    {
+      "category": "backtest-engine",
+      "name": "Backtest: EMA Cross",
+      "latencyMs": 0.81,
+      "success": true,
+      "totalReturnPercent": 0.01,
+      "winRate": 100,
+      "totalTrades": 1,
+      "maxDrawdownPercent": 0,
+      "profitFactor": 99.9,
+      "error": null
+    },
+    {
+      "category": "backtest-engine",
+      "name": "Backtest: RSI Reversal",
+      "latencyMs": 0.17,
+      "success": true,
+      "totalReturnPercent": 0,
+      "winRate": 0,
+      "totalTrades": 0,
+      "maxDrawdownPercent": 0,
+      "profitFactor": 0,
+      "error": null
+    },
+    {
+      "category": "backtest-engine",
+      "name": "Backtest: Breakout",
+      "latencyMs": 0.25,
+      "success": true,
+      "totalReturnPercent": 0,
+      "winRate": 0,
+      "totalTrades": 0,
+      "maxDrawdownPercent": 0,
+      "profitFactor": 0,
+      "error": null
+    }
+  ]
+}

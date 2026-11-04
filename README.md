@@ -458,6 +458,22 @@ The backend handles application API operations and coordinates access to configu
 
 The AI integration layer connects the platform to available AI providers and supports the capabilities exposed through the application.
 
+#### Meta AI Integration Verification
+
+The platform includes a diagnostic endpoint (`/api/ai/verify`) that reports the integration status of Meta AI models without exposing any credentials. It checks:
+
+- Whether `META_API_KEY` is configured server-side
+- Provider catalogue reachability via the Meta endpoint
+- A minimal real Meta chat call (when `metaOnly` routing is used)
+- Fallback configuration (Gemini, free-tier alternative)
+- Overall verification status: `verified`, `configured_unverified`, or `not_configured`
+
+This enables operators to confirm Meta API integration before deploying, without revealing API keys in logs or responses.
+
+#### Provider routing
+
+The AI engine uses a Meta-first tier with transparent fallback:
+
 ### External data
 
 Market and financial information is obtained from external data providers.
@@ -613,6 +629,75 @@ Where supported by the repository, type checking and automated tests can be exec
 Consult `package.json` for the exact scripts available in the current version of the project.
 
 A successful production build does not independently guarantee the availability of external AI providers or financial data services.
+
+---
+
+## Docker Deployment
+
+The project includes containerization support for reproducible deployment.
+
+### Dockerfile
+
+A multi-stage `Dockerfile` is provided at the repository root:
+
+- **Build stage:** Installs dependencies and builds the Vite frontend
+- **Runner stage:** Serves the built frontend and Express API as a non-privileged user
+- **Health check:** Validates the `/api/health` endpoint
+
+### docker-compose.yml
+
+A `docker-compose.yml` file defines the `jyntra-ai` service with port mapping, environment file support, and health checks.
+
+### Commands
+
+```bash
+# Build and run with Docker Compose
+docker-compose up --build
+
+# Build image only
+docker build -t jyntra-ai .
+
+# Run container directly
+docker run -p 3000:3000 --env-file .env jyntra-ai
+```
+
+---
+
+## Continuous Integration
+
+GitHub Actions CI is configured at `.github/workflows/ci.yml`. The pipeline runs on every push to `main` and on pull requests targeting `main`:
+
+1. Checkout repository
+2. Set up Node.js 20.19.0
+3. Install dependencies (`npm ci`)
+4. TypeScript typecheck (`npm run typecheck`)
+5. Test suite (`npm test`)
+6. Benchmarks (`npx tsx benchmarks/run.js`)
+7. Production build (`npm run build`)
+8. Docker build check
+
+All tests run without requiring production API keys; providers are mocked where necessary.
+
+---
+
+## Benchmarks
+
+Quantitative benchmarks are located in the `benchmarks/` directory. They provide deterministic, reproducible measurements of financial calculations and AI engine routing behavior.
+
+### Benchmark suites
+
+| Suite | File | Coverage |
+|-------|------|----------|
+| Financial calculations | `benchmarks/financial.js` | Risk calculator, backtest engine |
+| AI engine routing | `benchmarks/ai-engine.js` | Fallback chain, model routing, provider transparency |
+
+### Running benchmarks
+
+```bash
+npx tsx benchmarks/run.js
+```
+
+Results are written to `benchmarks/results/results.json` and `benchmarks/results/results.md`. All benchmarks run without external API dependencies.
 
 ---
 

@@ -1,0 +1,168 @@
+{
+  "benchmarkSuite": "JYNTRA AI Quantitative Benchmarks",
+  "executedAt": "2026-11-04T15:53:55.552Z",
+  "nodeVersion": "v26.4.0",
+  "results": [
+    {
+      "benchmarkId": "financial-v1",
+      "executedAt": "2026-11-04T15:53:54.085Z",
+      "module": "financial-calculations",
+      "cases": [
+        {
+          "category": "risk-calculator",
+          "name": "Valid LONG trade R:R=2.0",
+          "latencyMs": 0.18,
+          "isValid": true,
+          "riskRewardRatio": 2,
+          "riskAmount": 100,
+          "positionSize": 20,
+          "warnings": []
+        },
+        {
+          "category": "risk-calculator",
+          "name": "Valid SHORT trade R:R=2.0",
+          "latencyMs": 0.01,
+          "isValid": true,
+          "riskRewardRatio": 2,
+          "riskAmount": 100,
+          "positionSize": 20,
+          "warnings": []
+        },
+        {
+          "category": "risk-calculator",
+          "name": "Invalid: zero capital",
+          "latencyMs": 0,
+          "isValid": false,
+          "riskRewardRatio": 0,
+          "riskAmount": 0,
+          "positionSize": 0,
+          "warnings": ["CAPITAL_POSITIVE"]
+        },
+        {
+          "category": "risk-calculator",
+          "name": "Invalid: SL above entry (LONG)",
+          "latencyMs": 0.05,
+          "isValid": false,
+          "riskRewardRatio": 2,
+          "riskAmount": 100,
+          "positionSize": 20,
+          "warnings": ["LONG_SL"]
+        },
+        {
+          "category": "risk-calculator",
+          "name": "High risk > 3%",
+          "latencyMs": 0.02,
+          "isValid": true,
+          "riskRewardRatio": 2,
+          "riskAmount": 500,
+          "positionSize": 100,
+          "warnings": ["HIGH_RISK"]
+        },
+        {
+          "category": "risk-calculator",
+          "name": "Low R:R < 1.5",
+          "latencyMs": 0.02,
+          "isValid": true,
+          "riskRewardRatio": 0.4,
+          "riskAmount": 100,
+          "positionSize": 20,
+          "warnings": ["LOW_RR"]
+        },
+        {
+          "category": "backtest-engine",
+          "name": "Backtest: EMA Cross",
+          "latencyMs": 0.81,
+          "success": true,
+          "totalReturnPercent": 0.01,
+          "winRate": 100,
+          "totalTrades": 1,
+          "maxDrawdownPercent": 0,
+          "profitFactor": 99.9,
+          "error": null
+        },
+        {
+          "category": "backtest-engine",
+          "name": "Backtest: RSI Reversal",
+          "latencyMs": 0.17,
+          "success": true,
+          "totalReturnPercent": 0,
+          "winRate": 0,
+          "totalTrades": 0,
+          "maxDrawdownPercent": 0,
+          "profitFactor": 0,
+          "error": null
+        },
+        {
+          "category": "backtest-engine",
+          "name": "Backtest: Breakout",
+          "latencyMs": 0.25,
+          "success": true,
+          "totalReturnPercent": 0,
+          "winRate": 0,
+          "totalTrades": 0,
+          "maxDrawdownPercent": 0,
+          "profitFactor": 0,
+          "error": null
+        }
+      ]
+    },
+    {
+      "benchmarkId": "ai-engine-v1",
+      "executedAt": "2026-11-04T15:53:55.552Z",
+      "module": "ai-engine-routing",
+      "cases": [
+        {
+          "name": "Meta first model success",
+          "latencyMs": 1.15,
+          "success": false,
+          "calls": 2,
+          "modelTried": ["muse-spark-1.3", "muse-wonder-1.0"]
+        },
+        {
+          "name": "Meta quota fallback to alternate model",
+          "latencyMs": 0.86,
+          "success": true,
+          "tier": "META",
+          "model": "m2",
+          "calls": 2,
+          "modelTried": ["m1", "m2"]
+        },
+        {
+          "name": "Meta exhausted -> Gemini fallback",
+          "latencyMs": 0.19,
+          "success": true,
+          "tier": "GEMINI",
+          "model": "gemini",
+          "calls": 1
+        },
+        {
+          "name": "All providers down -> honest failure",
+          "latencyMs": 0.04,
+          "success": false,
+          "error": "NO_TIER_AVAILABLE"
+        },
+        {
+          "name": "401 stops chain (no model burning)",
+          "latencyMs": 0.13,
+          "success": true,
+          "tier": "GEMINI",
+          "calls": 1,
+          "modelTried": ["m1"]
+        },
+        {
+          "name": "Non-chat model ID exclusion",
+          "latencyMs": 0,
+          "success": false,
+          "detail": "Excluded IDs: sam-3.1, muse-voice-transcribe-1.0, muse-image-1.0"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalSuites": 2,
+    "totalCases": 15,
+    "passedCases": 9,
+    "failedCases": 6,
+    "averageLatencyMs": 0.43
+  }
+}
