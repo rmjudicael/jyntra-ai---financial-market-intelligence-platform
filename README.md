@@ -78,7 +78,7 @@
 
 ## Overview
 
-**JYNTRA AI — Your AI. Your Edge.** is an AI-powered financial intelligence platform designed to help users explore financial markets through a structured combination of market data, technical analysis, multimodal artificial intelligence, multi-agent reasoning, and quantitative research.
+**JYNTRA AI - Your AI. Your Edge.** is an AI-powered financial intelligence platform designed to help users explore financial markets through a structured combination of market data, technical analysis, multimodal artificial intelligence, multi-agent reasoning, and quantitative research.
 
 Financial markets generate enormous amounts of information. Understanding that information requires more than identifying patterns on a chart. It involves observing market behavior, interpreting context, evaluating risk, testing hypotheses, and distinguishing evidence from assumptions.
 
@@ -93,7 +93,7 @@ The platform combines a collection of specialized tools and AI-powered capabilit
 > Intelligence should support better analysis, not replace critical thinking.
 
 **Live platform:**  
-https://jyntra-ai-financial-market-intelligence.onrender.com/
+https://jyntra-ai-financial-market-intelligence.onrender.com
 
 ---
 
