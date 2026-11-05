@@ -1,0 +1,630 @@
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"NASDAQ100","timeframe":"4H","verdict":"NO_TRADE","entry":19947.8,"stopLoss":19249.63,"takeProfit1":20506.34}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":0.8,"primaryRisk":"Cloture sous le stop 19249.63 invalide la structure haussiere.","invalidation":"Cloture 1H sous 19249.63.","explanation":"R:R 0.80 sous le minimum de 1.5 (risque 3.5%); le setup long est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"4H","verdict":"NO_TRADE","entry":3169.75,"stopLoss":3090.51,"takeProfit1":3248.99}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1,"primaryRisk":"Cloture sous le stop 3090.51 invalide la structure haussiere.","invalidation":"Cloture 1H sous 3090.51.","explanation":"R:R 1.00 sous le minimum de 1.5 (risque 2.5%); le setup long est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"NASDAQ100","timeframe":"1D","verdict":"SELL","entry":19919.24,"stopLoss":20616.41,"takeProfit1":18664.33}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":1.8,"primaryRisk":"Cloture au-dessus du stop 20616.41 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 20616.41.","explanation":"R:R 1.80 au-dessus du minimum de 1.5 (risque 3.5%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"XAU/USD","timeframe":"1H","verdict":"NO_TRADE","entry":2325.66,"stopLoss":2407.06,"takeProfit1":2260.54}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":0.8,"primaryRisk":"Cloture au-dessus du stop 2407.06 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 2407.06.","explanation":"R:R 0.80 sous le minimum de 1.5 (risque 3.5%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"NASDAQ100","timeframe":"15M","verdict":"SELL","entry":20030.83,"stopLoss":20391.38,"takeProfit1":19129.44}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2.5,"primaryRisk":"Cloture au-dessus du stop 20391.38 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 20391.38.","explanation":"R:R 2.50 au-dessus du minimum de 1.5 (risque 1.8%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"15M","verdict":"BUY","entry":3118.91,"stopLoss":3009.75,"takeProfit1":3337.23}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2,"primaryRisk":"Cloture sous le stop 3009.75 invalide la structure haussiere.","invalidation":"Cloture 1H sous 3009.75.","explanation":"R:R 2.00 au-dessus du minimum de 1.5 (risque 3.5%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"XAU/USD","timeframe":"1H","verdict":"NO_TRADE","entry":2379.47,"stopLoss":2336.64,"takeProfit1":2430.87}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1.2,"primaryRisk":"Cloture sous le stop 2336.64 invalide la structure haussiere.","invalidation":"Cloture 1H sous 2336.64.","explanation":"R:R 1.20 sous le minimum de 1.5 (risque 1.8%); le setup long est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"XAU/USD","timeframe":"15M","verdict":"SELL","entry":2355.71,"stopLoss":2398.11,"takeProfit1":2292.11}
+
+### Response
+{"stance":"CAUTION","riskRewardRatio":1.5,"primaryRisk":"Cloture au-dessus du stop 2398.11 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 2398.11.","explanation":"R:R 1.50 proche du minimum de 1.5 (risque 1.8%); le setup short reste conditionnel."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"1D","verdict":"NO_TRADE","entry":3181.94,"stopLoss":3293.31,"takeProfit1":3092.85}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":0.8,"primaryRisk":"Cloture au-dessus du stop 3293.31 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 3293.31.","explanation":"R:R 0.80 sous le minimum de 1.5 (risque 3.5%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"15M","verdict":"NO_TRADE","entry":3107.3,"stopLoss":3029.62,"takeProfit1":3169.45}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":0.8,"primaryRisk":"Cloture sous le stop 3029.62 invalide la structure haussiere.","invalidation":"Cloture 1H sous 3029.62.","explanation":"R:R 0.80 sous le minimum de 1.5 (risque 2.5%); le setup long est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"BTC/USDT","timeframe":"1D","verdict":"BUY","entry":64298.35,"stopLoss":63140.98,"takeProfit1":66381.62}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":1.8,"primaryRisk":"Cloture sous le stop 63140.98 invalide la structure haussiere.","invalidation":"Cloture 1H sous 63140.98.","explanation":"R:R 1.80 au-dessus du minimum de 1.5 (risque 1.8%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"NASDAQ100","timeframe":"4H","verdict":"NO_TRADE","entry":19745.97,"stopLoss":19588,"takeProfit1":19935.53}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1.2,"primaryRisk":"Cloture sous le stop 19588 invalide la structure haussiere.","invalidation":"Cloture 1H sous 19588.","explanation":"R:R 1.20 sous le minimum de 1.5 (risque 0.8%); le setup long est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"SPX500","timeframe":"15M","verdict":"NO_TRADE","entry":5558.68,"stopLoss":5603.15,"takeProfit1":5523.1}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":0.8,"primaryRisk":"Cloture au-dessus du stop 5603.15 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 5603.15.","explanation":"R:R 0.80 sous le minimum de 1.5 (risque 0.8%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"SPX500","timeframe":"4H","verdict":"SELL","entry":5586.1,"stopLoss":5781.61,"takeProfit1":5234.18}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":1.8,"primaryRisk":"Cloture au-dessus du stop 5781.61 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 5781.61.","explanation":"R:R 1.80 au-dessus du minimum de 1.5 (risque 3.5%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"BTC/USDT","timeframe":"1H","verdict":"NO_TRADE","entry":65269.22,"stopLoss":66444.07,"takeProfit1":64329.34}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":0.8,"primaryRisk":"Cloture au-dessus du stop 66444.07 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 66444.07.","explanation":"R:R 0.80 sous le minimum de 1.5 (risque 1.8%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"SPX500","timeframe":"15M","verdict":"SELL","entry":5543.97,"stopLoss":5588.32,"takeProfit1":5433.09}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2.5,"primaryRisk":"Cloture au-dessus du stop 5588.32 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 5588.32.","explanation":"R:R 2.50 au-dessus du minimum de 1.5 (risque 0.8%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"1D","verdict":"BUY","entry":1.0979,"stopLoss":1.0705,"takeProfit1":1.1473}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":1.8,"primaryRisk":"Cloture sous le stop 1.0705 invalide la structure haussiere.","invalidation":"Cloture 1H sous 1.0705.","explanation":"R:R 1.80 au-dessus du minimum de 1.5 (risque 2.5%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"1H","verdict":"NO_TRADE","entry":1.0663,"stopLoss":1.0791,"takeProfit1":1.0535}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1,"primaryRisk":"Cloture au-dessus du stop 1.0791 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.0791.","explanation":"R:R 1.00 sous le minimum de 1.5 (risque 1.2%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"4H","verdict":"BUY","entry":3125.25,"stopLoss":3087.75,"takeProfit1":3192.76}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":1.8,"primaryRisk":"Cloture sous le stop 3087.75 invalide la structure haussiere.","invalidation":"Cloture 1H sous 3087.75.","explanation":"R:R 1.80 au-dessus du minimum de 1.5 (risque 1.2%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"SPX500","timeframe":"4H","verdict":"BUY","entry":5584.78,"stopLoss":5517.76,"takeProfit1":5685.31}
+
+### Response
+{"stance":"CAUTION","riskRewardRatio":1.5,"primaryRisk":"Cloture sous le stop 5517.76 invalide la structure haussiere.","invalidation":"Cloture 1H sous 5517.76.","explanation":"R:R 1.50 proche du minimum de 1.5 (risque 1.2%); le setup long reste conditionnel."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"1D","verdict":"NO_TRADE","entry":3205.11,"stopLoss":3230.75,"takeProfit1":3179.47}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1,"primaryRisk":"Cloture au-dessus du stop 3230.75 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 3230.75.","explanation":"R:R 1.00 sous le minimum de 1.5 (risque 0.8%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"XAU/USD","timeframe":"4H","verdict":"NO_TRADE","entry":2325,"stopLoss":2352.9,"takeProfit1":2291.52}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1.2,"primaryRisk":"Cloture au-dessus du stop 2352.9 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 2352.9.","explanation":"R:R 1.20 sous le minimum de 1.5 (risque 1.2%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"15M","verdict":"NO_TRADE","entry":1.0826,"stopLoss":1.0913,"takeProfit1":1.0696}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1.49,"primaryRisk":"Cloture au-dessus du stop 1.0913 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.0913.","explanation":"R:R 1.49 sous le minimum de 1.5 (risque 0.8%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"BTC/USDT","timeframe":"1D","verdict":"NO_TRADE","entry":64456.09,"stopLoss":66067.49,"takeProfit1":62844.69}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1,"primaryRisk":"Cloture au-dessus du stop 66067.49 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 66067.49.","explanation":"R:R 1.00 sous le minimum de 1.5 (risque 2.5%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"1D","verdict":"SELL","entry":1.0959,"stopLoss":1.1233,"takeProfit1":1.0411}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2,"primaryRisk":"Cloture au-dessus du stop 1.1233 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.1233.","explanation":"R:R 2.00 au-dessus du minimum de 1.5 (risque 2.5%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"NASDAQ100","timeframe":"15M","verdict":"SELL","entry":19670.05,"stopLoss":19906.09,"takeProfit1":18961.93}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":3,"primaryRisk":"Cloture au-dessus du stop 19906.09 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 19906.09.","explanation":"R:R 3.00 au-dessus du minimum de 1.5 (risque 1.2%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"BTC/USDT","timeframe":"4H","verdict":"SELL","entry":63683.41,"stopLoss":65912.33,"takeProfit1":58111.11}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2.5,"primaryRisk":"Cloture au-dessus du stop 65912.33 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 65912.33.","explanation":"R:R 2.50 au-dessus du minimum de 1.5 (risque 3.5%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"NASDAQ100","timeframe":"1D","verdict":"NO_TRADE","entry":19833.02,"stopLoss":20328.85,"takeProfit1":19436.36}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":0.8,"primaryRisk":"Cloture au-dessus du stop 20328.85 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 20328.85.","explanation":"R:R 0.80 sous le minimum de 1.5 (risque 2.5%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"BTC/USDT","timeframe":"1H","verdict":"BUY","entry":63417.81,"stopLoss":62910.47,"takeProfit1":64432.49}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2,"primaryRisk":"Cloture sous le stop 62910.47 invalide la structure haussiere.","invalidation":"Cloture 1H sous 62910.47.","explanation":"R:R 2.00 au-dessus du minimum de 1.5 (risque 0.8%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"15M","verdict":"NO_TRADE","entry":3087.48,"stopLoss":3143.05,"takeProfit1":3020.79}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1.2,"primaryRisk":"Cloture au-dessus du stop 3143.05 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 3143.05.","explanation":"R:R 1.20 sous le minimum de 1.5 (risque 1.8%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"1D","verdict":"SELL","entry":3172.22,"stopLoss":3283.25,"takeProfit1":2894.65}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2.5,"primaryRisk":"Cloture au-dessus du stop 3283.25 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 3283.25.","explanation":"R:R 2.50 au-dessus du minimum de 1.5 (risque 3.5%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"XAU/USD","timeframe":"1D","verdict":"BUY","entry":2348.99,"stopLoss":2290.27,"takeProfit1":2525.16}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":3,"primaryRisk":"Cloture sous le stop 2290.27 invalide la structure haussiere.","invalidation":"Cloture 1H sous 2290.27.","explanation":"R:R 3.00 au-dessus du minimum de 1.5 (risque 2.5%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"XAU/USD","timeframe":"15M","verdict":"NO_TRADE","entry":2336.11,"stopLoss":2294.06,"takeProfit1":2369.75}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":0.8,"primaryRisk":"Cloture sous le stop 2294.06 invalide la structure haussiere.","invalidation":"Cloture 1H sous 2294.06.","explanation":"R:R 0.80 sous le minimum de 1.5 (risque 1.8%); le setup long est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"SPX500","timeframe":"1D","verdict":"NO_TRADE","entry":5446.09,"stopLoss":5582.24,"takeProfit1":5337.17}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":0.8,"primaryRisk":"Cloture au-dessus du stop 5582.24 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 5582.24.","explanation":"R:R 0.80 sous le minimum de 1.5 (risque 2.5%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"15M","verdict":"NO_TRADE","entry":1.0951,"stopLoss":1.1082,"takeProfit1":1.0793}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1.21,"primaryRisk":"Cloture au-dessus du stop 1.1082 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.1082.","explanation":"R:R 1.21 sous le minimum de 1.5 (risque 1.2%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"XAU/USD","timeframe":"1D","verdict":"SELL","entry":2338.66,"stopLoss":2420.51,"takeProfit1":2174.95}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2,"primaryRisk":"Cloture au-dessus du stop 2420.51 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 2420.51.","explanation":"R:R 2.00 au-dessus du minimum de 1.5 (risque 3.5%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"SPX500","timeframe":"1H","verdict":"BUY","entry":5558.4,"stopLoss":5458.35,"takeProfit1":5738.49}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":1.8,"primaryRisk":"Cloture sous le stop 5458.35 invalide la structure haussiere.","invalidation":"Cloture 1H sous 5458.35.","explanation":"R:R 1.80 au-dessus du minimum de 1.5 (risque 1.8%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"XAU/USD","timeframe":"4H","verdict":"SELL","entry":2294.12,"stopLoss":2312.47,"takeProfit1":2261.08}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":1.8,"primaryRisk":"Cloture au-dessus du stop 2312.47 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 2312.47.","explanation":"R:R 1.80 au-dessus du minimum de 1.5 (risque 0.8%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"4H","verdict":"BUY","entry":3096.08,"stopLoss":2987.72,"takeProfit1":3421.17}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":3,"primaryRisk":"Cloture sous le stop 2987.72 invalide la structure haussiere.","invalidation":"Cloture 1H sous 2987.72.","explanation":"R:R 3.00 au-dessus du minimum de 1.5 (risque 3.5%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"XAU/USD","timeframe":"1H","verdict":"SELL","entry":2343.73,"stopLoss":2362.48,"takeProfit1":2306.23}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2,"primaryRisk":"Cloture au-dessus du stop 2362.48 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 2362.48.","explanation":"R:R 2.00 au-dessus du minimum de 1.5 (risque 0.8%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"1D","verdict":"SELL","entry":1.082,"stopLoss":1.1015,"takeProfit1":1.0528}
+
+### Response
+{"stance":"CAUTION","riskRewardRatio":1.5,"primaryRisk":"Cloture au-dessus du stop 1.1015 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.1015.","explanation":"R:R 1.50 proche du minimum de 1.5 (risque 1.8%); le setup short reste conditionnel."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"1D","verdict":"BUY","entry":3142.1,"stopLoss":3085.54,"takeProfit1":3311.77}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":3,"primaryRisk":"Cloture sous le stop 3085.54 invalide la structure haussiere.","invalidation":"Cloture 1H sous 3085.54.","explanation":"R:R 3.00 au-dessus du minimum de 1.5 (risque 1.8%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"XAU/USD","timeframe":"1D","verdict":"BUY","entry":2311.3,"stopLoss":2253.52,"takeProfit1":2426.87}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2,"primaryRisk":"Cloture sous le stop 2253.52 invalide la structure haussiere.","invalidation":"Cloture 1H sous 2253.52.","explanation":"R:R 2.00 au-dessus du minimum de 1.5 (risque 2.5%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"1H","verdict":"BUY","entry":3212.52,"stopLoss":3186.82,"takeProfit1":3276.77}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2.5,"primaryRisk":"Cloture sous le stop 3186.82 invalide la structure haussiere.","invalidation":"Cloture 1H sous 3186.82.","explanation":"R:R 2.50 au-dessus du minimum de 1.5 (risque 0.8%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"15M","verdict":"SELL","entry":1.1077,"stopLoss":1.1465,"takeProfit1":0.9914}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":3,"primaryRisk":"Cloture au-dessus du stop 1.1465 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.1465.","explanation":"R:R 3.00 au-dessus du minimum de 1.5 (risque 3.5%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"BTC/USDT","timeframe":"1D","verdict":"BUY","entry":63105.16,"stopLoss":62600.32,"takeProfit1":64367.26}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2.5,"primaryRisk":"Cloture sous le stop 62600.32 invalide la structure haussiere.","invalidation":"Cloture 1H sous 62600.32.","explanation":"R:R 2.50 au-dessus du minimum de 1.5 (risque 0.8%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"4H","verdict":"SELL","entry":1.0697,"stopLoss":1.0783,"takeProfit1":1.0543}
+
+### Response
+{"stance":"CAUTION","riskRewardRatio":1.79,"primaryRisk":"Cloture au-dessus du stop 1.0783 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.0783.","explanation":"R:R 1.79 proche du minimum de 1.5 (risque 0.8%); le setup short reste conditionnel."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"BTC/USDT","timeframe":"1D","verdict":"NO_TRADE","entry":64026.2,"stopLoss":65178.67,"takeProfit1":62643.23}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1.2,"primaryRisk":"Cloture au-dessus du stop 65178.67 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 65178.67.","explanation":"R:R 1.20 sous le minimum de 1.5 (risque 1.8%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"4H","verdict":"BUY","entry":1.079,"stopLoss":1.0661,"takeProfit1":1.1023}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":1.81,"primaryRisk":"Cloture sous le stop 1.0661 invalide la structure haussiere.","invalidation":"Cloture 1H sous 1.0661.","explanation":"R:R 1.81 au-dessus du minimum de 1.5 (risque 1.2%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"NASDAQ100","timeframe":"1H","verdict":"SELL","entry":19825.93,"stopLoss":20519.84,"takeProfit1":17744.21}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":3,"primaryRisk":"Cloture au-dessus du stop 20519.84 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 20519.84.","explanation":"R:R 3.00 au-dessus du minimum de 1.5 (risque 3.5%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"SPX500","timeframe":"4H","verdict":"BUY","entry":5540.68,"stopLoss":5346.76,"takeProfit1":5928.53}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2,"primaryRisk":"Cloture sous le stop 5346.76 invalide la structure haussiere.","invalidation":"Cloture 1H sous 5346.76.","explanation":"R:R 2.00 au-dessus du minimum de 1.5 (risque 3.5%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"1D","verdict":"BUY","entry":1.1058,"stopLoss":1.097,"takeProfit1":1.1279}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2.51,"primaryRisk":"Cloture sous le stop 1.097 invalide la structure haussiere.","invalidation":"Cloture 1H sous 1.097.","explanation":"R:R 2.51 au-dessus du minimum de 1.5 (risque 0.8%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"BTC/USDT","timeframe":"1D","verdict":"BUY","entry":63407,"stopLoss":62265.67,"takeProfit1":65118.99}
+
+### Response
+{"stance":"CAUTION","riskRewardRatio":1.5,"primaryRisk":"Cloture sous le stop 62265.67 invalide la structure haussiere.","invalidation":"Cloture 1H sous 62265.67.","explanation":"R:R 1.50 proche du minimum de 1.5 (risque 1.8%); le setup long reste conditionnel."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"1D","verdict":"NO_TRADE","entry":1.0966,"stopLoss":1.0878,"takeProfit1":1.1036}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":0.8,"primaryRisk":"Cloture sous le stop 1.0878 invalide la structure haussiere.","invalidation":"Cloture 1H sous 1.0878.","explanation":"R:R 0.80 sous le minimum de 1.5 (risque 0.8%); le setup long est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"SPX500","timeframe":"1D","verdict":"SELL","entry":5485.28,"stopLoss":5584.02,"takeProfit1":5189.07}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":3,"primaryRisk":"Cloture au-dessus du stop 5584.02 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 5584.02.","explanation":"R:R 3.00 au-dessus du minimum de 1.5 (risque 1.8%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"1H","verdict":"SELL","entry":3171.29,"stopLoss":3196.66,"takeProfit1":3125.62}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":1.8,"primaryRisk":"Cloture au-dessus du stop 3196.66 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 3196.66.","explanation":"R:R 1.80 au-dessus du minimum de 1.5 (risque 0.8%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"1D","verdict":"NO_TRADE","entry":1.0784,"stopLoss":1.087,"takeProfit1":1.068}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1.21,"primaryRisk":"Cloture au-dessus du stop 1.087 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.087.","explanation":"R:R 1.21 sous le minimum de 1.5 (risque 0.8%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"BTC/USDT","timeframe":"1D","verdict":"SELL","entry":64760.55,"stopLoss":65537.68,"takeProfit1":63206.3}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2,"primaryRisk":"Cloture au-dessus du stop 65537.68 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 65537.68.","explanation":"R:R 2.00 au-dessus du minimum de 1.5 (risque 1.2%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"4H","verdict":"NO_TRADE","entry":1.1048,"stopLoss":1.1435,"takeProfit1":1.0584}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1.2,"primaryRisk":"Cloture au-dessus du stop 1.1435 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.1435.","explanation":"R:R 1.20 sous le minimum de 1.5 (risque 3.5%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"1H","verdict":"SELL","entry":1.1025,"stopLoss":1.1301,"takeProfit1":1.0336}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2.5,"primaryRisk":"Cloture au-dessus du stop 1.1301 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.1301.","explanation":"R:R 2.50 au-dessus du minimum de 1.5 (risque 2.5%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"NASDAQ100","timeframe":"1H","verdict":"SELL","entry":20132.39,"stopLoss":20293.45,"takeProfit1":19842.48}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":1.8,"primaryRisk":"Cloture au-dessus du stop 20293.45 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 20293.45.","explanation":"R:R 1.80 au-dessus du minimum de 1.5 (risque 0.8%); le setup short respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"1D","verdict":"SELL","entry":1.0729,"stopLoss":1.0815,"takeProfit1":1.06}
+
+### Response
+{"stance":"CAUTION","riskRewardRatio":1.5,"primaryRisk":"Cloture au-dessus du stop 1.0815 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.0815.","explanation":"R:R 1.50 proche du minimum de 1.5 (risque 0.8%); le setup short reste conditionnel."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"NASDAQ100","timeframe":"1D","verdict":"BUY","entry":19551.37,"stopLoss":19062.59,"takeProfit1":20773.33}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2.5,"primaryRisk":"Cloture sous le stop 19062.59 invalide la structure haussiere.","invalidation":"Cloture 1H sous 19062.59.","explanation":"R:R 2.50 au-dessus du minimum de 1.5 (risque 2.5%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"EUR/USD","timeframe":"15M","verdict":"NO_TRADE","entry":1.0671,"stopLoss":1.0863,"takeProfit1":1.0479}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1,"primaryRisk":"Cloture au-dessus du stop 1.0863 invalide la structure baissiere.","invalidation":"Cloture 1H au-dessus de 1.0863.","explanation":"R:R 1.00 sous le minimum de 1.5 (risque 1.8%); le setup short est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"XAU/USD","timeframe":"1D","verdict":"BUY","entry":2334.8,"stopLoss":2316.12,"takeProfit1":2372.16}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2,"primaryRisk":"Cloture sous le stop 2316.12 invalide la structure haussiere.","invalidation":"Cloture 1H sous 2316.12.","explanation":"R:R 2.00 au-dessus du minimum de 1.5 (risque 0.8%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"SPX500","timeframe":"1H","verdict":"NO_TRADE","entry":5438.09,"stopLoss":5302.14,"takeProfit1":5546.85}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":0.8,"primaryRisk":"Cloture sous le stop 5302.14 invalide la structure haussiere.","invalidation":"Cloture 1H sous 5302.14.","explanation":"R:R 0.80 sous le minimum de 1.5 (risque 2.5%); le setup long est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"4H","verdict":"BUY","entry":3114.51,"stopLoss":3089.59,"takeProfit1":3176.8}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2.5,"primaryRisk":"Cloture sous le stop 3089.59 invalide la structure haussiere.","invalidation":"Cloture 1H sous 3089.59.","explanation":"R:R 2.50 au-dessus du minimum de 1.5 (risque 0.8%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"ETH/USDT","timeframe":"1H","verdict":"NO_TRADE","entry":3093.59,"stopLoss":3037.91,"takeProfit1":3160.41}
+
+### Response
+{"stance":"REJECTED","riskRewardRatio":1.2,"primaryRisk":"Cloture sous le stop 3037.91 invalide la structure haussiere.","invalidation":"Cloture 1H sous 3037.91.","explanation":"R:R 1.20 sous le minimum de 1.5 (risque 1.8%); le setup long est rejete par la regle deterministe."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"SPX500","timeframe":"1H","verdict":"BUY","entry":5417.59,"stopLoss":5374.25,"takeProfit1":5525.94}
+
+### Response
+{"stance":"APPROVED","riskRewardRatio":2.5,"primaryRisk":"Cloture sous le stop 5374.25 invalide la structure haussiere.","invalidation":"Cloture 1H sous 5374.25.","explanation":"R:R 2.50 au-dessus du minimum de 1.5 (risque 0.8%); le setup long respecte le plan de risque."}
+<|sft|>
+### Instruction
+Tu es le module de risque de JYNTRA AI. A partir du plan fourni, produis uniquement un objet JSON avec les cles: stance (APPROVED|CAUTION|REJECTED), riskRewardRatio (number|null), primaryRisk (string), invalidation (string), explanation (string). Ne promets aucun gain et n inventes aucune donnee.
+
+### Input
+{"symbol":"NASDAQ100","timeframe":"1H","verdict":"BUY","entry":19410.79,"stopLoss":19177.86,"takeProfit1":19760.18}
+
+### Response
+{"stance":"CAUTION","riskRewardRatio":1.5,"primaryRisk":"Cloture sous le stop 19177.86 invalide la structure haussiere.","invalidation":"Cloture 1H sous 19177.86.","explanation":"R:R 1.50 proche du minimum de 1.5 (risque 1.2%); le setup long reste conditionnel."}
