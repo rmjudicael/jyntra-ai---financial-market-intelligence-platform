@@ -1,0 +1,28 @@
+{
+  "seed": 20261105,
+  "generatedAt": "2026-11-05T07:17:20.364Z",
+  "synthetic": true,
+  "provenance": "deterministic arithmetic fixtures; not market data",
+  "counts": {
+    "train": 70,
+    "validation": 10,
+    "test": 10
+  },
+  "schema": [
+    "id",
+    "synthetic",
+    "provenance",
+    "symbol",
+    "timeframe",
+    "verdict",
+    "entry",
+    "stopLoss",
+    "takeProfit1",
+    "riskRewardRatio",
+    "stance",
+    "primaryRisk",
+    "invalidation",
+    "explanation"
+  ],
+  "rule": "stance=REJECTED when riskRewardRatio < 1.5; CAUTION when < 1.8; APPROVED otherwise"
+}
