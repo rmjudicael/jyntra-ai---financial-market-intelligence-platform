@@ -780,7 +780,22 @@ To build the application:
 npm run build
 ```
 
-Where supported by the repository, type checking and automated tests can be executed using their corresponding npm scripts.
+Where supported by the repository, type checking and automated tests can be executed using their corresponding npm scripts:
+
+```bash
+npm run typecheck   # frontend + backend
+npm test            # unit, contract and local-HTTP integration suites
+npm run bench       # deterministic benchmark suites (blocking in CI)
+```
+
+Test layers:
+
+| Layer | What is proven | Network |
+|---|---|---|
+| Unit | Risk math, backtest engine, language detection, stores | none |
+| Contract | Meta routing, fallback, meta-only, SAM/Image/Voice request shapes, agent schemas, vetoes | mocked fetch |
+| Integration | Open-weight partner request/response, 429 classification, key guard over **real local HTTP** | localhost only |
+| Evaluation | 9 labeled agent scenarios through the real orchestrator | none (replay) |
 
 Consult `package.json` for the exact scripts available in the current version of the project.
 
@@ -797,7 +812,7 @@ The project includes containerization support for reproducible deployment.
 A multi-stage `Dockerfile` is provided at the repository root:
 
 - **Build stage:** Installs dependencies and builds the Vite frontend
-- **Runner stage:** Serves the built frontend and Express API as a non-privileged user
+- **Runner stage:** Serves the built frontend and Express API as a non-privileged user; includes `server.ts`, `src/server` and `src/services` (the actual API runtime) plus `ffmpeg` for Muse Voice transcription
 - **Health check:** Validates the `/api/health` endpoint
 
 ### docker-compose.yml
