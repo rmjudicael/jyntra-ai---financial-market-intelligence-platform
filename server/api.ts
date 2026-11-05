@@ -14,6 +14,7 @@ import {
 } from './jyntrack.ts';
 import { JYNTRACK_SCENARIO_IDS, type JyntrackAgentReport, type JyntrackAgentRole, type JyntrackBand, type JyntrackRealityRequest } from '../src/types/jyntrack.ts';
 import { createJob, getJob, ownsJob, publicJob, setStep, updateJob } from './jobs.ts';
+import { createRateLimiter } from './rateLimit.ts';
 
 dotenv.config({ quiet: true });
 
@@ -48,32 +49,18 @@ app.use((_req: Request, res: Response, next) => {
 
 app.use(express.json({ limit: '14mb' }));
 
-function makeRateLimit(bucket: string, max: number, windowMs: number) {
-  const hits = new Map<string, { count: number; reset: number }>();
-  return (req: Request, res: Response, next: () => void) => {
-    const ip = req.ip || req.socket.remoteAddress || 'unknown';
-    const key = `${bucket}:${ip}`;
-    const now = Date.now();
-    const entry = hits.get(key);
-    if (!entry || now > entry.reset) {
-      hits.set(key, { count: 1, reset: now + windowMs });
-      next();
-      return;
-    }
-    if (entry.count >= max) {
-      res.setHeader('Retry-After', String(Math.ceil((entry.reset - now) / 1000)));
-      res.status(429).json({ success: false, code: 'RATE_LIMITED', error: 'Too many requests. Please wait a moment.' });
-      return;
-    }
-    entry.count += 1;
-    next();
-  };
-}
-const chatLimit = makeRateLimit('chat', 40, 60_000);
-const heavyLimit = makeRateLimit('heavy', 12, 60_000);
-const audioLimit = makeRateLimit('audio', 10, 60_000);
-const jyntrackLimit = makeRateLimit('jyntrack', 40, 60_000);
-const jyntrackWarRoomLimit = makeRateLimit('jyntrack-war', 6, 60_000);
+// Bounded, proxy-aware limiter: expired buckets are evicted and the map can
+// never grow past RATE_LIMIT_MAX_ENTRIES. X-Forwarded-For is trusted only when
+// TRUST_PROXY=true (a known reverse proxy sits in front of the app).
+const rateLimitOptions = {
+  trustProxy: process.env.TRUST_PROXY === 'true',
+  maxEntries: Number(process.env.RATE_LIMIT_MAX_ENTRIES) || 10_000,
+};
+const chatLimit = createRateLimiter({ bucket: 'chat', max: 40, windowMs: 60_000, ...rateLimitOptions }).middleware;
+const heavyLimit = createRateLimiter({ bucket: 'heavy', max: 12, windowMs: 60_000, ...rateLimitOptions }).middleware;
+const audioLimit = createRateLimiter({ bucket: 'audio', max: 10, windowMs: 60_000, ...rateLimitOptions }).middleware;
+const jyntrackLimit = createRateLimiter({ bucket: 'jyntrack', max: 40, windowMs: 60_000, ...rateLimitOptions }).middleware;
+const jyntrackWarRoomLimit = createRateLimiter({ bucket: 'jyntrack-war', max: 6, windowMs: 60_000, ...rateLimitOptions }).middleware;
 
 const noStore = (_req: Request, res: Response, next: () => void) => {
   res.setHeader('Cache-Control', 'no-store, max-age=0');
