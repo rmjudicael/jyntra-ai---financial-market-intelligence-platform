@@ -18,7 +18,7 @@
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "bench": "tsx benchmarks/run.js",
     "hf:export": "node hf/jyntra-agent-eval/export.mjs",
-    "test": "tsx tests/aiEngine.fallback.test.ts && tsx tests/workflowStore.test.ts && tsx tests/workflowBuilder.test.ts && tsx tests/detectLanguage.test.ts && tsx tests/jyntrack.test.ts && tsx src/i18n/translations.test.ts && tsx tests/riskCalculator.test.ts && tsx tests/backtestEngine.test.ts && tsx tests/metaOnly.test.ts && tsx tests/metaMultimodal.test.ts && tsx tests/multiAgentOrchestrator.test.ts && tsx tests/openWeight.test.ts && tsx tests/openWeight.integration.test.ts && tsx tests/agentContract.test.ts && tsx tests/rateLimit.test.ts"
+    "test": "tsx tests/aiEngine.fallback.test.ts && tsx tests/workflowStore.test.ts && tsx tests/workflowBuilder.test.ts && tsx tests/detectLanguage.test.ts && tsx tests/jyntrack.test.ts && tsx src/i18n/translations.test.ts && tsx tests/riskCalculator.test.ts && tsx tests/backtestEngine.test.ts && tsx tests/metaOnly.test.ts && tsx tests/metaMultimodal.test.ts && tsx tests/multiAgentOrchestrator.test.ts && tsx tests/openWeight.test.ts && tsx tests/openWeight.integration.test.ts && tsx tests/agentContract.test.ts && tsx tests/rateLimit.test.ts && tsx tests/providerRetry.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.32.0",

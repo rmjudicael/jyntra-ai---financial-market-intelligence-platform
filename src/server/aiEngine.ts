@@ -18,6 +18,7 @@
  */
 import { execFileSync } from 'child_process';
 import fs from 'fs';
+import { fetchWithRetry, type RetryOptions } from './providerRetry.ts';
 export type AiTask =
   | 'chat'
   | 'reasoning'
@@ -91,6 +92,8 @@ export interface AiEngineDeps {
   cacheTtlMs?: number;
   /** Progress callback for long-running operations (0..100). */
   onProgress?: (phase: string, pct: number) => void;
+  /** Transient-failure retry policy for provider HTTP calls (429/5xx/network). */
+  retry?: RetryOptions;
 }
 
 export interface AiSegmentBox {
@@ -347,6 +350,7 @@ function contentToText(content: string | AiContentPart[]): string {
 
 export function createAiEngine(deps: AiEngineDeps) {
   const timeoutMs = deps.timeoutMs ?? 45000;
+  const retryOptions: RetryOptions = deps.retry ?? {};
   const taskTimeouts: Record<AiTask, number> = {
     chat: timeoutMs,
     reasoning: timeoutMs,
@@ -499,22 +503,34 @@ export function createAiEngine(deps: AiEngineDeps) {
     temperature: number,
     maxTokens: number,
   ): Promise<{ ok: boolean; text?: string; status?: number; finish?: string; errorCategory?: AiResult['errorCategory'] }> {
-    calls += 1;
     try {
-      const r = await deps.fetchImpl(
+      const outcome = await fetchWithRetry(
+        deps.fetchImpl,
         deps.metaEndpoint,
-        withTimeout({
-          method: 'POST',
-          headers: { Authorization: `Bearer ${deps.metaKey}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model,
-            messages,
-            temperature: clamp(temperature, 0, 2),
-            // Keep a real token budget: reasoning checkpoints spend tokens first.
-            max_tokens: maxTokens,
+        () =>
+          withTimeout({
+            method: 'POST',
+            headers: { Authorization: `Bearer ${deps.metaKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              model,
+              messages,
+              temperature: clamp(temperature, 0, 2),
+              // Keep a real token budget: reasoning checkpoints spend tokens first.
+              max_tokens: maxTokens,
+            }),
           }),
-        }),
+        // A 429 on the Meta chain means "this model is out of quota": let the
+        // existing fallback chain move to the next declared model instead of
+        // retrying the same one. 5xx/network errors are still retried.
+        { ...retryOptions, excludeStatuses: [429, ...(retryOptions.excludeStatuses ?? [])] },
       );
+      calls += outcome.attempts;
+      if (!outcome.ok) {
+        recordHealth(model, false, classifyError(undefined, (outcome.error as any)?.message));
+        bumpProvider('meta', false);
+        return { ok: false, errorCategory: classifyError(undefined, (outcome.error as any)?.message) };
+      }
+      const r = outcome.response;
       if (!r.ok) {
         recordHealth(model, false, classifyError(r.status, ''));
         bumpProvider('meta', false);
@@ -604,28 +620,48 @@ export function createAiEngine(deps: AiEngineDeps) {
     const temperature = clamp(opts?.temperature ?? 0.2, 0, 2);
     const maxTokens = clamp(opts?.maxTokens ?? 2048, 128, 8192);
     const timeout = cfg.timeoutMs ?? taskTimeoutFor(opts?.task ?? 'audit');
-    calls += 1;
 
     try {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (cfg.apiKey) headers.Authorization = `Bearer ${cfg.apiKey}`;
-      const r = await deps.fetchImpl(
+      const outcome = await fetchWithRetry(
+        deps.fetchImpl,
         openWeightEndpoint(cfg),
-        withTimeout(
-          {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({
-              model: cfg.modelId,
-              messages,
-              temperature,
-              max_tokens: maxTokens,
-              stream: false,
-            }),
-          },
-          timeout,
-        ),
+        () =>
+          withTimeout(
+            {
+              method: 'POST',
+              headers,
+              body: JSON.stringify({
+                model: cfg.modelId,
+                messages,
+                temperature,
+                max_tokens: maxTokens,
+                stream: false,
+              }),
+            },
+            timeout,
+          ),
+        { ...retryOptions, maxAttempts: retryOptions.maxAttempts ?? 2 },
       );
+      calls += outcome.attempts;
+      if (!outcome.ok) {
+        recordHealth(cfg.modelId, false, classifyError(undefined, (outcome.error as any)?.message));
+        bumpProvider('openweight', false);
+        return {
+          success: false,
+          reason: 'OPEN_WEIGHT_NETWORK',
+          model: cfg.modelId,
+          modelTried: [cfg.modelId],
+          provider: 'meta',
+          hosting: cfg.provider,
+          openWeight: true,
+          latencyMs: Date.now() - started,
+          calls,
+          errorCategory: classifyError(undefined, (outcome.error as any)?.message),
+        };
+      }
+      const r = outcome.response;
 
       if (!r.ok) {
         recordHealth(cfg.modelId, false, classifyError(r.status, ''));

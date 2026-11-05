@@ -347,6 +347,13 @@ const aiEngine = createAiEngine({
   freeAiChat: freeAiKey ? freeAiChatAdapter : undefined,
   openWeight: openWeightConfig,
   imageSize: process.env.MUSE_IMAGE_SIZE || '1024x1024',
+  // Retry only transient provider failures (429/5xx/network). Setting
+  // AI_RETRY_MAX_ATTEMPTS=1 disables retries entirely.
+  retry: {
+    maxAttempts: Number(process.env.AI_RETRY_MAX_ATTEMPTS) || 2,
+    baseDelayMs: Number(process.env.AI_RETRY_BASE_DELAY_MS) || 250,
+    maxDelayMs: Number(process.env.AI_RETRY_MAX_DELAY_MS) || 4000,
+  },
 });
 
 /** One orchestrator per process: shares the engine cache, health and metrics. */
