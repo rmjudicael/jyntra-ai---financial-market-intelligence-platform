@@ -17,6 +17,7 @@
  * Aucun résultat n'est simulé : si Meta est indisponible, l'échec est honnête.
  */
 import { createAiEngine } from '../server/aiEngine.ts';
+import type { FineTunedResult, FineTunedRiskInput } from '../server/fineTunedAdapter.ts';
 
 /* ------------------------------------------------------------------ */
 /* Types partagés                                                     */
@@ -83,6 +84,8 @@ export interface OrchestrationResult {
   riskVetoReason?: string;
   openWeightVetoApplied: boolean;
   crossCheck: CrossCheckResult;
+  /** Optional structured risk explanation from the local fine-tuned adapter. */
+  fineTunedAudit?: FineTunedResult;
   contradictions: string[];
   latencyMs: number;
   calls: number;
@@ -246,6 +249,10 @@ async function callSingleAgent(
 /* Orchestrateur principal                                            */
 /* ------------------------------------------------------------------ */
 
+export interface FineTunedAdapter {
+  explainRisk: (input: FineTunedRiskInput) => Promise<FineTunedResult>;
+}
+
 export interface OrchestratorDeps {
   /** Real engine instance (preferred: shares cache, health and metrics). */
   engine?: any;
@@ -254,11 +261,17 @@ export interface OrchestratorDeps {
   engineDeps?: any;
   /** Set false to skip the open-weight audit even when configured. */
   crossCheck?: boolean;
+  /**
+   * Optional local fine-tuned adapter. It produces a structured risk
+   * explanation for the audit trail and never overrides the deterministic veto.
+   */
+  fineTunedAdapter?: FineTunedAdapter;
 }
 
 export class MultiAgentOrchestrator {
   private engine: any;
   private crossCheckEnabled: boolean;
+  private fineTunedAdapter?: FineTunedAdapter;
 
   constructor(deps: OrchestratorDeps = {}) {
     if (deps.engine) {
@@ -271,6 +284,7 @@ export class MultiAgentOrchestrator {
       this.engine = createAiEngine({} as any);
     }
     this.crossCheckEnabled = deps.crossCheck !== false;
+    this.fineTunedAdapter = deps.fineTunedAdapter;
   }
 
   async run(
@@ -366,9 +380,32 @@ export class MultiAgentOrchestrator {
       } as AgentOutput;
     }
 
+    // ---- Optional fine-tuned risk explainer (audit trail only). ----
+    // It runs after every deterministic rule and cannot change the verdict.
+    let fineTunedAudit: FineTunedResult | undefined;
+    if (this.fineTunedAdapter && risk.success) {
+      const plan = this.extractRiskPlan(risk.argument || '', risk.json);
+      fineTunedAudit = await this.fineTunedAdapter.explainRisk({
+        symbol,
+        timeframe,
+        verdict: finalVerdict,
+        entry: plan.entry,
+        stopLoss: plan.stopLoss,
+        takeProfit1: plan.takeProfit1,
+        riskRewardRatio: plan.riskRewardRatio,
+        riskArgument: risk.argument,
+      });
+    }
+
     const allSuccess = [technical, macro, risk, strategy, redTeam, agents.lead].every((a) => a.success);
     const confidence = this.computeConfidence(finalVerdict, technical, macro, risk, strategy, redTeam, contradictions);
-    const calls = Object.values(agents).reduce((sum, a) => sum + (a.calls ?? 0), 0) + (crossCheck.used ? 1 : 0);
+    const agentCalls = Object.values(agents).reduce((sum, a) => sum + (a.calls ?? 0), 0);
+    // Engines that do not report per-agent calls still performed one request
+    // per agent; count them instead of silently reporting zero.
+    const calls =
+      Math.max(agentCalls, Object.keys(agents).length) +
+      (crossCheck.used ? 1 : 0) +
+      (fineTunedAudit?.calls ?? 0);
 
     return {
       symbol,
@@ -381,17 +418,32 @@ export class MultiAgentOrchestrator {
       riskVetoReason,
       openWeightVetoApplied: crossCheck.vetoApplied,
       crossCheck,
+      fineTunedAudit,
       contradictions,
       latencyMs: Date.now() - started,
-      calls: calls || Object.keys(agents).length,
-      routing: Object.entries(agents).map(([agent, a]) => ({
-        agent,
-        model: a.modelUsed,
-        provider: a.provider,
-        hosting: a.hosting,
-        latencyMs: a.latencyMs,
-        calls: a.calls,
-      })),
+      calls,
+      routing: [
+        ...Object.entries(agents).map(([agent, a]) => ({
+          agent,
+          model: a.modelUsed,
+          provider: a.provider,
+          hosting: a.hosting,
+          latencyMs: a.latencyMs,
+          calls: a.calls,
+        })),
+        ...(fineTunedAudit?.attempted
+          ? [
+              {
+                agent: 'fine-tuned-risk',
+                model: fineTunedAudit.model,
+                provider: fineTunedAudit.provider,
+                hosting: 'local',
+                latencyMs: fineTunedAudit.latencyMs,
+                calls: fineTunedAudit.calls,
+              },
+            ]
+          : []),
+      ],
       success: allSuccess && !!finalVerdict,
       error: allSuccess ? undefined : 'Un ou plusieurs agents ont echoue.',
     };

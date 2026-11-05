@@ -4,6 +4,7 @@ import { createHash } from 'crypto';
 import { GoogleGenAI } from '@google/genai';
 import { createAiEngine, type AiContentPart, type AiMessage, type AiResult, type AiTask, isChatModelId } from '../src/server/aiEngine.ts';
 import { MultiAgentOrchestrator, AGENT_SCHEMAS, MIN_RISK_REWARD } from '../src/services/multiAgentOrchestrator.ts';
+import { explainRiskWithAdapter, fineTunedStatus, parseFineTunedConfig } from '../src/server/fineTunedAdapter.ts';
 import { isValidPriorAnalysis, MISSING_ANALYSIS_MSG } from '../src/utils/prerequisites.ts';
 import {
   JyntrackDataError,
@@ -336,6 +337,9 @@ const openWeightConfig = openWeightProvider
     }
   : undefined;
 
+// Optional local LoRA/QLoRA adapter served by an OpenAI-compatible runtime.
+const fineTunedConfig = parseFineTunedConfig(process.env);
+
 const aiEngine = createAiEngine({
   fetchImpl: fetch,
   metaKey: metaApiKey,
@@ -357,7 +361,12 @@ const aiEngine = createAiEngine({
 });
 
 /** One orchestrator per process: shares the engine cache, health and metrics. */
-const multiAgentOrchestrator = new MultiAgentOrchestrator({ engine: aiEngine });
+const multiAgentOrchestrator = new MultiAgentOrchestrator({
+  engine: aiEngine,
+  fineTunedAdapter: fineTunedConfig
+    ? { explainRisk: (input) => explainRiskWithAdapter(fineTunedConfig, input) }
+    : undefined,
+});
 
 // All provider calls go through the centralised aiEngine above (single
 // fallback chain, verbatim declared ids, no provider detail leaked).
@@ -1376,6 +1385,16 @@ app.get('/api/ai/agents/schemas', (_req: Request, res: Response) => {
 app.get('/api/ai/open-weight/status', noStore, (_req: Request, res: Response) => {
   // No key, endpoint URL or token is ever returned.
   res.json({ success: true, ...aiEngine.metrics() });
+});
+
+app.get('/api/ai/fine-tuned/status', noStore, (_req: Request, res: Response) => {
+  // Host only: no key, token or full endpoint URL is ever returned.
+  res.json({
+    success: true,
+    ...fineTunedStatus(fineTunedConfig),
+    mode: 'local-adapter',
+    note: 'Un adaptateur LoRA/QLoRA est servi localement; il ne remplace jamais les modeles Meta distants.',
+  });
 });
 
 app.post('/api/ai/agents/orchestrate', chatLimit, noStore, async (req: Request, res: Response) => {
