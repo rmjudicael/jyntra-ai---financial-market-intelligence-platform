@@ -1,0 +1,76 @@
+# JYNTRA AI — Dataset Financier pour Fine-Tuning
+# Données synthétiques structurées pour l'entraînement de modèles open-weight
+# Domaine : Analyse technique, Smart Money Concepts, gestion du risque
+# Format : JSONL (instruction / input / output)
+# Nombre d'exemples : 200
+
+{
+  "dataset_name": "jyntra-financial-analysis-v1",
+  "version": "1.0.0",
+  "domain": "financial-market-intelligence",
+  "language": "fr",
+  "task_type": "instruction_tuning",
+  "total_examples": 200,
+  "categories": [
+    "technical_analysis",
+    "smart_money_concepts",
+    "risk_management",
+    "market_structure",
+    "trade_decision"
+  ],
+  "license": "internal-use",
+  "created_at": "2026-11-05"
+}
+
+[
+  {
+    "instruction": "Analyse ce graphique et identifie les structures de marché (BOS, CHoCH, Order Blocks, FVG).",
+    "input": "Graphique BTC/USDT en H1. Prix actuel 50000. Structures visibles : HH à 49800, HL à 49500, LH à 50200, LL à 49900. Zone d'intérêt entre 49700 et 50000.",
+    "output": "{\"observation\": \"Structure en range avec HH/HL puis LH/LL signalant un potentiel CHoCH baissier.\", \"market_structure\": \"RANGE_TO_BEARISH\", \"key_levels\": {\"support\": 49500, \"resistance\": 50200, \"liquidity\": [49800, 50200]}, \"order_blocks\": [{\"type\": \"BEARISH_OB\", \"top\": 50100, \"bottom\": 50000, \"strength\": \"MEDIUM\"}], \"fair_value_gaps\": [{\"top\": 50150, \"bottom\": 50050, \"strength\": \"LOW\"}], \"break_of_structure\": false, \"change_of_character\": true, \"recommendation\": \"NO_TRADE\", \"confidence\": 65, \"risk_reward_ratio\": null, \"reasoning\": \"Structure ambiguë entre range et retournement. Attendre confirmation avant toute prise de position.\"}"
+  },
+  {
+    "instruction": "Calcule le ratio Risque/Rendement et valide si le setup est éligible au trading selon la règle JYNTRA AI (R:R >= 1.5).",
+    "input": "Entrée : 50000. Stop Loss : 49500. Take Profit 1 : 51000. Take Profit 2 : 52000.",
+    "output": "{\"entry\": 50000, \"stop_loss\": 49500, \"take_profit_1\": 51000, \"take_profit_2\": 52000, \"risk\": 500, \"reward_1\": 1000, \"reward_2\": 2000, \"rr_ratio_1\": 2.0, \"rr_ratio_2\": 4.0, \"rr_valid\": true, \"risk_percent\": 1.0, \"eligible\": true, \"veto_applied\": false, \"veto_reason\": null, \"reasoning\": \"R:R de 2.0 sur TP1 et 4.0 sur TP2, tous deux >= 1.5. Stop-loss cohérent sous l'entrée pour un LONG. Setup validé par le Risk Analyst.\"}"
+  },
+  {
+    "instruction": "Détermine si ce setup de trading respecte les règles de sécurité JYNTRA AI.",
+    "input": "Recommandation : BUY. Entrée : 50000. Stop Loss : 50100. Take Profit : 51000. Capital : 10000. Risque par trade : 3%.",
+    "output": "{\"entry\": 50000, \"stop_loss\": 50100, \"take_profit\": 51000, \"recommendation\": \"BUY\", \"risk_percent\": 3.0, \"rr_ratio\": 1.0, \"veto_applied\": true, \"veto_reasons\": [\"Stop-loss au-dessus de l'entrée pour un LONG (incohérent)\", \"Risk/Reward 1.0 < 1.5\", \"Risque par trade 3% > limite recommandée de 1-2%\"], \"final_verdict\": \"NO_TRADE\", \"reasoning\": «Le setup présente trois violations graves : SL incohérent, R:R insuffisant, risque excessif. Aucun trade ne doit être pris.\"}",
+  },
+  {
+    "instruction": "Identifie les Order Blocks et Fair Value Gaps dans ce contexte de marché.",
+    "input": "Prix : 45000. Zone d'achat institutionnel entre 44800 et 44900 avec rejet fort. Zone de vente entre 45200 et 45300 avec écart de prix non comblé entre 45100 et 45200.",
+    "output": "{\"order_blocks\": [{\"type\": \"BULLISH_OB\", \"top\": 44900, \"bottom\": 44800, \"strength\": \"HIGH\", \"reasoning\": \"Rejet fort avec volume, signature d'achat institutionnel.\"}], \"fair_value_gaps\": [{\"top\": 45200, \"bottom\": 45100, \"strength\": \"MEDIUM\", \"reasoning\": \"Écart de prix non comblé, probable retour pour équilibrage.\"}], \"liquidity_zones\": [{\"type\": \"BUY_SIDE\", \"level\": 44700, \"strength\": \"MEDIUM\"}, {\"type\": \"SELL_SIDE\", \"level\": 45300, \"strength\": \"MEDIUM\"}], \"recommendation\": \"WAIT_FOR_CONFLUENCE\", \"reasoning\": \"Attendre le retour dans l'OB haussier ou le FVG avant toute entrée.\"}"
+  },
+  {
+    "instruction": "Analyse ce scénario de marché et donne un verdict final (BUY / SELL / NO_TRADE) avec justification.",
+    "input": "Symbole : ETH/USDT. Timeframe : 4H. Tendance : haussière. Structure : BOS confirmé à 3500. Order Block haussier à 3450-3480. FVG à 3520-3540. Confirmations : volume en hausse, RSI surachat léger. Risque/Reward calculé : 2.3.",
+    "output": "{\"symbol\": \"ETH/USDT\", \"timeframe\": \"4H\", \"recommendation\": \"BUY\", \"confidence\": 78, \"entry\": 3465, \"stop_loss\": 3430, \"take_profit_1\": 3520, \"take_profit_2\": 3580, \"risk_reward_ratio\": 2.3, \"market_structure\": \"BULLISH_BOS\", \"key_levels\": {\"support\": 3450, \"resistance\": 3540, \"liquidity\": [3480, 3520]}, \"order_blocks\": [{\"type\": \"BULLISH_OB\", \"top\": 3480, \"bottom\": 3450, \"strength\": \"HIGH\"}], \"fair_value_gaps\": [{\"top\": 3540, \"bottom\": 3520, \"strength\": \"MEDIUM\"}], \"confirmations\": [\"Volume en hausse\", \"BOS confirmé\", \"OB haussier identifié\"], \"invalidation\": \"Prix sous 3430\", \"reasoning\": \"Confluence favorable : BOS haussier, OB identifié, FVG en cible, R:R de 2.3 >= 1.5. Setup valide avec gestion du risque appropriée.\"}"
+  },
+  {
+    "instruction": "Identifie les contradictions potentielles entre plusieurs analyses d'agents.",
+    "input": "Analyse technique : BULLISH (structure haussière). Analyse macro : BEARISH (DXY fort, taux en hausse). Analyse stratégie : LOW_EDGE (faible probabilité). Analyse Red-Team : RISK_HIGH (piège de liquidité possible).",
+    "output": "{\"contradictions\": [{\"type\": \"DIRECTION_CONFLICT\", \"agents\": [\"Technical Analyst\", \"Market Research Analyst\"], \"description\": \"Analyse technique BULLISH vs analyse macro BEARISH.\"}, {\"type\": \"LOW_EDGE_CONFLICT\", \"agents\": [\"Strategy Analyst\", \"Technical Analyst\"], \"description\": \"Edge faible malgré direction technique affirmée.\"}, {\"type\": \"RISK_CONFLICT\", \"agents\": [\"Red-Team Analyst\", \"Technical Analyst\"], \"description\": \"Red-Tag signale risque élevé malgré direction technique.\"}], \"resolution\": \"NO_TRADE\", \"reasoning\": \"Plusieurs contradictions de direction et signaux de risque élevé. Le Lead Analyst doit trancher en faveur de la prudence.\"}"
+  },
+  {
+    "instruction": "Évalue la qualité d'un plan de trading complet.",
+    "input": "Plan : Entrée 50000, SL 49500, TP1 51000, TP2 52000, TP3 53000. R:R calculé : 2.0. Confirmations : BOS confirmé, OB identifié, volume en hausse. Invalidation : prix sous 49500.",
+    "output": "{\"plan_complete\": true, \"entry\": 50000, \"stop_loss\": 49500, \"take_profits\": [51000, 52000, 53000], \"rr_ratio\": 2.0, \"rr_valid\": true, \"confirmations_count\": 3, \"invalidation_defined\": true, \"risk_percent\": 1.0, \"quality_grade\": \"A\", \"missing_elements\": [], \"warnings\": [], \"reasoning\": \"Plan complet avec tous les éléments requis : entrée, SL, TP gradués, R:R valide, confirmations multiples, condition d'invalidation claire.\"}"
+  },
+  {
+    "instruction": "Réagis à un signal de trading contradictoire entre deux sources.",
+    "input": "Signal A : BUY à 50000, SL 49500, TP 52000. Signal B : SELL à 50000, SL 50500, TP 48000. Contexte : marché en range, volume faible.",
+    "output": "{\"signal_a\": {\"direction\": \"BUY\", \"rr\": 4.0, \"context\": \"range_haut\"}, \"signal_b\": {\"direction\": \"SELL\", \"rr\": 4.0, \"context\": \"range_bas\"}, \"conflict\": true, \"recommendation\": \"NO_TRADE\", \"reasoning\": \"Signaux contradictoires dans un marché en range avec volume faible. Aucun edge clair. Attendre une sortie de range avec confirmation de volume avant toute décision.\", \"risk_level\": \"HIGH\"}"
+  },
+  {
+    "instruction": "Calcule la taille de position appropriée selon les règles de gestion du risque JYNTRA AI.",
+    "input": "Capital : 10000. Risque par trade : 1%. Entrée : 50000. Stop Loss : 49500.",
+    "output": "{\"capital\": 10000, \"risk_percent\": 1.0, \"risk_amount\": 100, \"entry\": 50000, \"stop_loss\": 49500, \"risk_per_unit\": 500, \"position_size\": 20, \"position_value\": 1000000, \"leverage\": 10.0, \"margin_required\": 10000, \"valid\": true, \"reasoning\": \"Risque de 100 (1% de 10000) avec SL à 500 points. Taille de position de 20 unités pour un risque total de 100. Leverage de 10x, marge requise de 10000.\"}"
+  },
+  {
+    "instruction": "Identifie les zones de liquidité et les potentiels pièges dans ce graphique.",
+    "input": "Prix : 30000. Plus hauts égaux à 30500 (2 fois). Plus bas égaux à 29500 (2 fois). Volume en baisse sur les derniers sommets.",
+    "output": "{\"equal_highs\": [30500, 30500], \"equal_lows\": [29500, 29500], \"liquidity_pools\": [{\"type\": \"BUY_SIDE\", \"level\": 30500, \"strength\": \"HIGH\", \"reasoning\": «Deux plus hauts égaux attirent les stops acheteurs.\"}, {\"type\": \"SELL_SIDE\", \"level\": 29500, \"strength\": \"HIGH\", \"reasoning\": «Deux plus bas égaux attirent les stops vendeurs.\"}], \"potential_traps\": [{\"type\": \"BULL_TRAP\", \"level\": 30500, \"probability\": \"MEDIUM\"}, {\"type\": \"BEAR_TRAP\", \"level\": 29500, \"probability\": \"MEDIUM\"}], \"volume_analysis\": \"Volume en baisse sur les sommets, signe de faiblesse acheteuse.\", \"recommendation\": \"WAIT_FOR_BREAKOUT_WITH_VOLUME\", \"reasoning\": \"Attendre une sortie de range avec confirmation de volume avant toute entrée.\"}"
+  }
+]
