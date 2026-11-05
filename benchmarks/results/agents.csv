@@ -1,0 +1,10 @@
+scenario,expected_verdict,actual_verdict,verdict_ok,schema_valid,risk_veto_ok,contradictions_ok,success_ok,open_weight_veto_ok,latency_ms
+clean-buy,BUY,BUY,true,true,true,true,true,true,2.97
+clean-sell,SELL,SELL,true,true,true,true,true,true,0.27
+macro-conflict,BUY,BUY,true,true,true,true,true,true,0.1
+rr-veto,NO_TRADE,NO_TRADE,true,true,true,true,true,true,0.09
+risk-rejected,NO_TRADE,NO_TRADE,true,true,true,true,true,true,0.08
+redteam-no-trade,NO_TRADE,NO_TRADE,true,true,true,true,true,true,0.07
+neutral-consensus,NO_TRADE,NO_TRADE,true,true,true,true,true,true,0.06
+missing-agent,NO_TRADE,NO_TRADE,true,true,true,true,true,true,0.07
+openweight-veto,NO_TRADE,NO_TRADE,true,true,true,true,true,true,0.25

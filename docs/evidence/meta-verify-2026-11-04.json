@@ -1,0 +1,32 @@
+{
+    "configured":  true,
+    "keyPresent":  true,
+    "endpoint":  "https://api.meta.ai/v1/chat/completions",
+    "modelsDeclared":  [
+                           "muse-wonder-1.0",
+                           "sam-3.1",
+                           "muse-spark-1.3-contributor",
+                           "muse-spark-1.3",
+                           "muse-voice-transcribe-1.0",
+                           "muse-image-1.0",
+                           "muse-spark-1.2-contributor",
+                           "muse-spark-1.2",
+                           "muse-spark-1.1"
+                       ],
+    "providerCatalogConfirmed":  true,
+    "metaCallResult":  {
+                           "attempted":  true,
+                           "success":  true,
+                           "model":  "muse-wonder-1.0",
+                           "tier":  "META",
+                           "latencyMs":  2418
+                       },
+    "fallbackConfigured":  {
+                               "gemini":  true,
+                               "freeAlternative":  false
+                           },
+    "overall":  "verified",
+    "executedAt":  "2026-11-05T01:11:33Z",
+    "evidence":  "Meta Model API verification",
+    "note":  "Real local production server call to GET /api/ai/verify with the operator key. No key included."
+}

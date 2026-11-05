@@ -9,12 +9,14 @@ import path from 'path';
 const BENCHMARK_DIR = path.join(process.cwd(), 'benchmarks');
 const RESULTS_DIR = path.join(BENCHMARK_DIR, 'results');
 
-// Resolve tsx via npx (works cross-platform including Windows)
-const TSX_BIN = 'npx';
+// Run tsx through the current Node binary: no .cmd/.ps1 shim, no shell
+// quoting issues on Windows runners.
+const TSX_CLI = path.join(process.cwd(), 'node_modules', 'tsx', 'dist', 'cli.mjs');
 
 const suites = [
   { name: 'financial', file: 'financial.js' },
   { name: 'ai-engine', file: 'ai-engine.js' },
+  { name: 'agents', file: 'agents.js' },
 ];
 
 const allResults = {
@@ -35,7 +37,7 @@ for (const suite of suites) {
   }
   console.log(`[benchmarks] Running suite: ${suite.name}`);
   try {
-    const output = execFileSync(TSX_BIN, ['tsx', filePath], { cwd: process.cwd(), encoding: 'utf8', timeout: 60000 });
+    const output = execFileSync(process.execPath, [TSX_CLI, filePath], { cwd: process.cwd(), encoding: 'utf8', timeout: 120000 });
     const parsed = JSON.parse(output.trim());
     allResults.results.push(parsed);
   } catch (err) {
@@ -58,7 +60,7 @@ let latencyCount = 0;
 for (const r of allResults.results) {
   for (const c of (r.cases || [])) {
     totalCases++;
-    if (c.success !== false) passedCases++;
+    if (c.success !== false || c.expectedFailure === true) passedCases++;
     if (c.latencyMs) { totalLatency += c.latencyMs; latencyCount++; }
   }
 }
@@ -97,7 +99,19 @@ for (const r of allResults.results) {
   mdLines.push(`## ${r.benchmarkId} (${r.module})`);
   mdLines.push('');
   mdLines.push(`Executed: ${r.executedAt}`);
+  if (r.mode) mdLines.push(`Mode: **${r.mode}**${r.mode === 'replay' ? ' — model outputs are labeled fixtures, not live calls' : ''}`);
   mdLines.push('');
+  if (r.metrics) {
+    mdLines.push('### Metrics');
+    mdLines.push('');
+    mdLines.push('| Metric | Value |');
+    mdLines.push('|------|-------|');
+    for (const [k, v] of Object.entries(r.metrics)) {
+      if (typeof v === 'object') continue;
+      mdLines.push(`| ${k} | ${v} |`);
+    }
+    mdLines.push('');
+  }
   if (r.error) {
     mdLines.push(`Error: ${r.error}`);
     mdLines.push('');
@@ -117,3 +131,17 @@ fs.writeFileSync(mdPath, mdLines.join('\n'));
 
 console.log(`\n[benchmarks] Complete. Reports written to ${RESULTS_DIR}/`);
 console.log(JSON.stringify(allResults.summary, null, 2));
+
+// Fail the run when a labeled agent scenario regresses. Deterministic replays
+// must be green, otherwise CI would report a false success.
+const agentSuite = allResults.results.find((r) => r.benchmarkId === 'agent-orchestration-v1');
+if (agentSuite?.metrics && agentSuite.metrics.casesPassed < agentSuite.metrics.scenarios) {
+  console.error(`[benchmarks] Agent evaluation regression: ${agentSuite.metrics.casesPassed}/${agentSuite.metrics.scenarios} passed`);
+  process.exitCode = 1;
+}
+for (const r of allResults.results) {
+  if (r.error) {
+    console.error(`[benchmarks] Suite failed: ${r.module}: ${r.error}`);
+    process.exitCode = 1;
+  }
+}

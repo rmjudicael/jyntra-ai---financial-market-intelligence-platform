@@ -1,12 +1,14 @@
 # JYNTRA AI — GitHub Actions CI
 # Runs on every push to main and on PRs targeting main.
-# No production API keys required: tests use mocked providers.
+# No production API keys required: tests use mocked providers, benchmarks are
+# deterministic replays. A failing typecheck, test, benchmark or container
+# healthcheck must fail the build.
 
 name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, mission-watt-mind-optimization]
   pull_request:
     branches: [main]
 
@@ -27,19 +29,48 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: TypeScript typecheck
+      - name: TypeScript typecheck (frontend + backend)
         run: npm run typecheck
 
-      - name: Run test suite
+      - name: Lint (same strict compiler gate)
+        run: npm run lint
+
+      - name: Run unit + contract test suite
         run: npm test
 
-      - name: Run benchmarks
-        run: npx tsx benchmarks/run.js
-        continue-on-error: true
+      - name: Run deterministic benchmarks (blocking)
+        run: npm run bench
 
-      - name: Production build
+      - name: Production build (frontend)
         run: npm run build
 
-      - name: Docker build check
-        run: docker build --target builder --tag jyntra-ai:ci-check .
-        if: ${{ always() }}
+      - name: API startup smoke test (no external keys)
+        env:
+          META_API_KEY: ''
+          GEMINI_API_KEY: ''
+        run: |
+          node --version
+          npx tsx server.ts --production > /tmp/jyntra-server.log 2>&1 &
+          SERVER_PID=$!
+          for i in $(seq 1 20); do
+            if curl -fsS http://localhost:3000/api/health > /tmp/health.json; then break; fi
+            sleep 1
+          done
+          cat /tmp/health.json
+          curl -fsS http://localhost:3000/api/ai/agents/schemas | head -c 300
+          kill $SERVER_PID
+
+      - name: Docker production image build
+        run: docker build --tag jyntra-ai:ci .
+
+      - name: Docker runtime healthcheck smoke test
+        run: |
+          docker run -d --name jyntra-ci -p 3001:3000 -e PORT=3000 jyntra-ai:ci
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:3001/api/health; then ok=1; break; fi
+            sleep 1
+          done
+          echo "--- container logs ---"
+          docker logs jyntra-ci
+          docker rm -f jyntra-ci
+          test "${ok:-0}" = "1"

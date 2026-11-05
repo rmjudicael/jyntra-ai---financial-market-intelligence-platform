@@ -1,0 +1,36 @@
+{
+  "evidence": "Live six-agent orchestration through POST /api/ai/agents/orchestrate",
+  "observedDuring": "pre-freeze session on 2026-11-05 (UTC); exact wall-clock timestamp not captured by the harness",
+  "note": "One real production-mode request. Six separate Meta inferences plus two reasoning-budget retries. Raw prompts and full agent prose are not reproduced here; this file records the verifiable routing and decision contract.",
+  "request": {
+    "symbol": "BTC/USDT",
+    "timeframe": "1H",
+    "context": "Prix 64200. Structure haussiere, BOS recent, DXY stable, volume moyen.",
+    "metaOnly": false,
+    "openWeightConfigured": false
+  },
+  "outcome": {
+    "success": true,
+    "realOrchestration": true,
+    "consensusVerdict": "NO_TRADE",
+    "consensusConfidence": 35,
+    "confidenceBasis": "base 50; risk caution -5; red-team trap -10",
+    "riskVetoApplied": false,
+    "openWeightVetoApplied": false,
+    "crossCheck": {
+      "attempted": false,
+      "reason": "OPEN_WEIGHT_NOT_CONFIGURED"
+    },
+    "latencyMs": 101313,
+    "calls": 8
+  },
+  "agents": {
+    "technical": { "success": true, "stance": "BULLISH", "model": "muse-spark-1.3", "provider": "meta", "latencyMs": 10464, "calls": 1 },
+    "macro": { "success": true, "stance": "NEUTRAL", "model": "muse-spark-1.3", "provider": "meta", "latencyMs": 18823, "calls": 1 },
+    "risk": { "success": true, "stance": "CAUTION", "model": "muse-spark-1.3", "provider": "meta", "latencyMs": 15439, "calls": 1, "riskPlan": { "entry": 64200, "stopLoss": 63350, "takeProfit1": 65500 } },
+    "strategy": { "success": true, "stance": "MEDIUM", "model": "muse-spark-1.3", "provider": "meta", "latencyMs": 14005, "calls": 1 },
+    "redTeam": { "success": true, "stance": "WARN_TRAP", "model": "muse-spark-1.3", "provider": "meta", "latencyMs": 40036, "calls": 2 },
+    "lead": { "success": true, "verdict": "NO_TRADE", "model": "muse-spark-1.3", "provider": "meta", "latencyMs": 42438, "calls": 2 }
+  },
+  "interpretation": "The Red-Team flagged a fragile BOS without volume confirmation; the Lead Analyst refused the BUY and preserved the disagreement. This is a real model execution, not a replay."
+}

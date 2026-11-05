@@ -242,6 +242,9 @@ JYNTRA AI includes a dedicated **Meta-only mode** that forces the platform to us
 
 This enables operators to confirm Meta API integration before deploying, without revealing API keys in logs or responses.
 
+Recorded verification evidence (real call, no keys included):
+[`docs/meta-verification.md`](docs/meta-verification.md).
+
 #### Execution trace
 
 Every analysis response includes an execution trace showing:
@@ -253,16 +256,73 @@ Every analysis response includes an execution trace showing:
 
 Judges and reviewers can verify that responses genuinely originate from Meta models when Meta-only mode is active.
 
-#### Open-weight Meta models (declared, not used by default)
+#### Open-weight Meta models (real integration path)
 
-The model registry (`src/server/aiEngine.ts`) also declares Meta open-weight model candidates:
+JYNTRA AI supports Meta open-weight checkpoints through an official
+inference partner (Together, Fireworks, Baseten) or a local OpenAI-compatible
+server (vLLM / llama.cpp / Ollama bridge). The implementation lives in
+`src/server/aiEngine.ts` (`runOpenWeight`, `crossCheck`, `openWeightStatus`,
+`metrics`) and is wired to the real six-agent orchestrator.
 
-| Open-weight model | Role | Status |
-|-------------------|------|--------|
-| Muse Spark Open | Reasoning chat | Declared, requires explicit operator configuration |
-| Muse Glimmer | Light chat | Declared, requires explicit operator configuration |
+| Open-weight model | Role in the pipeline | Status |
+|-------------------|----------------------|--------|
+| Muse Spark Open (`meta-models/muse-spark-open-1026`) | Independent audit of the Lead Analyst verdict (contradiction check, R:R consistency) | Implemented + contract-tested; runs live when configured |
+| Muse Glimmer | Lightweight chat / fast audit | Declared in the registry; selectable via config |
 
-These models are **declared but not activated by default**. Activating them requires the operator to set `MUSE_OPEN_WEIGHT_MODEL_ID` and `MUSE_OPEN_WEIGHT_ENDPOINT` environment variables and to verify compatibility with the Meta inference endpoint. No open-weight model is shipped or used without explicit operator action.
+The audit is **not decorative**: when the open-weight model returns
+`{"agreement": false, "severity": "HIGH"}`, the orchestrator applies a hard
+veto and forces `NO_TRADE`. A non-Meta checkpoint id is refused before any
+network request (`NON_META_MODEL_REJECTED`), so the project cannot silently
+drift to a proprietary non-Meta SDK.
+
+Configuration:
+
+```bash
+MUSE_OPEN_WEIGHT_PROVIDER=together       # together | fireworks | baseten | local
+MUSE_OPEN_WEIGHT_MODEL_ID=meta-models/muse-spark-open-1026
+MUSE_OPEN_WEIGHT_API_KEY=...             # or TOGETHER_API_KEY / FIREWORKS_API_KEY / BASETEN_API_KEY
+# MUSE_OPEN_WEIGHT_ENDPOINT=https://api.together.xyz/v1
+```
+
+Every open-weight result is attributed with `model`, `hosting`, `latencyMs`,
+`usage` and `openWeight: true`. No result is relabelled as hosted Meta.
+If no key is configured, the route fails honestly with
+`OPEN_WEIGHT_NOT_CONFIGURED` — nothing is simulated.
+
+`GET /api/ai/open-weight/status` exposes configuration state, per-provider
+counters and per-model health without exposing keys or endpoint URLs.
+
+#### Six-agent orchestration (six real inferences)
+
+`src/services/multiAgentOrchestrator.ts` executes six independent agent
+inferences, in three waves:
+
+1. Technical, Market Research, Risk and Strategy analysts run **in parallel**.
+2. The Red-Team analyst attacks the technical and strategy arguments.
+3. The Lead Analyst synthesises, exposes disagreements, and returns
+   `BUY`, `SELL` or `NO_TRADE`.
+
+Each agent output is validated by a closed-vocabulary schema
+(`AGENT_SCHEMAS`). Two deterministic vetoes are applied independently of the
+models:
+
+- Risk Analyst stance `REJECTED` → `NO_TRADE`.
+- Risk-to-Reward < 1.5, missing/invalid Entry/SL/TP, or SL on the wrong side
+  of the entry → `NO_TRADE`.
+- Open-weight audit: `agreement=false` + `severity=HIGH` → `NO_TRADE`.
+
+Endpoints:
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /api/ai/agents/orchestrate` | Real six-agent orchestration (one call per agent) |
+| `GET /api/ai/agents/schemas` | Agent schemas, risk rule and open-weight status |
+| `POST /api/ai/multi-agents` | Fast single-committee synthesis (kept for compatibility) |
+
+The response includes per-agent `modelUsed`, `provider`, `hosting`, `latencyMs`,
+`schemaValid`, a routing table, `riskVetoApplied`, `openWeightVetoApplied`,
+`crossCheck` and a deterministic `consensusConfidence` computed from
+agreement, not invented by a model.
 
 ---
 
@@ -273,9 +333,21 @@ Deterministic benchmarks are located in `benchmarks/`. They provide reproducible
 | Suite | Coverage |
 |-------|----------|
 | Financial calculations | Risk calculator (valid/invalid LONG/SHORT, R:R validation, position sizing), backtest engine (EMA Cross, RSI Reversal, Breakout), determinism check |
-| AI engine routing | Meta fallback chain, model routing, provider transparency, 401 chain-stop, honest failure |
+| AI engine routing | Meta fallback chain, model routing, provider transparency, 401 chain-stop, honest failure, open-weight attribution |
+| Agent orchestration | 9 labeled scenarios through the real orchestrator: verdict accuracy, schema conformance, risk-veto agreement, contradiction detection, missing-agent robustness, open-weight veto |
 
-Results are written to `benchmarks/results/results.json` and `benchmarks/results/results.md`. All benchmarks run without external API dependencies; AI engine benchmarks use mocked providers to verify routing logic without consuming credits.
+Agent evaluation is **replay mode**: model outputs are labeled fixtures, so the
+run is deterministic and offline. It measures the orchestration contract, not
+model quality and not trading profitability. Results:
+
+- `benchmarks/results/results.json` (machine-readable)
+- `benchmarks/results/results.md` (human-readable)
+- `benchmarks/results/agents.csv` (per-scenario CSV)
+
+The dataset is published as a Hugging Face-ready artifact in
+`hf/jyntra-agent-eval/` (dataset card + JSONL + reference CSV). It is prepared
+with an honest synthetic-fixture provenance and is **not uploaded
+automatically**.
 
 ---
 
@@ -624,19 +696,48 @@ npm install
 
 ### 3. Configure environment variables
 
-Create a local environment configuration based on the project's existing environment example, if available.
+```bash
+cp .env.example .env
+```
 
-Do not commit private credentials or API keys.
-
-Refer to the actual environment configuration and backend implementation to identify the required variables.
+`META_API_KEY` is the only key needed for the primary Meta tier. The
+open-weight audit is optional (section 4). Every other tier is optional and is
+skipped honestly when unconfigured. Do not commit `.env`.
 
 ### 4. Start the development server
 
 ```bash
-npm run dev
+npm run dev        # frontend + API (Vite middleware)
+# or
+npm run dev:api    # API only on :3000
 ```
 
-Open the local URL displayed by Vite in your terminal.
+Open the local URL displayed by Vite.
+
+### 5. Production build (local)
+
+```bash
+npm run build
+npm start          # serves dist/ + API on :3000
+```
+
+### 6. Verify the installation
+
+```bash
+npm run typecheck
+npm test
+npm run bench
+curl http://localhost:3000/api/health
+curl http://localhost:3000/api/ai/agents/schemas
+```
+
+### 7. Demo without API keys
+
+The deterministic surface (risk calculator, backtesting, JYNTRACK simulations,
+agent-contract tests, benchmarks) runs without any key. AI routes return an
+honest `503` with a machine-readable reason instead of a fabricated answer.
+Labeled replays in `benchmarks/` demonstrate orchestration behaviour without
+claiming a live model call.
 
 ---
 
@@ -726,12 +827,17 @@ GitHub Actions CI is configured at `.github/workflows/ci.yml`. The pipeline runs
 2. Set up Node.js 20.19.0
 3. Install dependencies (`npm ci`)
 4. TypeScript typecheck (`npm run typecheck`)
-5. Test suite (`npm test`)
-6. Benchmarks (`npx tsx benchmarks/run.js`)
-7. Production build (`npm run build`)
-8. Docker build check
+5. Lint (`npm run lint`)
+6. Test suite, including open-weight and agent-contract tests (`npm test`)
+7. Deterministic benchmarks — blocking (`npm run bench`)
+8. Production build (`npm run build`)
+9. API startup smoke test (`/api/health`, `/api/ai/agents/schemas`)
+10. Full Docker production image build
+11. Container runtime healthcheck
 
-All tests run without requiring production API keys; providers are mocked where necessary.
+A failing typecheck, test, agent scenario or container healthcheck fails the
+build. All tests run without requiring production API keys; providers are
+mocked where necessary.
 
 ---
 
@@ -745,14 +851,35 @@ Quantitative benchmarks are located in the `benchmarks/` directory. They provide
 |-------|------|----------|
 | Financial calculations | `benchmarks/financial.js` | Risk calculator, backtest engine |
 | AI engine routing | `benchmarks/ai-engine.js` | Fallback chain, model routing, provider transparency |
+| Agent orchestration | `benchmarks/agents.js` | 9 labeled scenarios, schema conformance, vetoes, contradictions, open-weight audit |
+| Dataset | `benchmarks/datasets/jyntra-agent-scenarios.v1.json` | Labeled synthetic fixtures (CC-BY-4.0) |
 
 ### Running benchmarks
 
 ```bash
-npx tsx benchmarks/run.js
+npm run bench
+# or: npx tsx benchmarks/run.js
+# single suite: npx tsx benchmarks/agents.js
 ```
 
-Results are written to `benchmarks/results/results.json` and `benchmarks/results/results.md`. All benchmarks run without external API dependencies.
+Results are written to `benchmarks/results/results.json`,
+`benchmarks/results/results.md` and `benchmarks/results/agents.csv`. All
+benchmarks run without external API dependencies. The agent suite is replay
+mode: it exercises the real orchestrator with labeled fixtures and makes no
+claim about live model quality or profitability.
+
+### Hugging Face artifact
+
+```bash
+node hf/jyntra-agent-eval/export.mjs   # materialises data/*.jsonl + metrics
+```
+
+The dataset card documents the provenance, license (CC-BY-4.0), limitations and
+reference metrics. Upload is manual and requires an explicit operator token:
+
+```bash
+huggingface-cli upload <account>/jyntra-agent-eval hf/jyntra-agent-eval . --repo-type dataset
+```
 
 ---
 

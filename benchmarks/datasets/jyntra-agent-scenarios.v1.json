@@ -1,0 +1,168 @@
+{
+  "datasetId": "jyntra-agent-scenarios",
+  "version": "1.0.0",
+  "license": "CC-BY-4.0",
+  "createdAt": "2026-11-04",
+  "provenance": {
+    "kind": "author-authored-synthetic-fixtures",
+    "description": "Labeled multi-agent decision scenarios authored for JYNTRA AI's orchestrator evaluation. The agent arguments are synthetic test fixtures, not real market data and not investment advice. Labels (expected verdict / veto / contradiction) were defined before running the harness.",
+    "notAClaim": "Does not demonstrate trading profitability. Measures decision-contract compliance and orchestration determinism only."
+  },
+  "riskRule": "Risk-to-Reward must be >= 1.5; a Risk Analyst stance of REJECTED is a hard veto.",
+  "scenarios": [
+    {
+      "id": "clean-buy",
+      "description": "Technique, macro, stratégie et risque alignés à la hausse.",
+      "symbol": "BTC/USDT",
+      "timeframe": "1H",
+      "context": "Tendance haussière, BOS confirmé, DXY stable.",
+      "priorAnalysis": { "verdict": "BUY", "summary": "Structure haussière" },
+      "fixtures": {
+        "technical": { "stance": "BULLISH", "argument": "BOS haussier et retest d'Order Block.", "keyLevel": "64000" },
+        "macro": { "stance": "BULLISH", "argument": "DXY faible, flux institutionnels positifs.", "macroFactor": "DXY" },
+        "risk": { "stance": "APPROVED", "argument": "Plan valide.", "riskPlan": { "entry": 64000, "stopLoss": 62800, "takeProfit1": 67000 } },
+        "strategy": { "stance": "HIGH_PROBABILITY", "argument": "Edge statistique élevé.", "expectedEdge": "2.4R" },
+        "redTeam": { "stance": "VALIDATED", "argument": "Aucun piège détecté.", "critique": "Vérifié", "counterHypothesis": "Aucune" },
+        "lead": { "verdict": "BUY", "argument": "Consensus haussier.", "executiveSummary": "BUY", "keyDisagreements": "Aucune", "suggestedAction": "Entrer" }
+      },
+      "expected": { "verdict": "BUY", "riskVeto": false, "minContradictions": 0, "exactContradictions": 0, "schemaValidAgents": 6, "success": true }
+    },
+    {
+      "id": "clean-sell",
+      "description": "Configuration baissière cohérente avec un plan short valide.",
+      "symbol": "ETH/USDT",
+      "timeframe": "4H",
+      "context": "Lower highs, rejet de résistance, DXY fort.",
+      "priorAnalysis": { "verdict": "SELL", "summary": "Structure baissière" },
+      "fixtures": {
+        "technical": { "stance": "BEARISH", "argument": "CHoCH baissier et FVG non comblé.", "keyLevel": "3200" },
+        "macro": { "stance": "BEARISH", "argument": "DXY fort, appétit pour le risque en baisse.", "macroFactor": "DXY" },
+        "risk": { "stance": "APPROVED", "argument": "Plan short valide.", "riskPlan": { "entry": 3200, "stopLoss": 3320, "takeProfit1": 2840 } },
+        "strategy": { "stance": "HIGH_PROBABILITY", "argument": "Edge baissier confirmé.", "expectedEdge": "3R" },
+        "redTeam": { "stance": "VALIDATED", "argument": "Pas de bull trap détecté.", "critique": "Vérifié", "counterHypothesis": "Aucune" },
+        "lead": { "verdict": "SELL", "argument": "Consensus baissier.", "executiveSummary": "SELL", "keyDisagreements": "Aucune", "suggestedAction": "Vendre" }
+      },
+      "expected": { "verdict": "SELL", "riskVeto": false, "minContradictions": 0, "exactContradictions": 0, "schemaValidAgents": 6, "success": true }
+    },
+    {
+      "id": "macro-conflict",
+      "description": "Technique haussière contre macro baissière : le désaccord doit être exposé.",
+      "symbol": "EUR/USD",
+      "timeframe": "1H",
+      "context": "Technique haussière, macro opposée.",
+      "priorAnalysis": { "verdict": "BUY", "summary": "Signal technique" },
+      "fixtures": {
+        "technical": { "stance": "BULLISH", "argument": "Double bottom et cassure.", "keyLevel": "1.0850" },
+        "macro": { "stance": "BEARISH", "argument": "Taux US en hausse.", "macroFactor": "US10Y" },
+        "risk": { "stance": "APPROVED", "argument": "Plan valide.", "riskPlan": { "entry": 1.085, "stopLoss": 1.081, "takeProfit1": 1.095 } },
+        "strategy": { "stance": "MEDIUM", "argument": "Edge modéré.", "expectedEdge": "1.8R" },
+        "redTeam": { "stance": "WARN_TRAP", "argument": "Risque de fakeout.", "critique": "Cassure non confirmée", "counterHypothesis": "Retour dans le range" },
+        "lead": { "verdict": "BUY", "argument": "BUY mais désaccord macro conservé.", "executiveSummary": "BUY", "keyDisagreements": "Macro opposée", "suggestedAction": "Entrer prudemment" }
+      },
+      "expected": { "verdict": "BUY", "riskVeto": false, "minContradictions": 1, "schemaValidAgents": 6, "success": true }
+    },
+    {
+      "id": "rr-veto",
+      "description": "R:R = 1.0 : le veto déterministe doit ramener le verdict à NO_TRADE.",
+      "symbol": "XAU/USD",
+      "timeframe": "15M",
+      "context": "Setup haussier mais objectif trop proche.",
+      "priorAnalysis": { "verdict": "BUY", "summary": "Setup serré" },
+      "fixtures": {
+        "technical": { "stance": "BULLISH", "argument": "Micro cassure.", "keyLevel": "2400" },
+        "macro": { "stance": "BULLISH", "argument": "Demande de valeur refuge.", "macroFactor": "Réel" },
+        "risk": { "stance": "APPROVED", "argument": "R:R insuffisant.", "riskPlan": { "entry": 2400, "stopLoss": 2399, "takeProfit1": 2401 } },
+        "strategy": { "stance": "MEDIUM", "argument": "Edge moyen.", "expectedEdge": "1R" },
+        "redTeam": { "stance": "VALIDATED", "argument": "Pas de piège.", "critique": "Vérifié", "counterHypothesis": "Aucune" },
+        "lead": { "verdict": "BUY", "argument": "BUY proposé.", "executiveSummary": "BUY", "keyDisagreements": "Aucune", "suggestedAction": "Entrer" }
+      },
+      "expected": { "verdict": "NO_TRADE", "riskVeto": true, "minContradictions": 0, "schemaValidAgents": 6, "success": true }
+    },
+    {
+      "id": "risk-rejected",
+      "description": "Le Risk Analyst rejette explicitement : veto dur.",
+      "symbol": "SOL/USDT",
+      "timeframe": "1H",
+      "context": "Volatilité extrême, position trop risquée.",
+      "priorAnalysis": { "verdict": "BUY", "summary": "Momentum" },
+      "fixtures": {
+        "technical": { "stance": "BULLISH", "argument": "Momentum fort.", "keyLevel": "150" },
+        "macro": { "stance": "NEUTRAL", "argument": "Contexte mixte.", "macroFactor": "BTC" },
+        "risk": { "stance": "REJECTED", "argument": "Risque de ruine trop élevé.", "maxRiskRecommended": "0%" },
+        "strategy": { "stance": "MEDIUM", "argument": "Edge incertain.", "expectedEdge": "1.6R" },
+        "redTeam": { "stance": "RISK_HIGH", "argument": "Volatilité manipulée.", "critique": "Risque de liquidation", "counterHypothesis": "Retournement violent" },
+        "lead": { "verdict": "BUY", "argument": "BUY proposé.", "executiveSummary": "BUY", "keyDisagreements": "Risque élevé", "suggestedAction": "Entrer" }
+      },
+      "expected": { "verdict": "NO_TRADE", "riskVeto": true, "minContradictions": 1, "schemaValidAgents": 6, "success": true }
+    },
+    {
+      "id": "redteam-no-trade",
+      "description": "Red-team et edge faible : le Lead doit refuser le trade.",
+      "symbol": "NASDAQ",
+      "timeframe": "1D",
+      "context": "Cassure douteuse avant publication macro.",
+      "priorAnalysis": { "verdict": "NO_TRADE", "summary": "Attente" },
+      "fixtures": {
+        "technical": { "stance": "BULLISH", "argument": "Cassure du range.", "keyLevel": "18500" },
+        "macro": { "stance": "BULLISH", "argument": "Tendance de fond positive.", "macroFactor": "Taux" },
+        "risk": { "stance": "CAUTION", "argument": "Plan valide mais risqué.", "riskPlan": { "entry": 18500, "stopLoss": 18300, "takeProfit1": 19100 } },
+        "strategy": { "stance": "LOW_EDGE", "argument": "Edge faible avant la macro.", "expectedEdge": "0.9R" },
+        "redTeam": { "stance": "RISK_HIGH", "argument": "Faux breakout probable.", "critique": "Volume insuffisant", "counterHypothesis": "Retour sous 18400" },
+        "lead": { "verdict": "NO_TRADE", "argument": "Attendre la publication.", "executiveSummary": "NO_TRADE", "keyDisagreements": "Red-team contre technique", "suggestedAction": "Attendre" }
+      },
+      "expected": { "verdict": "NO_TRADE", "riskVeto": false, "minContradictions": 2, "schemaValidAgents": 6, "success": true }
+    },
+    {
+      "id": "neutral-consensus",
+      "description": "Absence de direction claire : NO_TRADE sans veto.",
+      "symbol": "USD/JPY",
+      "timeframe": "1H",
+      "context": "Range étroit, données manquantes.",
+      "priorAnalysis": { "verdict": "NO_TRADE", "summary": "Range" },
+      "fixtures": {
+        "technical": { "stance": "NEUTRAL", "argument": "Range sans direction.", "keyLevel": "150" },
+        "macro": { "stance": "NEUTRAL", "argument": "Facteurs opposés.", "macroFactor": "BoJ" },
+        "risk": { "stance": "CAUTION", "argument": "Pas de plan clair.", "maxRiskRecommended": "0.5%" },
+        "strategy": { "stance": "LOW_EDGE", "argument": "Pas d'edge.", "expectedEdge": "0.5R" },
+        "redTeam": { "stance": "VALIDATED", "argument": "Rien à contester.", "critique": "Range confirmé", "counterHypothesis": "Aucune" },
+        "lead": { "verdict": "NO_TRADE", "argument": "Aucun trade.", "executiveSummary": "NO_TRADE", "keyDisagreements": "Aucune", "suggestedAction": "Attendre" }
+      },
+      "expected": { "verdict": "NO_TRADE", "riskVeto": false, "minContradictions": 0, "schemaValidAgents": 6, "success": true }
+    },
+    {
+      "id": "missing-agent",
+      "description": "Un agent indisponible : échec honnête, aucun verdict inventé.",
+      "symbol": "BTC/USDT",
+      "timeframe": "1H",
+      "context": "Panne partielle du fournisseur.",
+      "priorAnalysis": { "verdict": "NO_TRADE", "summary": "Incertitude" },
+      "fixtures": {
+        "technical": { "__unavailable": true },
+        "macro": { "stance": "NEUTRAL", "argument": "Contexte stable.", "macroFactor": "DXY" },
+        "risk": { "stance": "CAUTION", "argument": "Prudence.", "maxRiskRecommended": "0.5%" },
+        "strategy": { "stance": "LOW_EDGE", "argument": "Edge incertain.", "expectedEdge": "0.8R" },
+        "redTeam": { "stance": "WARN_TRAP", "argument": "Risque de faux signal.", "critique": "Données incomplètes", "counterHypothesis": "Attendre" },
+        "lead": { "verdict": "NO_TRADE", "argument": "Données incomplètes.", "executiveSummary": "NO_TRADE", "keyDisagreements": "Agent technique indisponible", "suggestedAction": "Attendre" }
+      },
+      "expected": { "verdict": "NO_TRADE", "riskVeto": false, "minContradictions": 0, "schemaValidAgents": 5, "success": false }
+    },
+    {
+      "id": "openweight-veto",
+      "description": "L'audit open-weight conteste le verdict en sévérité HIGH : veto indépendant.",
+      "symbol": "BTC/USDT",
+      "timeframe": "4H",
+      "context": "Setup haussier apparemment valide.",
+      "priorAnalysis": { "verdict": "BUY", "summary": "Structure haussière" },
+      "fixtures": {
+        "technical": { "stance": "BULLISH", "argument": "BOS haussier.", "keyLevel": "64000" },
+        "macro": { "stance": "BULLISH", "argument": "Flux positifs.", "macroFactor": "DXY" },
+        "risk": { "stance": "APPROVED", "argument": "Plan valide.", "riskPlan": { "entry": 64000, "stopLoss": 62800, "takeProfit1": 67000 } },
+        "strategy": { "stance": "HIGH_PROBABILITY", "argument": "Edge élevé.", "expectedEdge": "2.4R" },
+        "redTeam": { "stance": "VALIDATED", "argument": "Aucun piège.", "critique": "Vérifié", "counterHypothesis": "Aucune" },
+        "lead": { "verdict": "BUY", "argument": "Consensus BUY.", "executiveSummary": "BUY", "keyDisagreements": "Aucune", "suggestedAction": "Entrer" }
+      },
+      "crossCheck": { "agreement": false, "severity": "HIGH", "verdict": "NO_TRADE", "concerns": ["La liquidité supposée n'est pas démontrée par le contexte fourni"] },
+      "expected": { "verdict": "NO_TRADE", "riskVeto": false, "minContradictions": 1, "schemaValidAgents": 6, "success": true, "openWeightVeto": true }
+    }
+  ]
+}

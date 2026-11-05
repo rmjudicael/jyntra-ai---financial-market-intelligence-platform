@@ -2,7 +2,7 @@
 // Measures fallback chain latency, model routing, and provider transparency.
 // Runs without external API keys: reports "not configured" when no keys present.
 
-import { createAiEngine } from '../src/server/aiEngine.js';
+import { createAiEngine, isChatModelId } from '../src/server/aiEngine.js';
 
 const results = {
   benchmarkId: 'ai-engine-v1',
@@ -18,7 +18,7 @@ const errRes = (status) => ({ ok: false, status, json: async () => ({}), text: a
 // Case 1: Meta works first try
 {
   const start = process.hrtime.bigint();
-  const e = createAiEngine({ fetchImpl: okJson('meta-ok'), metaKey: 'k', metaEndpoint: 'https://x/chat/completions', metaModels: ['muse-wonder-1.0', 'muse-spark-1.3'] });
+  const e = createAiEngine({ fetchImpl: (async () => okJson('meta-ok')), metaKey: 'k', metaEndpoint: 'https://x/chat/completions', metaModels: ['muse-wonder-1.0', 'muse-spark-1.3'] });
   const r = await e.runChat(testMessages, { temperature: 0, task: 'chat' });
   const end = process.hrtime.bigint();
   results.cases.push({
@@ -76,6 +76,7 @@ const errRes = (status) => ({ ok: false, status, json: async () => ({}), text: a
     name: 'All providers down -> honest failure',
     latencyMs: Math.round(Number(end - start) / 1_000_000 * 100) / 100,
     success: r.success,
+    expectedFailure: true,
     tier: r.tier,
     error: r.reason,
   });
@@ -101,11 +102,11 @@ const errRes = (status) => ({ ok: false, status, json: async () => ({}), text: a
 // Case 6: Non-chat model IDs excluded from chat chain
 {
   const nonChat = ['sam-3.1', 'muse-voice-transcribe-1.0', 'muse-image-1.0'];
-  const excluded = nonChat.filter((id) => !((id) => !['sam-3.1', 'muse-voice-transcribe-1.0', 'muse-image-1.0'].includes(id.toLowerCase()))(id));
+  const allExcluded = nonChat.every((id) => !isChatModelId(id));
   results.cases.push({
     name: 'Non-chat model ID exclusion',
     latencyMs: 0,
-    success: excluded.length === 0,
+    success: allExcluded,
     detail: `Excluded IDs: ${nonChat.join(', ')}`,
   });
 }

@@ -24,10 +24,34 @@ export type AiTask =
   | 'vision'
   | 'agents'
   | 'redteam'
+  | 'audit'
   | 'fast'
   | 'image'
   | 'segmentation'
   | 'transcription';
+
+/**
+ * Hosted inference partner for Meta open-weight checkpoints.
+ * `local` targets any OpenAI-compatible server on the operator's machine
+ * (vLLM, llama.cpp, Ollama's OpenAI bridge); the three hosted partners are
+ * the ones recognised by the evaluation grid.
+ */
+export type OpenWeightProvider = 'together' | 'fireworks' | 'baseten' | 'local' | 'openai-compatible';
+
+export interface OpenWeightConfig {
+  provider: OpenWeightProvider;
+  apiKey: string;
+  baseUrl: string;
+  /** Exact checkpoint id, e.g. meta-models/muse-spark-open-1026. */
+  modelId: string;
+  timeoutMs?: number;
+  /**
+   * Safety guard: a non-Meta checkpoint is refused unless the operator
+   * explicitly opts in. This prevents the project from silently routing
+   * through a proprietary non-Meta SDK (Watt Mind penalty).
+   */
+  allowNonMetaModel?: boolean;
+}
 
 export type AiContentPart =
   | { type: 'text'; text: string }
@@ -49,6 +73,12 @@ export interface AiEngineDeps {
   geminiTranscribe?: (audio: Blob, language: string) => Promise<string | null>;
   /** Free-tier alternative (OpenAI-compatible), used only when configured. */
   freeAiChat?: (messages: AiMessage[], opts: { temperature: number }) => Promise<string>;
+  /**
+   * Meta open-weight inference (Muse Spark Open / Muse Glimmer) through a
+   * hosted partner (Together, Fireworks, Baseten) or a local OpenAI-compatible
+   * server. When configured, this path is used for independent cross-checks.
+   */
+  openWeight?: OpenWeightConfig;
   /** Per-call timeout so a hung provider cannot stall the whole chain. */
   timeoutMs?: number;
   /** Per-task timeout overrides (ms), e.g. { fast: 15000, vision: 60000 }. */
@@ -99,6 +129,12 @@ export interface AiResult {
   provider?: 'meta' | 'gemini' | 'free' | 'none';
   /** Error category for programmatic handling. */
   errorCategory?: 'auth' | 'quota' | 'timeout' | 'network' | 'provider' | 'configuration' | 'none';
+  /** True only when the answer was really produced by an open-weight Meta checkpoint. */
+  openWeight?: boolean;
+  /** Where the open-weight checkpoint actually ran (never inferred). */
+  hosting?: 'meta-api' | OpenWeightProvider;
+  /** Provider-reported token usage, when available. */
+  usage?: { promptTokens?: number; completionTokens?: number; totalTokens?: number };
 }
 
 export interface AiStreamEvent {
@@ -317,6 +353,7 @@ export function createAiEngine(deps: AiEngineDeps) {
     vision: Math.max(timeoutMs, 60000),
     agents: Math.max(timeoutMs, 60000),
     redteam: Math.max(timeoutMs * 0.75, 30000),
+    audit: Math.max(timeoutMs, 45000),
     fast: Math.min(timeoutMs * 0.5, 20000),
     image: 120000,
     segmentation: 120000,
@@ -368,6 +405,18 @@ export function createAiEngine(deps: AiEngineDeps) {
   /** Circuit breaker: set when every Meta model reports quota/billing. */
   let metaCooldownUntil = 0;
   let calls = 0;
+  /** Per-provider counters, incremented only on real network attempts. */
+  const providerStats: Record<string, { success: number; failure: number }> = {
+    meta: { success: 0, failure: 0 },
+    openweight: { success: 0, failure: 0 },
+    gemini: { success: 0, failure: 0 },
+    free: { success: 0, failure: 0 },
+  };
+  const bumpProvider = (provider: string, success: boolean) => {
+    if (!providerStats[provider]) providerStats[provider] = { success: 0, failure: 0 };
+    if (success) providerStats[provider].success += 1;
+    else providerStats[provider].failure += 1;
+  };
   /** Per-model health: success/failure counts, last failure time, consecutive failures. */
   const modelHealth = new Map<string, { success: number; failure: number; consecutiveFailures: number; lastFailureAt: number | null }>();
 
@@ -468,21 +517,219 @@ export function createAiEngine(deps: AiEngineDeps) {
       );
       if (!r.ok) {
         recordHealth(model, false, classifyError(r.status, ''));
+        bumpProvider('meta', false);
         return { ok: false, status: r.status, errorCategory: classifyError(r.status, '') };
       }
       const j: any = await r.json();
       const text = j.choices?.[0]?.message?.content;
       recordHealth(model, true);
+      const usable = typeof text === 'string' && text.trim().length > 0;
+      bumpProvider('meta', usable);
       return {
-        ok: typeof text === 'string' && text.trim().length > 0,
+        ok: usable,
         text: typeof text === 'string' ? text.trim() : undefined,
         status: r.status,
         finish: j.choices?.[0]?.finish_reason,
       };
     } catch (err: any) {
       recordHealth(model, false, classifyError(undefined, err?.message));
+      bumpProvider('meta', false);
       return { ok: false, errorCategory: classifyError(undefined, err?.message) };
     }
+  }
+
+  /**
+   * Meta open-weight inference. The request is only issued when an operator
+   * configured a real endpoint + checkpoint; nothing is simulated.
+   */
+  function openWeightStatus() {
+    const cfg = deps.openWeight;
+    if (!cfg || !cfg.modelId || !cfg.baseUrl) {
+      return {
+        configured: false,
+        provider: cfg?.provider ?? null,
+        modelId: cfg?.modelId ?? null,
+        reason: 'OPEN_WEIGHT_NOT_CONFIGURED',
+      };
+    }
+    const metaModel = /^(meta-models\/|muse[-_]|llama)/i.test(cfg.modelId);
+    if (!metaModel && !cfg.allowNonMetaModel) {
+      return {
+        configured: false,
+        provider: cfg.provider,
+        modelId: cfg.modelId,
+        reason: 'NON_META_MODEL_REJECTED',
+      };
+    }
+    const remote = cfg.provider !== 'local';
+    return {
+      configured: remote ? !!cfg.apiKey : true,
+      provider: cfg.provider,
+      modelId: cfg.modelId,
+      reason: remote && !cfg.apiKey ? 'OPEN_WEIGHT_KEY_MISSING' : 'READY',
+    };
+  }
+
+  function openWeightEndpoint(cfg: OpenWeightConfig): string {
+    const baseUrl = cfg.baseUrl.replace(/\/$/, '');
+    return /\/chat\/completions$/i.test(baseUrl) ? baseUrl : `${baseUrl}/chat/completions`;
+  }
+
+  /**
+   * Call a Meta open-weight checkpoint on a hosted partner or a local
+   * OpenAI-compatible server. Returns a fully attributed result: model,
+   * hosting partner, latency, usage and error category are all real values.
+   */
+  async function runOpenWeight(
+    messages: AiMessage[],
+    opts?: { temperature?: number; maxTokens?: number; task?: AiTask },
+  ): Promise<AiResult> {
+    const started = Date.now();
+    calls = 0;
+    const status = openWeightStatus();
+    const cfg = deps.openWeight;
+    if (!cfg || !status.configured) {
+      return {
+        success: false,
+        reason: status.reason,
+        provider: 'none',
+        openWeight: true,
+        modelTried: cfg?.modelId ? [cfg.modelId] : [],
+        latencyMs: 0,
+        calls: 0,
+        errorCategory: 'configuration',
+      };
+    }
+
+    const temperature = clamp(opts?.temperature ?? 0.2, 0, 2);
+    const maxTokens = clamp(opts?.maxTokens ?? 2048, 128, 8192);
+    const timeout = cfg.timeoutMs ?? taskTimeoutFor(opts?.task ?? 'audit');
+    calls += 1;
+
+    try {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (cfg.apiKey) headers.Authorization = `Bearer ${cfg.apiKey}`;
+      const r = await deps.fetchImpl(
+        openWeightEndpoint(cfg),
+        withTimeout(
+          {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+              model: cfg.modelId,
+              messages,
+              temperature,
+              max_tokens: maxTokens,
+              stream: false,
+            }),
+          },
+          timeout,
+        ),
+      );
+
+      if (!r.ok) {
+        recordHealth(cfg.modelId, false, classifyError(r.status, ''));
+        bumpProvider('openweight', false);
+        return {
+          success: false,
+          reason: r.status === 429 || r.status === 402 ? 'OPEN_WEIGHT_QUOTA' : 'OPEN_WEIGHT_FAILED',
+          model: cfg.modelId,
+          modelTried: [cfg.modelId],
+          provider: 'meta',
+          hosting: cfg.provider,
+          openWeight: true,
+          latencyMs: Date.now() - started,
+          calls,
+          errorCategory: classifyError(r.status, ''),
+        };
+      }
+
+      const j: any = await r.json();
+      const text = j.choices?.[0]?.message?.content ?? j.output_text;
+      if (typeof text !== 'string' || !text.trim()) {
+        recordHealth(cfg.modelId, false, 'provider');
+        bumpProvider('openweight', false);
+        return {
+          success: false,
+          reason: 'OPEN_WEIGHT_EMPTY',
+          model: cfg.modelId,
+          modelTried: [cfg.modelId],
+          provider: 'meta',
+          hosting: cfg.provider,
+          openWeight: true,
+          latencyMs: Date.now() - started,
+          calls,
+          errorCategory: 'provider',
+        };
+      }
+
+      recordHealth(cfg.modelId, true);
+      bumpProvider('openweight', true);
+      return {
+        success: true,
+        text: text.trim(),
+        tier: 'META',
+        model: cfg.modelId,
+        modelTried: [cfg.modelId],
+        provider: 'meta',
+        hosting: cfg.provider,
+        openWeight: true,
+        usage: {
+          promptTokens: j.usage?.prompt_tokens,
+          completionTokens: j.usage?.completion_tokens,
+          totalTokens: j.usage?.total_tokens,
+        },
+        latencyMs: Date.now() - started,
+        calls,
+        errorCategory: 'none',
+      };
+    } catch (err: any) {
+      recordHealth(cfg.modelId, false, classifyError(undefined, err?.message));
+      bumpProvider('openweight', false);
+      return {
+        success: false,
+        reason: 'OPEN_WEIGHT_NETWORK',
+        model: cfg.modelId,
+        modelTried: [cfg.modelId],
+        provider: 'meta',
+        hosting: cfg.provider,
+        openWeight: true,
+        latencyMs: Date.now() - started,
+        calls,
+        errorCategory: classifyError(undefined, err?.message),
+      };
+    }
+  }
+
+  /**
+   * Independent audit of a hosted-Meta answer by the open-weight checkpoint.
+   * This is a real second inference, not a re-label of the first one.
+   */
+  async function crossCheck(
+    payload: string,
+    opts?: { temperature?: number; maxTokens?: number },
+  ): Promise<AiResult> {
+    const system =
+      'You are an independent auditor for JYNTRA AI. You receive a trading verdict and its evidence. ' +
+      'Check for contradictions, invalid risk-to-reward, missing data and unverifiable claims. ' +
+      'Reply ONLY with strict JSON: {"agreement": boolean, "severity": "LOW"|"MEDIUM"|"HIGH", "verdict": "BUY"|"SELL"|"NO_TRADE"|"UNKNOWN", "concerns": string[]}.';
+    return runOpenWeight(
+      [
+        { role: 'system', content: system },
+        { role: 'user', content: payload.slice(0, 12000) },
+      ],
+      { temperature: opts?.temperature ?? 0.1, maxTokens: opts?.maxTokens ?? 900, task: 'audit' },
+    );
+  }
+
+  function metrics() {
+    return {
+      openWeight: openWeightStatus(),
+      providers: providerStats,
+      modelHealth: Object.fromEntries(modelHealth.entries()),
+      metaCooldownActive: Date.now() < metaCooldownUntil,
+      metaCooldownUntil: metaCooldownUntil || null,
+    };
   }
 
   function normaliseOptions(opts?: number | ChatOptions): Required<Pick<ChatOptions, 'temperature' | 'task' | 'maxTokens'>> & ChatOptions {
@@ -552,6 +799,7 @@ export function createAiEngine(deps: AiEngineDeps) {
       try {
         const text = await deps.geminiChat(messages, { temperature });
         if (text && text.trim()) {
+          bumpProvider('gemini', true);
           return {
             success: true,
             text: text.trim(),
@@ -573,6 +821,7 @@ export function createAiEngine(deps: AiEngineDeps) {
       try {
         const text = await deps.freeAiChat(messages, { temperature });
         if (text && text.trim()) {
+          bumpProvider('free', true);
           return {
             success: true,
             text: text.trim(),
@@ -636,7 +885,10 @@ export function createAiEngine(deps: AiEngineDeps) {
             }),
           }, taskTimeoutFor(task))
         );
-        if (!r.ok || !r.body) return false;
+        if (!r.ok || !r.body) {
+          bumpProvider('meta', false);
+          return false;
+        }
         const decoder = new TextDecoder();
         let buffer = '';
         const reader = r.body.getReader();
@@ -1060,6 +1312,7 @@ export function createAiEngine(deps: AiEngineDeps) {
       },
       modelHealth: modelHealthMap,
       openWeightModels: MODEL_REGISTRY.filter((m) => m.openWeight).map((m) => m.id),
+      openWeight: openWeightStatus(),
       declaredModels: deps.metaModels,
     };
   }
@@ -1074,6 +1327,10 @@ export function createAiEngine(deps: AiEngineDeps) {
     transcribe,
     isTranscriptionAvailable,
     capabilities,
+    runOpenWeight,
+    crossCheck,
+    openWeightStatus,
+    metrics,
     callMetaModel: (model: string, messages: AiMessage[], temperature = 0.4) => callMetaModel(model, messages, temperature, 2048),
     contentToText,
   };

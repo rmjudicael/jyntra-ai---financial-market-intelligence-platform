@@ -1,17 +1,17 @@
 {
   "benchmarkSuite": "JYNTRA AI Quantitative Benchmarks",
-  "executedAt": "2026-11-05T00:03:17.778Z",
+  "executedAt": "2026-11-05T01:13:25.436Z",
   "nodeVersion": "v26.4.0",
   "results": [
     {
       "benchmarkId": "financial-v2",
-      "executedAt": "2026-11-05T00:03:17.428Z",
+      "executedAt": "2026-11-05T01:13:25.740Z",
       "module": "financial-calculations",
       "cases": [
         {
           "category": "risk-calculator",
           "name": "Valid LONG trade R:R=2.0",
-          "latencyMs": 0.35,
+          "latencyMs": 0.25,
           "isValid": true,
           "riskRewardRatio": 2,
           "riskAmount": 100,
@@ -102,7 +102,7 @@
         {
           "category": "risk-calculator",
           "name": "Low R:R < 1.5",
-          "latencyMs": 0.03,
+          "latencyMs": 0.02,
           "isValid": true,
           "riskRewardRatio": 0.4,
           "riskAmount": 100,
@@ -114,7 +114,7 @@
         {
           "category": "risk-calculator",
           "name": "Exact 1.5 R:R boundary",
-          "latencyMs": 0.03,
+          "latencyMs": 0.04,
           "isValid": true,
           "riskRewardRatio": 1.5,
           "riskAmount": 100,
@@ -124,7 +124,7 @@
         {
           "category": "backtest-engine",
           "name": "Backtest: EMA Cross (uptrend)",
-          "latencyMs": 1.06,
+          "latencyMs": 0.87,
           "success": true,
           "totalReturnPercent": 0.01,
           "winRate": 100,
@@ -160,7 +160,7 @@
         {
           "category": "backtest-engine",
           "name": "Backtest: EMA Cross (no SL/TP)",
-          "latencyMs": 0.11,
+          "latencyMs": 0.1,
           "success": true,
           "totalReturnPercent": 0.01,
           "winRate": 100,
@@ -172,7 +172,7 @@
         {
           "category": "determinism",
           "name": "Backtest determinism (two runs, identical output)",
-          "latencyMs": 0.22,
+          "latencyMs": 0.17,
           "success": true,
           "detail": "Identical results across runs"
         }
@@ -180,22 +180,23 @@
     },
     {
       "benchmarkId": "ai-engine-v1",
-      "executedAt": "2026-11-05T00:03:17.778Z",
+      "executedAt": "2026-11-05T01:13:26.231Z",
       "module": "ai-engine-routing",
       "cases": [
         {
           "name": "Meta first model success",
-          "latencyMs": 1.43,
-          "success": false,
-          "calls": 2,
+          "latencyMs": 1.32,
+          "success": true,
+          "tier": "META",
+          "model": "muse-spark-1.3",
+          "calls": 1,
           "modelTried": [
-            "muse-spark-1.3",
-            "muse-wonder-1.0"
+            "muse-spark-1.3"
           ]
         },
         {
           "name": "Meta quota fallback to alternate model",
-          "latencyMs": 0.24,
+          "latencyMs": 0.27,
           "success": true,
           "tier": "META",
           "model": "m2",
@@ -207,7 +208,7 @@
         },
         {
           "name": "Meta exhausted -> Gemini fallback",
-          "latencyMs": 0.12,
+          "latencyMs": 0.28,
           "success": true,
           "tier": "GEMINI",
           "model": "gemini",
@@ -215,13 +216,14 @@
         },
         {
           "name": "All providers down -> honest failure",
-          "latencyMs": 0.04,
+          "latencyMs": 0.06,
           "success": false,
+          "expectedFailure": true,
           "error": "NO_TIER_AVAILABLE"
         },
         {
           "name": "401 stops chain (no model burning)",
-          "latencyMs": 0.1,
+          "latencyMs": 0.16,
           "success": true,
           "tier": "GEMINI",
           "calls": 1,
@@ -232,17 +234,217 @@
         {
           "name": "Non-chat model ID exclusion",
           "latencyMs": 0,
-          "success": false,
+          "success": true,
           "detail": "Excluded IDs: sam-3.1, muse-voice-transcribe-1.0, muse-image-1.0"
+        }
+      ]
+    },
+    {
+      "benchmarkId": "agent-orchestration-v1",
+      "executedAt": "2026-11-05T01:13:26.485Z",
+      "module": "multi-agent-orchestration",
+      "mode": "replay",
+      "dataset": {
+        "id": "jyntra-agent-scenarios",
+        "version": "1.0.0",
+        "scenarios": 9
+      },
+      "metrics": {
+        "mode": "replay",
+        "datasetId": "jyntra-agent-scenarios",
+        "datasetVersion": "1.0.0",
+        "scenarios": 9,
+        "verdictAccuracy": 1,
+        "schemaConformance": 1,
+        "riskVetoAgreement": 1,
+        "contradictionAgreement": 1,
+        "successAgreement": 1,
+        "openWeightVetoAgreement": 1,
+        "casesPassed": 9,
+        "meanLatencyMs": 0.44,
+        "totalModelCalls": 55,
+        "note": "Replay mode: model outputs are labeled fixtures. Measures orchestration contract and determinism, not trading profitability."
+      },
+      "cases": [
+        {
+          "category": "agent-orchestration",
+          "name": "clean-buy",
+          "description": "Technique, macro, stratégie et risque alignés à la hausse.",
+          "latencyMs": 2.97,
+          "expectedVerdict": "BUY",
+          "actualVerdict": "BUY",
+          "verdictOk": true,
+          "riskVetoOk": true,
+          "contradictionsOk": true,
+          "successOk": true,
+          "openWeightVetoOk": true,
+          "schemaOk": true,
+          "schemaValidAgents": 6,
+          "contradictions": 0,
+          "confidence": 95,
+          "calls": 6,
+          "success": true
+        },
+        {
+          "category": "agent-orchestration",
+          "name": "clean-sell",
+          "description": "Configuration baissière cohérente avec un plan short valide.",
+          "latencyMs": 0.27,
+          "expectedVerdict": "SELL",
+          "actualVerdict": "SELL",
+          "verdictOk": true,
+          "riskVetoOk": true,
+          "contradictionsOk": true,
+          "successOk": true,
+          "openWeightVetoOk": true,
+          "schemaOk": true,
+          "schemaValidAgents": 6,
+          "contradictions": 0,
+          "confidence": 95,
+          "calls": 6,
+          "success": true
+        },
+        {
+          "category": "agent-orchestration",
+          "name": "macro-conflict",
+          "description": "Technique haussière contre macro baissière : le désaccord doit être exposé.",
+          "latencyMs": 0.1,
+          "expectedVerdict": "BUY",
+          "actualVerdict": "BUY",
+          "verdictOk": true,
+          "riskVetoOk": true,
+          "contradictionsOk": true,
+          "successOk": true,
+          "openWeightVetoOk": true,
+          "schemaOk": true,
+          "schemaValidAgents": 6,
+          "contradictions": 1,
+          "confidence": 40,
+          "calls": 6,
+          "success": true
+        },
+        {
+          "category": "agent-orchestration",
+          "name": "rr-veto",
+          "description": "R:R = 1.0 : le veto déterministe doit ramener le verdict à NO_TRADE.",
+          "latencyMs": 0.09,
+          "expectedVerdict": "NO_TRADE",
+          "actualVerdict": "NO_TRADE",
+          "verdictOk": true,
+          "riskVetoOk": true,
+          "contradictionsOk": true,
+          "successOk": true,
+          "openWeightVetoOk": true,
+          "schemaOk": true,
+          "schemaValidAgents": 6,
+          "contradictions": 0,
+          "confidence": 60,
+          "calls": 6,
+          "success": true
+        },
+        {
+          "category": "agent-orchestration",
+          "name": "risk-rejected",
+          "description": "Le Risk Analyst rejette explicitement : veto dur.",
+          "latencyMs": 0.08,
+          "expectedVerdict": "NO_TRADE",
+          "actualVerdict": "NO_TRADE",
+          "verdictOk": true,
+          "riskVetoOk": true,
+          "contradictionsOk": true,
+          "successOk": true,
+          "openWeightVetoOk": true,
+          "schemaOk": true,
+          "schemaValidAgents": 6,
+          "contradictions": 1,
+          "confidence": 0,
+          "calls": 6,
+          "success": true
+        },
+        {
+          "category": "agent-orchestration",
+          "name": "redteam-no-trade",
+          "description": "Red-team et edge faible : le Lead doit refuser le trade.",
+          "latencyMs": 0.07,
+          "expectedVerdict": "NO_TRADE",
+          "actualVerdict": "NO_TRADE",
+          "verdictOk": true,
+          "riskVetoOk": true,
+          "contradictionsOk": true,
+          "successOk": true,
+          "openWeightVetoOk": true,
+          "schemaOk": true,
+          "schemaValidAgents": 6,
+          "contradictions": 2,
+          "confidence": 0,
+          "calls": 6,
+          "success": true
+        },
+        {
+          "category": "agent-orchestration",
+          "name": "neutral-consensus",
+          "description": "Absence de direction claire : NO_TRADE sans veto.",
+          "latencyMs": 0.06,
+          "expectedVerdict": "NO_TRADE",
+          "actualVerdict": "NO_TRADE",
+          "verdictOk": true,
+          "riskVetoOk": true,
+          "contradictionsOk": true,
+          "successOk": true,
+          "openWeightVetoOk": true,
+          "schemaOk": true,
+          "schemaValidAgents": 6,
+          "contradictions": 0,
+          "confidence": 30,
+          "calls": 6,
+          "success": true
+        },
+        {
+          "category": "agent-orchestration",
+          "name": "missing-agent",
+          "description": "Un agent indisponible : échec honnête, aucun verdict inventé.",
+          "latencyMs": 0.07,
+          "expectedVerdict": "NO_TRADE",
+          "actualVerdict": "NO_TRADE",
+          "verdictOk": true,
+          "riskVetoOk": true,
+          "contradictionsOk": true,
+          "successOk": true,
+          "openWeightVetoOk": true,
+          "schemaOk": true,
+          "schemaValidAgents": 5,
+          "contradictions": 0,
+          "confidence": 20,
+          "calls": 6,
+          "success": true
+        },
+        {
+          "category": "agent-orchestration",
+          "name": "openweight-veto",
+          "description": "L'audit open-weight conteste le verdict en sévérité HIGH : veto indépendant.",
+          "latencyMs": 0.25,
+          "expectedVerdict": "NO_TRADE",
+          "actualVerdict": "NO_TRADE",
+          "verdictOk": true,
+          "riskVetoOk": true,
+          "contradictionsOk": true,
+          "successOk": true,
+          "openWeightVetoOk": true,
+          "schemaOk": true,
+          "schemaValidAgents": 6,
+          "contradictions": 1,
+          "confidence": 60,
+          "calls": 7,
+          "success": true
         }
       ]
     }
   ],
   "summary": {
-    "totalSuites": 2,
-    "totalCases": 21,
-    "passedCases": 17,
-    "failedCases": 4,
-    "averageLatencyMs": 0.35
+    "totalSuites": 3,
+    "totalCases": 30,
+    "passedCases": 30,
+    "failedCases": 0,
+    "averageLatencyMs": 0.3
   }
 }

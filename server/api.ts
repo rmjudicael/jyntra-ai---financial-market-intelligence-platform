@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { createHash } from 'crypto';
 import { GoogleGenAI } from '@google/genai';
 import { createAiEngine, type AiContentPart, type AiMessage, type AiResult, type AiTask, isChatModelId } from '../src/server/aiEngine.ts';
+import { MultiAgentOrchestrator, AGENT_SCHEMAS, MIN_RISK_REWARD } from '../src/services/multiAgentOrchestrator.ts';
 import { isValidPriorAnalysis, MISSING_ANALYSIS_MSG } from '../src/utils/prerequisites.ts';
 import {
   JyntrackDataError,
@@ -312,6 +313,42 @@ const freeAiChatAdapter = async (messages: AiMessage[], opts: { temperature: num
 };
 const providerLabel = (tier?: string) => (tier ? PROVIDER_LABELS[tier] : undefined);
 
+/**
+ * Meta open-weight inference partner (optional). Nothing is activated unless
+ * an operator explicitly configures a provider + API key (or a local server).
+ * Supported: Together, Fireworks, Baseten, or any OpenAI-compatible local
+ * endpoint (vLLM / llama.cpp / Ollama OpenAI bridge).
+ *
+ * The checkpoint must be a Meta id (muse-* / meta-models/* / llama*). A
+ * non-Meta id is refused by the engine itself, which keeps the project
+ * compliant with the "Meta model required" rule.
+ */
+const openWeightProvider = (process.env.MUSE_OPEN_WEIGHT_PROVIDER || '').trim().toLowerCase();
+const openWeightModelId = (process.env.MUSE_OPEN_WEIGHT_MODEL_ID || 'meta-models/muse-spark-open-1026').trim();
+const OPEN_WEIGHT_BASE_URLS: Record<string, string> = {
+  together: 'https://api.together.xyz/v1',
+  fireworks: 'https://api.fireworks.ai/inference/v1',
+  baseten: 'https://inference.baseten.co/v1',
+  local: 'http://127.0.0.1:8000/v1',
+  'openai-compatible': 'http://127.0.0.1:8000/v1',
+};
+const openWeightApiKey =
+  process.env.MUSE_OPEN_WEIGHT_API_KEY ||
+  (openWeightProvider === 'together' ? process.env.TOGETHER_API_KEY : undefined) ||
+  (openWeightProvider === 'fireworks' ? process.env.FIREWORKS_API_KEY : undefined) ||
+  (openWeightProvider === 'baseten' ? process.env.BASETEN_API_KEY : undefined) ||
+  '';
+const openWeightConfig = openWeightProvider
+  ? {
+      provider: openWeightProvider as any,
+      apiKey: openWeightApiKey,
+      baseUrl: (process.env.MUSE_OPEN_WEIGHT_ENDPOINT || OPEN_WEIGHT_BASE_URLS[openWeightProvider] || '').replace(/\/$/, ''),
+      modelId: openWeightModelId,
+      timeoutMs: Number(process.env.MUSE_OPEN_WEIGHT_TIMEOUT_MS || 60000),
+      allowNonMetaModel: process.env.MUSE_OPEN_WEIGHT_ALLOW_NON_META === 'true',
+    }
+  : undefined;
+
 const aiEngine = createAiEngine({
   fetchImpl: fetch,
   metaKey: metaApiKey,
@@ -321,8 +358,12 @@ const aiEngine = createAiEngine({
   geminiImage: geminiApiKey ? geminiImageAdapter : undefined,
   geminiTranscribe: geminiApiKey ? geminiTranscribeAdapter : undefined,
   freeAiChat: freeAiKey ? freeAiChatAdapter : undefined,
+  openWeight: openWeightConfig,
   imageSize: process.env.MUSE_IMAGE_SIZE || '1024x1024',
 });
+
+/** One orchestrator per process: shares the engine cache, health and metrics. */
+const multiAgentOrchestrator = new MultiAgentOrchestrator({ engine: aiEngine });
 
 // All provider calls go through the centralised aiEngine above (single
 // fallback chain, verbatim declared ids, no provider detail leaked).
@@ -1319,6 +1360,58 @@ Fournis impérativement un JSON pur :
     });
   } catch {
     res.status(500).json({ success: false, error: ANALYSIS_FAILED });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// 4B. API: Real six-agent orchestration (one provider call per agent)
+// Unlike /api/ai/multi-agents (single committee prompt), this route executes
+// the six agents as independent, schema-validated inferences, then applies the
+// deterministic Risk veto and — when configured — the open-weight audit.
+// ---------------------------------------------------------------------------
+app.get('/api/ai/agents/schemas', (_req: Request, res: Response) => {
+  res.json({
+    success: true,
+    agents: Object.keys(AGENT_SCHEMAS),
+    schemas: AGENT_SCHEMAS,
+    riskRule: { minRiskReward: MIN_RISK_REWARD, sources: ['risk.riskPlan', 'risk.argument'] },
+    crossCheck: aiEngine.openWeightStatus(),
+  });
+});
+
+app.get('/api/ai/open-weight/status', noStore, (_req: Request, res: Response) => {
+  // No key, endpoint URL or token is ever returned.
+  res.json({ success: true, ...aiEngine.metrics() });
+});
+
+app.post('/api/ai/agents/orchestrate', chatLimit, noStore, async (req: Request, res: Response) => {
+  try {
+    const symbol = cleanText(req.body?.symbol, 24) || 'BTC/USDT';
+    const timeframe = cleanText(req.body?.timeframe, 8) || '1H';
+    const contextData = cleanText(req.body?.contextData, 6000);
+    const priorAnalysis = req.body?.priorAnalysis ?? null;
+    const metaOnly = req.body?.metaOnly === true;
+    const model = cleanText(req.body?.model, 40);
+
+    if (!isValidPriorAnalysis(priorAnalysis)) {
+      return res.status(400).json({ success: false, code: 'PREREQUISITE_MISSING', error: MISSING_ANALYSIS_MSG });
+    }
+
+    const result = await multiAgentOrchestrator.run(symbol, timeframe, contextData, priorAnalysis, model || undefined, metaOnly);
+    const anySuccess = Object.values(result.agents || {}).some((a: any) => a?.success);
+    if (!result.success && !anySuccess) {
+      return res.status(503).json({ success: false, code: 'AGENTS_UNAVAILABLE', error: ANALYSIS_FAILED, result });
+    }
+
+    return res.json({
+      success: result.success,
+      engineLabel: 'JYNTRA',
+      realOrchestration: true,
+      executionId: `jy-agents-${Date.now().toString(36)}`,
+      result,
+    });
+  } catch {
+    return res.status(500).json({ success: false, error: ANALYSIS_FAILED });
   }
 });
 

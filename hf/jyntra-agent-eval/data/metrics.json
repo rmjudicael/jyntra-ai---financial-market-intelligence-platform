@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-11-05T01:05:55.049Z",
+  "source": "benchmarks/results/results.json",
+  "agentEvaluation": {
+    "mode": "replay",
+    "datasetId": "jyntra-agent-scenarios",
+    "datasetVersion": "1.0.0",
+    "scenarios": 9,
+    "verdictAccuracy": 1,
+    "schemaConformance": 1,
+    "riskVetoAgreement": 1,
+    "contradictionAgreement": 1,
+    "successAgreement": 1,
+    "openWeightVetoAgreement": 1,
+    "casesPassed": 9,
+    "meanLatencyMs": 0.27,
+    "totalModelCalls": 55,
+    "note": "Replay mode: model outputs are labeled fixtures. Measures orchestration contract and determinism, not trading profitability."
+  },
+  "caveat": "Replay evaluation of the orchestration contract. Not a profitability benchmark."
+}
