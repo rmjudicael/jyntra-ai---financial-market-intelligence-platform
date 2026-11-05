@@ -95,6 +95,10 @@ export interface AiResult {
   latencyMs?: number;
   /** Number of provider calls actually made for this result. */
   calls?: number;
+  /** Provider that actually served the result (never inferred). */
+  provider?: 'meta' | 'gemini' | 'free' | 'none';
+  /** Error category for programmatic handling. */
+  errorCategory?: 'auth' | 'quota' | 'timeout' | 'network' | 'provider' | 'configuration' | 'none';
 }
 
 export interface AiStreamEvent {
@@ -126,6 +130,45 @@ interface ChatOptions {
   /** Ids that are not chat models: never sent to the chat chain. */
 export const NON_CHAT_MODEL_IDS = ['sam-3.1', 'muse-voice-transcribe-1.0', 'muse-image-1.0'];
 export const isChatModelId = (id: string) => !NON_CHAT_MODEL_IDS.includes(id.toLowerCase());
+
+/**
+ * Model metadata registry. Declares capabilities, cost tier, and latency class
+ * for every model JYNTRA AI can call. Open-weight models (Muse Spark Open,
+ * Muse Glimmer) are declared but NOT used by default — they require explicit
+ * operator configuration (MUSE_OPEN_WEIGHT_MODEL_ID, MUSE_OPEN_WEIGHT_ENDPOINT).
+ */
+export interface ModelMeta {
+  id: string;
+  provider: 'meta' | 'gemini' | 'free';
+  family: 'muse-spark' | 'muse-wonder' | 'sam' | 'muse-image' | 'muse-voice' | 'gemini' | 'groq' | 'open-weight';
+  task: 'chat' | 'reasoning' | 'vision' | 'segmentation' | 'image' | 'transcription';
+  latencyClass: 'fast' | 'standard' | 'slow';
+  costTier: 'low' | 'medium' | 'high';
+  openWeight: boolean;
+  defaultMaxTokens: number;
+}
+
+export const MODEL_REGISTRY: ModelMeta[] = [
+  { id: 'muse-spark-1.3', provider: 'meta', family: 'muse-spark', task: 'reasoning', latencyClass: 'fast', costTier: 'low', openWeight: false, defaultMaxTokens: 4096 },
+  { id: 'muse-spark-1.2', provider: 'meta', family: 'muse-spark', task: 'reasoning', latencyClass: 'fast', costTier: 'low', openWeight: false, defaultMaxTokens: 4096 },
+  { id: 'muse-spark-1.1', provider: 'meta', family: 'muse-spark', task: 'chat', latencyClass: 'fast', costTier: 'low', openWeight: false, defaultMaxTokens: 2048 },
+  { id: 'muse-wonder-1.0', provider: 'meta', family: 'muse-wonder', task: 'reasoning', latencyClass: 'slow', costTier: 'high', openWeight: false, defaultMaxTokens: 8192 },
+  { id: 'sam-3.1', provider: 'meta', family: 'sam', task: 'segmentation', latencyClass: 'slow', costTier: 'high', openWeight: false, defaultMaxTokens: 4096 },
+  { id: 'muse-image-1.0', provider: 'meta', family: 'muse-image', task: 'image', latencyClass: 'slow', costTier: 'high', openWeight: false, defaultMaxTokens: 1024 },
+  { id: 'muse-voice-transcribe-1.0', provider: 'meta', family: 'muse-voice', task: 'transcription', latencyClass: 'slow', costTier: 'medium', openWeight: false, defaultMaxTokens: 4096 },
+  // Open-weight Meta models — declared, NOT used by default. Require explicit operator config.
+  { id: 'muse-spark-open', provider: 'meta', family: 'muse-spark', task: 'reasoning', latencyClass: 'standard', costTier: 'low', openWeight: true, defaultMaxTokens: 4096 },
+  { id: 'muse-glimmer', provider: 'meta', family: 'muse-spark', task: 'chat', latencyClass: 'fast', costTier: 'low', openWeight: true, defaultMaxTokens: 2048 },
+  { id: 'gemini-2.5-flash', provider: 'gemini', family: 'gemini', task: 'reasoning', latencyClass: 'standard', costTier: 'medium', openWeight: false, defaultMaxTokens: 8192 },
+  { id: 'gemini-2.5-flash-image', provider: 'gemini', family: 'gemini', task: 'image', latencyClass: 'slow', costTier: 'high', openWeight: false, defaultMaxTokens: 1024 },
+  { id: 'llama-3.3-70b-versatile', provider: 'free', family: 'groq', task: 'chat', latencyClass: 'fast', costTier: 'low', openWeight: false, defaultMaxTokens: 4096 },
+];
+
+export const getModelMeta = (id: string): ModelMeta | undefined =>
+  MODEL_REGISTRY.find((m) => m.id === id);
+
+export const isOpenWeightModel = (id: string): boolean =>
+  MODEL_REGISTRY.some((m) => m.id === id && m.openWeight);
 
 const REASONING_PRIORITY = ['muse-spark-1.3', 'muse-wonder-1.0', 'muse-spark-1.2', 'muse-spark-1.1'];
 const CONTRIBUTOR_IDS = ['muse-spark-1.3-contributor', 'muse-spark-1.2-contributor'];
@@ -325,6 +368,36 @@ export function createAiEngine(deps: AiEngineDeps) {
   /** Circuit breaker: set when every Meta model reports quota/billing. */
   let metaCooldownUntil = 0;
   let calls = 0;
+  /** Per-model health: success/failure counts, last failure time, consecutive failures. */
+  const modelHealth = new Map<string, { success: number; failure: number; consecutiveFailures: number; lastFailureAt: number | null }>();
+
+  const recordHealth = (id: string, success: boolean, errorCategory?: AiResult['errorCategory']) => {
+    let h = modelHealth.get(id);
+    if (!h) {
+      h = { success: 0, failure: 0, consecutiveFailures: 0, lastFailureAt: null };
+      modelHealth.set(id, h);
+    }
+    if (success) {
+      h.success += 1;
+      h.consecutiveFailures = 0;
+    } else {
+      h.failure += 1;
+      h.consecutiveFailures += 1;
+      h.lastFailureAt = Date.now();
+    }
+  };
+
+  const getModelHealth = (id: string) => modelHealth.get(id) ?? { success: 0, failure: 0, consecutiveFailures: 0, lastFailureAt: null };
+
+  const classifyError = (status: number | undefined, message: string): AiResult['errorCategory'] => {
+    if (status === 401 || status === 403) return 'auth';
+    if (status === 429 || status === 402) return 'quota';
+    if (status === 408 || status === 504 || /timeout/i.test(message)) return 'timeout';
+    if (status === 0 || /network|fetch|ECONNREFUSED|ENOTFOUND/i.test(message)) return 'network';
+    if (status === 400 || status === 404) return 'provider';
+    if (!status) return 'configuration';
+    return 'provider';
+  };
 
   const available = (id: string) => deps.metaModels.some((m) => m.toLowerCase() === id);
 
@@ -376,7 +449,7 @@ export function createAiEngine(deps: AiEngineDeps) {
     messages: AiMessage[],
     temperature: number,
     maxTokens: number,
-  ): Promise<{ ok: boolean; text?: string; status?: number; finish?: string }> {
+  ): Promise<{ ok: boolean; text?: string; status?: number; finish?: string; errorCategory?: AiResult['errorCategory'] }> {
     calls += 1;
     try {
       const r = await deps.fetchImpl(
@@ -393,17 +466,22 @@ export function createAiEngine(deps: AiEngineDeps) {
           }),
         }),
       );
-      if (!r.ok) return { ok: false, status: r.status };
+      if (!r.ok) {
+        recordHealth(model, false, classifyError(r.status, ''));
+        return { ok: false, status: r.status, errorCategory: classifyError(r.status, '') };
+      }
       const j: any = await r.json();
       const text = j.choices?.[0]?.message?.content;
+      recordHealth(model, true);
       return {
         ok: typeof text === 'string' && text.trim().length > 0,
         text: typeof text === 'string' ? text.trim() : undefined,
         status: r.status,
         finish: j.choices?.[0]?.finish_reason,
       };
-    } catch {
-      return { ok: false };
+    } catch (err: any) {
+      recordHealth(model, false, classifyError(undefined, err?.message));
+      return { ok: false, errorCategory: classifyError(undefined, err?.message) };
     }
   }
 
@@ -435,14 +513,17 @@ export function createAiEngine(deps: AiEngineDeps) {
           res = await callMetaModel(model, messages, temperature, 4096);
         }
         if (res.ok && res.text) {
+          recordHealth(model, true);
           return {
             success: true,
             text: res.text,
             tier: 'META',
             model,
+            provider: 'meta',
             modelTried: tried,
             latencyMs: Date.now() - started,
             calls,
+            errorCategory: 'none',
           };
         }
         if (res.status === 401 || res.status === 403) break;         // key/permission: no other model helps
@@ -462,6 +543,8 @@ export function createAiEngine(deps: AiEngineDeps) {
         modelTried: tried,
         latencyMs: Date.now() - started,
         calls,
+        provider: 'none',
+        errorCategory: 'none',
       };
     }
 
@@ -474,9 +557,11 @@ export function createAiEngine(deps: AiEngineDeps) {
             text: text.trim(),
             tier: 'GEMINI',
             model: 'gemini',
+            provider: 'gemini',
             modelTried: tried,
             latencyMs: Date.now() - started,
             calls,
+            errorCategory: 'none',
           };
         }
       } catch {
@@ -495,6 +580,8 @@ export function createAiEngine(deps: AiEngineDeps) {
             modelTried: tried,
             latencyMs: Date.now() - started,
             calls,
+            provider: 'free',
+            errorCategory: 'none',
           };
         }
       } catch {
@@ -508,6 +595,8 @@ export function createAiEngine(deps: AiEngineDeps) {
       modelTried: tried,
       latencyMs: Date.now() - started,
       calls,
+      provider: 'none',
+      errorCategory: 'none',
     };
   }
 
@@ -704,8 +793,10 @@ export function createAiEngine(deps: AiEngineDeps) {
               imageMime: mime,
               tier: 'META',
               model: imageId,
+              provider: 'meta',
               latencyMs: Date.now() - started,
               calls: 1,
+              errorCategory: 'none',
             };
           }
         }
@@ -723,14 +814,16 @@ export function createAiEngine(deps: AiEngineDeps) {
             imageMime: img.dataUrl.slice(5, img.dataUrl.indexOf(';')),
             tier: 'GEMINI',
             model: 'gemini-image',
+            provider: 'gemini',
             latencyMs: Date.now() - started,
+            errorCategory: 'none',
           };
         }
       } catch {
         /* échec honnête ci-dessous */
       }
     }
-    return { success: false, reason: 'NO_IMAGE_PROVIDER_CONFIGURED', latencyMs: Date.now() - started };
+    return { success: false, reason: 'NO_IMAGE_PROVIDER_CONFIGURED', latencyMs: Date.now() - started, provider: 'none', errorCategory: 'configuration' };
   }
 
   /**
@@ -811,11 +904,13 @@ export function createAiEngine(deps: AiEngineDeps) {
         masks,
         model: SEGMENT_ID,
         tier: 'META',
+        provider: 'meta',
         latencyMs: Date.now() - started,
         calls: 1,
+        errorCategory: 'none',
       };
     } catch {
-      return { success: false, reason: 'SEGMENTATION_FAILED' };
+      return { success: false, reason: 'SEGMENTATION_FAILED', provider: 'meta', errorCategory: 'provider' };
     }
   }
 
@@ -886,7 +981,7 @@ export function createAiEngine(deps: AiEngineDeps) {
   async function transcribe(
     audio: Blob,
     language = '',
-  ): Promise<{ success: boolean; text?: string; model?: string; reason?: string; tier?: 'META' | 'GEMINI' }> {
+  ): Promise<{ success: boolean; text?: string; model?: string; reason?: string; tier?: 'META' | 'GEMINI'; provider?: 'meta' | 'gemini' | 'none'; errorCategory?: AiResult['errorCategory'] }> {
     if (deps.metaKey && available(TRANSCRIBE_ID) && (await isTranscriptionAvailable())) {
       try {
         // Convert to WAV 16kHz mono PCM — required by the Meta ASR endpoint.
@@ -910,9 +1005,12 @@ export function createAiEngine(deps: AiEngineDeps) {
         if (r.ok) {
           const j: any = await r.json();
           const text = typeof j.transcript === 'string' ? j.transcript.trim() : '';
-          if (text) return { success: true, text, model: TRANSCRIBE_ID, tier: 'META' };
+          if (text) return { success: true, text, model: TRANSCRIBE_ID, tier: 'META', provider: 'meta', errorCategory: 'none' };
+        } else {
+          recordHealth(TRANSCRIBE_ID, false, classifyError(r.status, ''));
         }
-      } catch {
+      } catch (err: any) {
+        recordHealth(TRANSCRIBE_ID, false, classifyError(undefined, err?.message));
         /* fall through to the secondary provider */
       }
     }
@@ -921,20 +1019,24 @@ export function createAiEngine(deps: AiEngineDeps) {
       try {
         const text = await deps.geminiTranscribe(audio, language);
         if (text && text.trim()) {
-          return { success: true, text: text.trim(), model: 'gemini', tier: 'GEMINI' };
+          return { success: true, text: text.trim(), model: 'gemini', tier: 'GEMINI', provider: 'gemini', errorCategory: 'none' };
         }
       } catch {
         /* échec honnête ci-dessous */
       }
     }
 
-    if (!deps.metaKey && !deps.geminiTranscribe) return { success: false, reason: 'TRANSCRIPTION_NOT_CONFIGURED' };
-    return { success: false, reason: 'TRANSCRIPTION_ENDPOINT_UNAVAILABLE' };
+    if (!deps.metaKey && !deps.geminiTranscribe) return { success: false, reason: 'TRANSCRIPTION_NOT_CONFIGURED', provider: 'none', errorCategory: 'configuration' };
+    return { success: false, reason: 'TRANSCRIPTION_ENDPOINT_UNAVAILABLE', provider: 'none', errorCategory: 'network' };
   }
 
   async function capabilities() {
     const metaTranscription = await isTranscriptionAvailable();
     const transcription = metaTranscription || !!deps.geminiTranscribe;
+    const modelHealthMap: Record<string, { success: number; failure: number; consecutiveFailures: number }> = {};
+    for (const [id, h] of modelHealth) {
+      modelHealthMap[id] = { success: h.success, failure: h.failure, consecutiveFailures: h.consecutiveFailures };
+    }
     return {
       chat: !!deps.metaKey || !!deps.geminiChat || !!deps.freeAiChat,
       reasoning: !!deps.metaKey,
@@ -942,6 +1044,7 @@ export function createAiEngine(deps: AiEngineDeps) {
       image: (!!deps.metaKey && available(deps.metaImageModel || IMAGE_ID)) || !!deps.geminiImage,
       segmentation: !!deps.metaKey && available(SEGMENT_ID),
       transcription,
+      metaOnlySupported: true,
       tiers: {
         meta: !!deps.metaKey,
         gemini: !!deps.geminiChat,
@@ -955,6 +1058,9 @@ export function createAiEngine(deps: AiEngineDeps) {
         segmentation: available(SEGMENT_ID) ? SEGMENT_ID : null,
         transcription: metaTranscription ? TRANSCRIBE_ID : transcription ? 'secondary' : null,
       },
+      modelHealth: modelHealthMap,
+      openWeightModels: MODEL_REGISTRY.filter((m) => m.openWeight).map((m) => m.id),
+      declaredModels: deps.metaModels,
     };
   }
 

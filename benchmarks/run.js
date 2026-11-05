@@ -9,6 +9,9 @@ import path from 'path';
 const BENCHMARK_DIR = path.join(process.cwd(), 'benchmarks');
 const RESULTS_DIR = path.join(BENCHMARK_DIR, 'results');
 
+// Resolve tsx via npx (works cross-platform including Windows)
+const TSX_BIN = 'npx';
+
 const suites = [
   { name: 'financial', file: 'financial.js' },
   { name: 'ai-engine', file: 'ai-engine.js' },
@@ -32,7 +35,7 @@ for (const suite of suites) {
   }
   console.log(`[benchmarks] Running suite: ${suite.name}`);
   try {
-    const output = execFileSync('tsx', [filePath], { cwd: process.cwd(), encoding: 'utf8', timeout: 60000 });
+    const output = execFileSync(TSX_BIN, ['tsx', filePath], { cwd: process.cwd(), encoding: 'utf8', timeout: 60000 });
     const parsed = JSON.parse(output.trim());
     allResults.results.push(parsed);
   } catch (err) {

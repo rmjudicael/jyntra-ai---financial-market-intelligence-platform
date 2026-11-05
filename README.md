@@ -253,7 +253,32 @@ Every analysis response includes an execution trace showing:
 
 Judges and reviewers can verify that responses genuinely originate from Meta models when Meta-only mode is active.
 
+#### Open-weight Meta models (declared, not used by default)
+
+The model registry (`src/server/aiEngine.ts`) also declares Meta open-weight model candidates:
+
+| Open-weight model | Role | Status |
+|-------------------|------|--------|
+| Muse Spark Open | Reasoning chat | Declared, requires explicit operator configuration |
+| Muse Glimmer | Light chat | Declared, requires explicit operator configuration |
+
+These models are **declared but not activated by default**. Activating them requires the operator to set `MUSE_OPEN_WEIGHT_MODEL_ID` and `MUSE_OPEN_WEIGHT_ENDPOINT` environment variables and to verify compatibility with the Meta inference endpoint. No open-weight model is shipped or used without explicit operator action.
+
 ---
+
+#### Quantitative benchmarks
+
+Deterministic benchmarks are located in `benchmarks/`. They provide reproducible measurements without external API keys:
+
+| Suite | Coverage |
+|-------|----------|
+| Financial calculations | Risk calculator (valid/invalid LONG/SHORT, R:R validation, position sizing), backtest engine (EMA Cross, RSI Reversal, Breakout), determinism check |
+| AI engine routing | Meta fallback chain, model routing, provider transparency, 401 chain-stop, honest failure |
+
+Results are written to `benchmarks/results/results.json` and `benchmarks/results/results.md`. All benchmarks run without external API dependencies; AI engine benchmarks use mocked providers to verify routing logic without consuming credits.
+
+---
+
 
 ## Platform Features
 
