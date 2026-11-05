@@ -6,7 +6,31 @@ not live-verified, and what is blocked. No credential is reproduced here.
 Evidence files:
 
 - [`evidence/meta-verify-2026-11-04.json`](evidence/meta-verify-2026-11-04.json)
+- [`evidence/meta-verify-production-2026-11-05.json`](evidence/meta-verify-production-2026-11-05.json)
 - [`evidence/orchestration-live-2026-11-05.json`](evidence/orchestration-live-2026-11-05.json)
+
+---
+
+## 0. Deployed application — functional and verified
+
+After pushing `main` (commit `9712c48`), the Render instance was checked:
+
+```bash
+curl https://jyntra-ai-financial-market-intelligence.onrender.com/api/health
+curl https://jyntra-ai-financial-market-intelligence.onrender.com/api/ai/verify
+curl https://jyntra-ai-financial-market-intelligence.onrender.com/api/ai/open-weight/status
+```
+
+Results (2026-11-05T01:19:41Z):
+
+- `/api/health` → `200`, `status: online`, `aiServiceConfigured: true`.
+- `/api/ai/verify` → `overall: verified`, real model `muse-wonder-1.0`,
+  tier `META`, latency `1621 ms`.
+- `/api/ai/open-weight/status` → `200`; open-weight correctly reports
+  `OPEN_WEIGHT_NOT_CONFIGURED` (no partner key).
+
+This confirms the new deployment is live and the Meta integration works in
+production, not only locally.
 
 ---
 

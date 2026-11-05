@@ -1,0 +1,28 @@
+{
+  "evidence": "Meta Model API verification on the deployed Render instance",
+  "executedAt": "2026-11-05T01:19:41Z",
+  "url": "https://jyntra-ai-financial-market-intelligence.onrender.com/api/ai/verify",
+  "note": "Real production call after deploying main at commit 9712c48. No key included.",
+  "configured": true,
+  "keyPresent": true,
+  "endpoint": "https://api.meta.ai/v1/chat/completions",
+  "providerCatalogConfirmed": true,
+  "metaCallResult": {
+    "attempted": true,
+    "success": true,
+    "model": "muse-wonder-1.0",
+    "tier": "META",
+    "latencyMs": 1621
+  },
+  "fallbackConfigured": {
+    "gemini": true,
+    "freeAlternative": false
+  },
+  "overall": "verified",
+  "deployedEndpointCheck": {
+    "path": "/api/ai/open-weight/status",
+    "httpStatus": 200,
+    "openWeightConfigured": false,
+    "reason": "OPEN_WEIGHT_NOT_CONFIGURED"
+  }
+}
